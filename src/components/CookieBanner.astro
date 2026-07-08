@@ -1,0 +1,37 @@
+---
+// Информационное cookie-уведомление (152-ФЗ / витрина без аналитики).
+// Inline-скрипт и localStorage — независимо от папки _astro (как ContactForm).
+// Если на сайте появится Яндекс.Метрика/GTM — переделать в согласие-гейт
+// (запуск счётчиков только после «Принять»), см. docs/legal.md.
+---
+<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Уведомление об использовании cookie" hidden>
+  <p>Мы используем cookie для корректной работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с этим и с <a href="/privacy">политикой обработки персональных данных</a>.</p>
+  <button type="button" class="btn btn-primary cookie-ok" id="cookie-ok">Понятно</button>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'cookieNotice';
+    var el = document.getElementById('cookie-banner');
+    if (!el) return;
+    try { if (localStorage.getItem(KEY) === '1') return; } catch (e) {}
+    el.hidden = false;
+    requestAnimationFrame(function () { el.classList.add('show'); });
+    var btn = document.getElementById('cookie-ok');
+    if (btn) btn.addEventListener('click', function () {
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      el.classList.remove('show');
+      el.addEventListener('transitionend', function () { el.hidden = true; }, { once: true });
+      setTimeout(function () { el.hidden = true; }, 400);
+    });
+  })();
+</script>
+
+<style>
+  .cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;max-width:760px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:16px 20px;background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.45);opacity:0;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease}
+  .cookie-banner.show{opacity:1;transform:translateY(0)}
+  .cookie-banner p{margin:0;flex:1 1 340px;font-size:14px;line-height:1.5;color:var(--muted)}
+  .cookie-banner a{color:var(--accent);text-decoration:underline}
+  .cookie-banner .cookie-ok{flex:0 0 auto}
+  @media (prefers-reduced-motion:reduce){.cookie-banner{transition:none;transform:none}}
+</style>

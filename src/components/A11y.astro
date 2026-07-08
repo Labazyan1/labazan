@@ -1,0 +1,134 @@
+---
+// Версия для слабовидящих (доступная среда по ГОСТ Р 52872 / WCAG 2.1 AA).
+// Без зависимостей и фреймворков — чистый inline-JS, работает на статике Beget.
+// Классы вешаются на <html>: a11y (режим вкл), a11y-c-* (схема), a11y-f-* (шрифт),
+// a11y-s (интервал), a11y-noimg (без картинок). Состояние хранится в localStorage.
+---
+<button
+  class="a11y-toggle"
+  type="button"
+  aria-expanded="false"
+  aria-controls="a11y-panel"
+  aria-label="Версия для слабовидящих"
+  title="Версия для слабовидящих"
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M12 5c-5 0-9 4.5-10 7 1 2.5 5 7 10 7s9-4.5 10-7c-1-2.5-5-7-10-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+  </svg>
+</button>
+
+<div id="a11y-panel" class="a11y-panel" role="dialog" aria-label="Настройки версии для слабовидящих" hidden>
+  <h4>Размер шрифта</h4>
+  <div class="a11y-row">
+    <button type="button" data-a11y="font" data-val="1">A</button>
+    <button type="button" data-a11y="font" data-val="2">A+</button>
+    <button type="button" data-a11y="font" data-val="3">A++</button>
+  </div>
+
+  <h4>Цветовая схема</h4>
+  <div class="a11y-row">
+    <button type="button" data-a11y="scheme" data-val="wb">Ч/Б</button>
+    <button type="button" data-a11y="scheme" data-val="bw">Б/Ч</button>
+    <button type="button" data-a11y="scheme" data-val="blue">Синяя</button>
+  </div>
+
+  <h4>Изображения</h4>
+  <div class="a11y-row">
+    <button type="button" data-a11y="img" data-val="on">Показывать</button>
+    <button type="button" data-a11y="img" data-val="off">Отключить</button>
+  </div>
+
+  <h4>Интервал</h4>
+  <div class="a11y-row">
+    <button type="button" data-a11y="space" data-val="normal">Обычный</button>
+    <button type="button" data-a11y="space" data-val="wide">Увеличенный</button>
+  </div>
+
+  <button type="button" class="a11y-off" data-a11y="off">Обычная версия сайта</button>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    var toggle = document.querySelector('.a11y-toggle');
+    var panel = document.getElementById('a11y-panel');
+    if (!toggle || !panel) return;
+
+    function save() {
+      var cls = [].filter.call(root.classList, function (c) { return c.indexOf('a11y') === 0; }).join(' ');
+      try { cls ? localStorage.setItem('a11yClasses', cls) : localStorage.removeItem('a11yClasses'); } catch (e) {}
+    }
+    function setGroup(prefix, cls) {
+      [].slice.call(root.classList).forEach(function (c) { if (c.indexOf(prefix) === 0) root.classList.remove(c); });
+      if (cls) root.classList.add(cls);
+    }
+    function ensureDefaults() {
+      root.classList.add('a11y');
+      if (!root.className.match(/a11y-c-/)) root.classList.add('a11y-c-wb');
+      if (!root.className.match(/a11y-f-/)) root.classList.add('a11y-f-2');
+    }
+    function sync() {
+      var on = root.classList.contains('a11y');
+      toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+      panel.querySelectorAll('[data-a11y]').forEach(function (b) {
+        var act = b.getAttribute('data-a11y'), val = b.getAttribute('data-val'), active = false;
+        if (act === 'font') active = root.classList.contains('a11y-f-' + val);
+        else if (act === 'scheme') active = root.classList.contains('a11y-c-' + val);
+        else if (act === 'space') active = (val === 'wide') === root.classList.contains('a11y-s');
+        else if (act === 'img') active = (val === 'off') === root.classList.contains('a11y-noimg');
+        b.classList.toggle('on', active && on);
+      });
+    }
+    function focusable() {
+      return [].slice.call(panel.querySelectorAll('button:not([disabled])'));
+    }
+    function openPanel(open) {
+      if (open) {
+        panel.removeAttribute('hidden');
+        panel.setAttribute('aria-modal', 'true');
+        toggle.setAttribute('aria-expanded', 'true');
+        var f = focusable();
+        if (f.length) f[0].focus();
+      } else {
+        panel.setAttribute('hidden', '');
+        panel.removeAttribute('aria-modal');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    toggle.addEventListener('click', function () { openPanel(panel.hasAttribute('hidden')); });
+
+    // Удержание фокуса внутри открытого диалога (Tab по кругу)
+    panel.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var f = focusable();
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    panel.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-a11y]');
+      if (!b) return;
+      var act = b.getAttribute('data-a11y'), val = b.getAttribute('data-val');
+      if (act === 'off') {
+        [].slice.call(root.classList).forEach(function (c) { if (c.indexOf('a11y') === 0) root.classList.remove(c); });
+        save(); sync(); return;
+      }
+      ensureDefaults();
+      if (act === 'font') setGroup('a11y-f-', 'a11y-f-' + val);
+      else if (act === 'scheme') setGroup('a11y-c-', 'a11y-c-' + val);
+      else if (act === 'space') root.classList.toggle('a11y-s', val === 'wide');
+      else if (act === 'img') root.classList.toggle('a11y-noimg', val === 'off');
+      save(); sync();
+    });
+
+    // Закрытие по Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hasAttribute('hidden')) { openPanel(false); toggle.focus(); }
+    });
+
+    sync();
+  })();
+</script>
