@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://labazan.ru/sitemap-index.xml

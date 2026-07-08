@@ -1,0 +1,64 @@
+---
+// Форма заявки. Отправляет данные в PHP-обработчик /api/lead.php на хостинге,
+// который пересылает заявку в Telegram. Секреты — в lead-config.php на сервере (РФ).
+const { compact = false } = Astro.props;
+---
+<form class="contact-form" action="/api/lead.php" method="post" data-action="/api/lead.php">
+  <label for={compact ? 'name-c' : 'name'}>Как вас зовут</label>
+  <input id={compact ? 'name-c' : 'name'} name="name" required placeholder="Имя" autocomplete="name" />
+  <label for={compact ? 'contact-c' : 'contact-field'}>Телефон или почта</label>
+  <input id={compact ? 'contact-c' : 'contact-field'} name="contact" required placeholder="Куда прислать смету" autocomplete="on" inputmode="text" />
+  <label for={compact ? 'task-c' : 'task'}>Задача</label>
+  <textarea id={compact ? 'task-c' : 'task'} name="task" placeholder="Например: нужен сайт и реклама для салона"></textarea>
+  <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
+  <label class="consent-check" for={compact ? 'consent-c' : 'consent'}>
+    <input type="checkbox" id={compact ? 'consent-c' : 'consent'} name="consent" required value="1" />
+    <span>Я согласен на обработку персональных данных согласно <a href="/privacy">политике обработки персональных данных</a> в соответствии с 152-ФЗ.</span>
+  </label>
+  <button type="submit" class="btn btn-primary">Получить смету <span class="arrow">→</span></button>
+  <p class="form-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<script is:inline>
+  // Inline — чтобы форма работала независимо от папки _astro. Защита от двойной инициализации.
+  (function () {
+    if (window.__leadFormInit) return;
+    window.__leadFormInit = true;
+    document.querySelectorAll('.contact-form').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var status = form.querySelector('.form-status');
+        var btn = form.querySelector('button[type=submit]');
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        var action = form.dataset.action || '/api/lead.php';
+        var show = function (msg, ok) {
+          if (!status) return;
+          status.hidden = false;
+          status.textContent = msg;
+          status.style.color = ok === false ? 'var(--accent)' : 'var(--ok)';
+        };
+        if (btn) btn.disabled = true;
+        fetch(action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
+          .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (data) { return { status: res.status, data: data }; });
+          })
+          .then(function (r) {
+            // Успех — только если сервер явно вернул {ok:true}, а не просто HTTP 2xx.
+            if (r.data && r.data.ok === true) { show('Заявка отправлена. Вернёмся со сметой в течение дня.'); form.reset(); }
+            else if (r.status === 503) { show('Форма ещё настраивается. Напишите нам на почту, пожалуйста.', false); }
+            else if (r.status === 429) { show('Слишком много попыток. Подождите минуту и попробуйте снова.', false); }
+            else { show('Не удалось отправить. Напишите нам на почту, пожалуйста.', false); }
+          })
+          .catch(function () { show('Нет связи с сервером. Напишите нам на почту, пожалуйста.', false); })
+          .finally(function () { if (btn) btn.disabled = false; });
+      });
+    });
+  })();
+</script>
+
+<style>
+  .form-status{margin-top:6px;font-size:14px;color:var(--ok)}
+  .consent-check{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.45;color:var(--muted);cursor:pointer}
+  .consent-check input{margin-top:2px;flex:0 0 auto;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+  .consent-check a{color:var(--accent);text-decoration:underline}
+</style>

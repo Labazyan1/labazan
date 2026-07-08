@@ -1,0 +1,101 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { services } from '../../data/services';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props;
+const others = services.filter((s) => s.slug !== service.slug);
+
+// FAQ-разметка помогает попадать в ответы поисковиков и нейросетей (GEO/AEO).
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: service.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<Base title={service.metaTitle} description={service.metaDescription} path={`/uslugi/${service.slug}`}>
+  <section class="page-hero">
+    <div class="hero-grid"></div>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="/">Главная</a> / <a href="/uslugi">Услуги</a> / {service.name}</p>
+      <h1>{service.title}</h1>
+      <p class="lead">{service.lead}</p>
+      <div class="hero-actions" style="margin-top:30px">
+        <a href="#zayavka" class="btn btn-primary">Рассчитать <span class="arrow">→</span></a>
+        <a href="/uslugi" class="btn btn-ghost">Все услуги</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div class="prose">
+        <p style="font-size:19px;color:var(--text)">{service.answer}</p>
+
+        <h2>Что входит</h2>
+        <ul>{service.includes.map((i) => <li>{i}</li>)}</ul>
+
+        <h2>Кому подходит</h2>
+        <p>{service.forWhom}</p>
+
+        <h2>Частые вопросы</h2>
+        <div class="faq" style="border-top:1px solid var(--line);margin-top:8px">
+          {service.faq.map((f) => (
+            <details class="qa">
+              <summary>{f.q}<span class="pm">+</span></summary>
+              <div class="ans">{f.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <aside>
+        <div class="aside-card">
+          <h4>Параметры услуги</h4>
+          <div class="ticket-row" style="padding-left:0;padding-right:0"><span class="k">Срок</span><span class="v">{service.term}</span></div>
+          <div class="ticket-row" style="padding-left:0;padding-right:0"><span class="k">Стоимость</span><span class="v" style="color:var(--accent)">{service.price}</span></div>
+          <div class="ticket-row" style="padding-left:0;padding-right:0;border-bottom:0"><span class="k">Формат</span><span class="v">фикс-смета</span></div>
+          <a href="#zayavka" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px">Обсудить задачу</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="zayavka">
+    <div class="wrap">
+      <div class="cta-wrap reveal">
+        <div>
+          <h2>Нужна эта услуга? Посчитаем смету.</h2>
+          <p>Опишите задачу. Пришлём расчёт, срок и план работ в течение дня. Бесплатно и без обязательств.</p>
+        </div>
+        <ContactForm compact={true} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Ещё услуги</span><h2>Другие направления</h2></div>
+      <div class="spec">
+        {others.map((s) => (
+          <a class="spec-row" href={`/uslugi/${s.slug}`}>
+            <div class="s-name"><span class="no">{s.num}</span>{s.name}</div>
+            <div class="s-desc">{s.short}</div>
+            <div class="s-term">{s.term}</div>
+            <div class="s-price">{s.price}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

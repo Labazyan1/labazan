@@ -1,0 +1,424 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { categories } from '../data/categories';
+
+const marquee = ['Разработка сайтов', 'SEO и GEO/AEO', 'AI-чат-боты', 'AI-автоматизация', 'Яндекс Директ', 'SMM и соцсети', 'Видео и Reels', 'Маркетплейсы', 'Дизайн каталогов'];
+
+// Прогрессивное раскрытие: в главном поле зрения — сильнейшие направления и услуги,
+// остальное клиент раскрывает сам (details ниже и полный список на /uslugi).
+const TOP_ITEMS = 4;                       // сколько услуг показываем в карточке
+const featuredDirs = categories.slice(0, 4); // сильнейшие направления в главном экране
+const moreDirs = categories.slice(4);        // остальные — под раскрытие
+
+const faqs = [
+  { q: 'Сайт может сам отвечать клиентам и принимать заявки ночью?', a: 'Да. Ставим на сайт чат-бота, который консультирует, отвечает на частые вопросы и собирает контакты круглосуточно. Утром вы видите заявки, которые иначе ушли бы к тем, кто ответил быстрее. Он же подхватывает сообщения из Telegram и мессенджеров.', cta: { text: 'Обсудить бота под мою задачу', href: '/uslugi/ai-avtomatizaciya' } },
+  { q: 'Меня реально найти через Алису и ChatGPT, а не только в Яндексе?', a: 'Да, и пока об этом мало кто думает. Люди всё чаще спрашивают не поисковик, а нейросети: Алису, ChatGPT, Perplexity. Мы готовим сайт так, чтобы он попадал в их ответы, и вас советуют там, где конкурентов ещё нет.', cta: { text: 'Продвижение в нейросетях', href: '/uslugi/geo-aeo' } },
+  { q: 'Можно понять, на каком шаге люди уходят и не покупают?', a: 'Да. Подключаем аналитику, которая показывает не «мало продаж вообще», а конкретное место, где человек передумал: не понял цену, не нашёл кнопку, бросил оплату. Это узкое место можно найти и поправить, а не гадать.' },
+  { q: 'Можно связать сайт с 1С, чтобы цены и остатки обновлялись сами?', a: 'Да. Синхронизируем сайт с 1С или CRM: товары, цены, остатки и заказы обновляются автоматически. Вы перестаёте вести две базы вручную и путаться, где актуальные данные.' },
+  { q: 'Можно платить за сайт помесячно, а не всей суммой сразу?', a: 'Да. Берёте сайт и продвижение комплексом и платите помесячно, без крупного чека на старте, а в конце срока сайт остаётся вам. Это не банковская рассрочка, а наша модель.', cta: { text: 'Как работает оплата помесячно', href: '/uslugi/rost-podpiska' } },
+  { q: 'А слабовидящие смогут пользоваться моим сайтом?', a: 'Да. Делаем версию для слабовидящих: крупный шрифт, контрастные схемы, чтение для незрячих. С марта 2026 по Постановлению № 102 одной кнопки уже мало, доступность проверяют на уровне кода, и мы делаем именно так. Проверьте кнопку с глазом внизу этой страницы.', cta: { text: 'Доступность по ГОСТ и № 102', href: '/uslugi/dostupnaya-sreda' } },
+  { q: 'Сколько стоит и как быстро?', a: 'Лендинг — от 24 900 ₽ и запуск за 5–7 дней, корпоративный сайт — за 2–3 недели, магазин дороже по задаче. Точную цену и срок называем после короткого брифа и фиксируем в договоре, дальше они не меняются.' },
+  { q: 'А сайт для тендера или госзаказа можете?', a: 'Да. Если сайт нужен государственной организации или чтобы участвовать в закупке, делаем его точно по списку требований из задания, вплоть до версии для слабовидящих. Тогда работу принимают без придирок. Работаем по договору и безналу, с закрывающими документами.' },
+];
+
+// FAQ-разметка для главной — помогает попадать в ответы поиска и нейросетей (GEO/AEO).
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+// Реальные отзывы клиентов. Заполняем по мере поступления: имя, компания, результат (лучше с цифрой), короткая живая цитата.
+// Пустой массив = секция скрыта. Отзывы НЕ выдумываем — показываем только настоящие.
+const reviews = [
+  // { author: 'Имя Фамилия', company: 'Компания', result: '+40% заявок за 2 месяца', text: 'Короткая цитата клиента своими словами.' },
+];
+---
+<Base path="/">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow reveal">Digital-студия полного цикла</span>
+        <h1 class="reveal">Сайты, трафик и AI-автоматизация <span class="hl">по фикс-смете</span> и точным срокам.</h1>
+        <p class="lead reveal">Разработка, SEO, реклама, AI-автоматизация и поддержка в одном месте. Считаем смету до старта, фиксируем сроки в договоре и показываем каждый этап работы.</p>
+        <div class="hero-actions reveal">
+          <a href="#contact" class="btn btn-primary">Рассчитать мой проект <span class="arrow">→</span></a>
+          <a href="#services" class="btn btn-ghost">Смотреть услуги</a>
+        </div>
+        <div class="hero-trust reveal">
+          <span>Запуск от <b>5 дней</b></span>
+          <span>Смета <b>фиксированная</b></span>
+          <span>Работаем <b>по договору</b></span>
+        </div>
+      </div>
+      <div class="ticket reveal" aria-label="Параметры заказа">
+        <div class="ticket-top">
+          <span class="lbl">Спецификация заказа</span>
+          <span class="id">№ 0001</span>
+        </div>
+        <div class="ticket-row"><span class="k">Срок запуска</span><span class="v">5–14 дней</span></div>
+        <div class="ticket-row"><span class="k">Формат</span><span class="v">фикс-смета</span></div>
+        <div class="ticket-row"><span class="k">Гарантия</span><span class="v">в договоре</span></div>
+        <div class="ticket-row"><span class="k">Поддержка</span><span class="v">от запуска</span></div>
+        <div class="ticket-row"><span class="k">Статус</span><span class="v ok">● свободны</span></div>
+        <div class="ticket-foot">// расчёт сметы и срока — бесплатно, до подписания</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {[...marquee, ...marquee].map((m) => <span>{m}<span></span></span>)}
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Услуги</span>
+        <h2>Направления, а не свалка услуг</h2>
+        <p>Собрали всё по семи направлениям — от разработки и рекламы до видео и маркетплейсов. Выберите нужное или откройте полный список услуг.</p>
+      </div>
+      <div class="dirs">
+        {featuredDirs.map((c) => (
+          <div class="dir reveal">
+            <div class="dir-top"><span class="dir-num">{c.num}</span><h3>{c.label}</h3></div>
+            <p class="dir-blurb">{c.blurb}</p>
+            <ul class="dir-list">
+              {c.items.slice(0, TOP_ITEMS).map((it) => (
+                <li><a href={it.slug ? `/uslugi/${it.slug}` : `/uslugi#${c.slug}`}>{it.label}</a></li>
+              ))}
+            </ul>
+            <a class="dir-all" href={`/uslugi#${c.slug}`}>
+              {c.items.length > TOP_ITEMS ? `Ещё ${c.items.length - TOP_ITEMS} · смотреть все` : 'Смотреть направление'} <span class="arrow">→</span>
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <details class="dirs-more reveal">
+        <summary>Ещё {moreDirs.length} направления<span class="pm">+</span></summary>
+        <div class="dirs" style="margin-top:18px">
+          {moreDirs.map((c) => (
+            <div class="dir">
+              <div class="dir-top"><span class="dir-num">{c.num}</span><h3>{c.label}</h3></div>
+              <p class="dir-blurb">{c.blurb}</p>
+              <ul class="dir-list">
+                {c.items.slice(0, TOP_ITEMS).map((it) => (
+                  <li><a href={it.slug ? `/uslugi/${it.slug}` : `/uslugi#${c.slug}`}>{it.label}</a></li>
+                ))}
+              </ul>
+              <a class="dir-all" href={`/uslugi#${c.slug}`}>
+                {c.items.length > TOP_ITEMS ? `Ещё ${c.items.length - TOP_ITEMS} · смотреть все` : 'Смотреть направление'} <span class="arrow">→</span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </details>
+
+      <div class="dirs-foot reveal">
+        <a href="/uslugi" class="btn btn-ghost">Все услуги списком</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section class="section" id="packages">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Пакеты под ключ</span>
+        <h2>Соберите всё в один контракт</h2>
+        <p>Отдельные услуги работают, но вместе дают результат быстрее. Берите пакет или соберём свой.</p>
+      </div>
+      <div class="pkgs">
+        <div class="pkg reveal">
+          <h3>Старт</h3>
+          <p class="for">Для тех, кому нужен рабочий сайт и первые заявки.</p>
+          <div class="price">от 39 900 ₽</div>
+          <ul>
+            <li>Сайт или лендинг под ключ</li>
+            <li>Базовая SEO-настройка и аналитика</li>
+            <li>Заявки в Telegram или CRM</li>
+            <li>Месяц поддержки в подарок</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Выбрать «Старт»</a>
+        </div>
+        <div class="pkg feat reveal">
+          <span class="tag">Берут чаще</span>
+          <h3>Рост</h3>
+          <p class="for">Для бизнеса, которому нужен поток клиентов, а не просто сайт.</p>
+          <div class="price">от 99 900 ₽ <small>/ старт</small></div>
+          <ul>
+            <li>Всё из пакета «Старт»</li>
+            <li>SEO + GEO/AEO продвижение</li>
+            <li>Яндекс Директ под ключ</li>
+            <li>Ежемесячные отчёты по цифрам</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary">Выбрать «Рост»</a>
+        </div>
+        <div class="pkg reveal">
+          <h3>Маркетинг под ключ</h3>
+          <p class="for">Когда нужны клиенты и присутствие, а не только сайт.</p>
+          <div class="price">по смете</div>
+          <ul>
+            <li>Реклама и трафик (Директ, таргет)</li>
+            <li>SMM и ведение соцсетей</li>
+            <li>Видео и Reels под площадки</li>
+            <li>SEO и контент</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Обсудить маркетинг</a>
+        </div>
+        <div class="pkg reveal">
+          <h3>Полный цикл</h3>
+          <p class="for">Когда нужно закрыть весь digital одним подрядчиком.</p>
+          <div class="price">по смете</div>
+          <ul>
+            <li>Разработка, магазин, приложения</li>
+            <li>Весь маркетинг: SEO, реклама, SMM, видео</li>
+            <li>CRM, 1С, боты и автоматизация</li>
+            <li>Постоянное сопровождение</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Обсудить проект</a>
+          <a href="#subscription" class="pkg-link">Можно с оплатой помесячно →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBSCRIPTION -->
+  <section class="section" id="subscription">
+    <div class="wrap">
+      <div class="subs-panel reveal">
+        <div class="section-head">
+          <span class="eyebrow">Оплата помесячно</span>
+          <h2>Платите, пока система работает на вас</h2>
+          <p>Не нужен крупный чек на старте. Вы берёте не одну услугу, а комплекс, который приносит заявки, и платите за него помесячно. Мы в одной лодке: получаем деньги, пока система работает на вас.</p>
+        </div>
+        <div class="subs">
+          <div class="pkg">
+            <span class="subs-badge">1 платёж в месяц вместо суммы сразу</span>
+            <h3>Рост-подписка</h3>
+            <p class="for">Стартовать без крупного вложения и платить по мере роста.</p>
+            <div class="price">от 25 000 ₽ <small>/ мес</small></div>
+            <p class="subs-vs">Вместо ~150 000 ₽ сразу за сайт и продвижение по отдельности.</p>
+            <ul>
+              <li>Сайт под ключ, в конце срока остаётся вам</li>
+              <li>Базовое SEO и аналитика</li>
+              <li>Хостинг и сопровождение</li>
+              <li>Отчёт по заявкам каждый месяц</li>
+            </ul>
+            <p class="subs-term">Минимальный срок 6 месяцев</p>
+            <a href="#contact" class="btn btn-ghost">Обсудить подписку</a>
+          </div>
+          <div class="pkg feat">
+            <span class="tag">Максимум роста</span>
+            <span class="subs-badge">1 платёж в месяц вместо суммы сразу</span>
+            <h3>Партнёрский</h3>
+            <p class="for">Когда нужен поток клиентов и системная работа над выручкой.</p>
+            <div class="price">от 45 000 ₽ <small>/ мес</small></div>
+            <p class="subs-vs">Вместо ~280 000 ₽ сразу за сайт, рекламу и SMM по отдельности.</p>
+            <ul>
+              <li>Всё из «Рост-подписки»</li>
+              <li>Яндекс Директ под ключ</li>
+              <li>SMM и контент для соцсетей</li>
+              <li>Приоритетная поддержка</li>
+            </ul>
+            <p class="subs-term">Минимальный срок 6 месяцев</p>
+            <a href="#contact" class="btn btn-primary">Обсудить подписку</a>
+          </div>
+        </div>
+        <div class="subs-guarantee">
+          <strong>Без риска для вас.</strong> Не устроит работа в первый месяц — доделаем бесплатно или расстанемся без штрафа. Домен и аккаунты оформлены на вас с первого дня, вы ничем не связаны.
+        </div>
+        <p class="subs-note">Прозрачные KPI и отчёт каждый месяц. Пауза или выход после 6 месяцев. Мы не обещаем конкретных цифр выручки: отвечаем за работающую систему, которую в конце вы забираете себе. <a href="/uslugi/rost-podpiska">Как это работает →</a></p>
+        <p class="subs-hybrid">Хотите разделить риск иначе? Соберём гибрид: меньше фиксированный платёж плюс бонус, когда заявок становится больше. <a href="#contact">Обсудить формат →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section" id="process">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Как мы работаем</span>
+        <h2>Понятный процесс без сюрпризов</h2>
+        <p>Вы всегда знаете, на каком этапе проект, сколько он стоит и когда будет готов.</p>
+      </div>
+      <div class="steps reveal">
+        <div class="step">
+          <span class="no">01</span>
+          <h4>Бриф и смета</h4>
+          <p>Разбираем задачу, считаем фиксированную смету и срок.</p>
+          <span class="free">бесплатно</span>
+        </div>
+        <div class="step">
+          <span class="no">02</span>
+          <h4>Договор</h4>
+          <p>Фиксируем объём, сроки и гарантии на бумаге. Без скрытых доплат.</p>
+        </div>
+        <div class="step">
+          <span class="no">03</span>
+          <h4>Производство</h4>
+          <p>Собираем проект и показываем результат на каждом этапе.</p>
+        </div>
+        <div class="step">
+          <span class="no">04</span>
+          <h4>Запуск и поддержка</h4>
+          <p>Выкатываем, передаём доступы, обучаем и остаёмся на связи.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASES -->
+  <section class="section" id="cases">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Проекты</span>
+        <h2>Демо-проекты и подход</h2>
+        <p>Студия молодая, поэтому показываем не только результат, но и то, как мы думаем и работаем.</p>
+      </div>
+      <div class="cases-note reveal"><b>Честно:</b> большое портфолио ещё набираем. Ниже — концепты по всем направлениям: сайты и магазины, дизайн каталогов, видео, соцсети, интеграции. По ним видно уровень работы; реальные кейсы появятся по мере запуска проектов.</div>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="vis v1"><span class="c-tag">Демо · застройщик</span></div>
+          <div class="c-body">
+            <h4>Сайт для жилого комплекса</h4>
+            <p>Продающий сайт с подбором квартир и заявкой на просмотр.</p>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="vis v2"><span class="c-tag">Демо · магазин</span></div>
+          <div class="c-body">
+            <h4>Интернет-магазин с 1С</h4>
+            <p>Витрина с каталогом, оплатой и синхронизацией товаров и остатков с 1С.</p>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="vis v3"><span class="c-tag">Демо · полиграфия</span></div>
+          <div class="c-body">
+            <h4>Дизайн каталога товаров</h4>
+            <p>Печатный каталог: обложка, развороты и подготовка файлов под типографию.</p>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="vis v4"><span class="c-tag">Демо · видео</span></div>
+          <div class="c-body">
+            <h4>Рекламный ролик и Reels</h4>
+            <p>Вертикальное видео под таргет с монтажом, субтитрами и моушн-графикой.</p>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="vis v5"><span class="c-tag">Демо · соцсети</span></div>
+          <div class="c-body">
+            <h4>Ведение соцсетей студии</h4>
+            <p>Контент-план, оформление профиля и посты, которые приводят заявки.</p>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="vis v6"><span class="c-tag">Метод · SEO</span></div>
+          <div class="c-body">
+            <h4>Разбор: SEO + GEO/AEO</h4>
+            <p>Как мы выводим сайт в поиск Яндекса и в ответы нейросетей.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Почему нам</span>
+        <h2>Доверие без длинного портфолио</h2>
+        <p>Мы убираем главный риск работы с подрядчиком: непредсказуемость по деньгам, срокам и результату.</p>
+      </div>
+      <div class="trust">
+        <div class="tcard reveal"><div class="ic">01</div><h4>Смета заранее</h4><p>Цену и срок называем до старта и фиксируем в договоре. Без «всплывших» доплат.</p></div>
+        <div class="tcard reveal"><div class="ic">02</div><h4>Видно процесс</h4><p>Показываем работу на каждом этапе. Вы согласуете результат, а не получаете кота в мешке.</p></div>
+        <div class="tcard reveal"><div class="ic">03</div><h4>Быстрые сайты</h4><p>Делаем на современных технологиях: загрузка до 2,5 секунд, готовность к SEO с первого дня.</p></div>
+        <div class="tcard reveal"><div class="ic">04</div><h4>Один подрядчик</h4><p>Сайт, продвижение, реклама и поддержка в одних руках. Не нужно собирать команду из пяти фрилансеров.</p></div>
+      </div>
+      <p class="trust-who reveal">С вами работает тот, кто делает проект, а не менеджер-прокладка. Правки обсуждаем в одном чате, а доступы, домен и код всегда остаются у вас.</p>
+    </div>
+  </section>
+
+  {reviews.length > 0 && (
+  <!-- REVIEWS -->
+  <section class="section" id="reviews">
+    <div class="wrap">
+      <div class="section-head reveal" style="text-align:center;margin:0 auto 44px">
+        <span class="eyebrow" style="justify-content:center">Отзывы</span>
+        <h2>Что говорят клиенты</h2>
+      </div>
+      <div class="reviews">
+        {reviews.map((r) => (
+          <figure class="review reveal">
+            {r.result && <div class="r-result">{r.result}</div>}
+            <blockquote>«{r.text}»</blockquote>
+            <figcaption>{r.author}{r.company ? `, ${r.company}` : ''}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin:0 auto 52px;text-align:center">
+        <span class="eyebrow" style="justify-content:center">Вопросы</span>
+        <h2>Отвечаем заранее</h2>
+      </div>
+      <div class="faq reveal">
+        {faqs.map((f) => (
+          <details class="qa">
+            <summary>{f.q}<span class="pm">+</span></summary>
+            <div class="ans">{f.a}{f.cta && (<a class="qa-cta" href={f.cta.href}>{f.cta.text} →</a>)}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact" style="border-top:0">
+    <div class="wrap">
+      <div class="pre-cta-faq reveal">
+        {faqs.slice(0, 3).map((f) => (
+          <details class="qa">
+            <summary>{f.q}<span class="pm">+</span></summary>
+            <div class="ans">{f.a}</div>
+          </details>
+        ))}
+      </div>
+      <div class="cta-wrap reveal">
+        <div>
+          <h2>Расскажите про задачу. Вернёмся со сметой.</h2>
+          <p>Опишите проект в двух словах. В ответ пришлём расчёт сметы, срок и план работ. Это бесплатно и ни к чему не обязывает.</p>
+          <div class="ticket">
+            <div class="ticket-top"><span class="lbl">Что вы получите</span><span class="id">→</span></div>
+            <div class="ticket-row"><span class="k">Ответ</span><span class="v">в течение дня</span></div>
+            <div class="ticket-row"><span class="k">Смета и срок</span><span class="v ok">бесплатно</span></div>
+            <div class="ticket-row"><span class="k">Обязательства</span><span class="v">никаких</span></div>
+          </div>
+        </div>
+        <ContactForm />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

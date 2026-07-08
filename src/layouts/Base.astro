@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import A11y from '../components/A11y.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Путь страницы для canonical, например "/uslugi/seo-prodvizhenie" */
+  path?: string;
+  /** Абсолютный или относительный путь картинки для OG/Twitter. По умолчанию общий баннер. */
+  image?: string;
+}
+
+const {
+  title = `${site.name} — ${site.tagline}`,
+  description = site.description,
+  path = '',
+  image = '/og.png',
+} = Astro.props;
+
+const ogImage = new URL(image, site.url).href;
+
+// Astro собирает страницы в формате каталога (/path/), sitemap тоже со слэшем.
+// Нормализуем canonical к тому же виду, чтобы не расходился с sitemap.
+const canonicalPath = path === '' || path === '/' ? '/' : `/${path.replace(/^\/+|\/+$/g, '')}/`;
+const canonical = new URL(canonicalPath, site.url).href;
+
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+  email: site.email,
+  description: site.description,
+  areaServed: 'RU',
+};
+---
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script is:inline>
+    // Восстанавливаем версию для слабовидящих до отрисовки — чтобы не мигало.
+    try { var a = localStorage.getItem('a11yClasses'); if (a) document.documentElement.className += ' ' + a; } catch (e) {}
+  </script>
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="theme-color" content="#0D1014" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json" set:html={JSON.stringify(org)} is:inline />
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+  <Header />
+  <main id="main-content">
+    <slot />
+  </main>
+  <Footer />
+  <A11y />
+  <CookieBanner />
+  <script is:inline>
+    // Плавное появление блоков при скролле. Inline — чтобы не зависеть от папки _astro.
+    (function () {
+      var els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('in'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(function (el, i) {
+        el.style.transitionDelay = (Math.min(i % 5, 4) * 60) + 'ms';
+        io.observe(el);
+      });
+    })();
+  </script>
+</body>
+</html>

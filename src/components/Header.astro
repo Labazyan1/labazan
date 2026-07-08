@@ -1,0 +1,130 @@
+---
+import { site, nav } from '../data/site';
+import { categories } from '../data/categories';
+
+// «Услуги» рендерим отдельным мега-меню, остальные пункты — обычными ссылками.
+const restNav = nav.filter((item) => item.label !== 'Услуги');
+---
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="/" class="logo" aria-label={site.name}><span class="br">[</span>{site.name}<span class="br">]</span></a>
+    <nav class="nav-links" aria-label="Основная навигация">
+      <div class="nav-mega">
+        <a href="/uslugi" class="nav-mega-trigger">Услуги</a>
+        <button class="mega-caret" type="button" aria-expanded="false" aria-controls="mega-uslugi" aria-label="Показать направления услуг"><span class="caret" aria-hidden="true">▾</span></button>
+        <div class="mega" id="mega-uslugi" aria-label="Направления услуг">
+          <div class="mega-inner">
+            {categories.map((c) => (
+              <div class="mega-col">
+                <a class="mega-head" href={`/uslugi#${c.slug}`}>
+                  <span class="mega-num">{c.num}</span>{c.label}
+                </a>
+                <ul>
+                  {c.items.slice(0, 5).map((it) => (
+                    <li>
+                      <a href={it.slug ? `/uslugi/${it.slug}` : `/uslugi#${c.slug}`}>{it.label}</a>
+                    </li>
+                  ))}
+                  {c.items.length > 5 && (
+                    <li class="mega-more"><a href={`/uslugi#${c.slug}`}>+ ещё {c.items.length - 5} →</a></li>
+                  )}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {restNav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <div class="nav-cta">
+      <span class="nav-status"><span class="dot"></span>Принимаем заказы</span>
+      <a href="/#contact" class="btn btn-primary">Рассчитать проект</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню">
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+    </button>
+  </div>
+  <nav id="mobile-nav" class="nav-mobile" aria-label="Мобильная навигация" hidden>
+    <a href="/uslugi">Услуги</a>
+    {restNav.map((item) => <a href={item.href}>{item.label}</a>)}
+    <a href="/#contact" class="btn btn-primary nav-mobile-cta">Рассчитать проект</a>
+  </nav>
+</header>
+
+<script is:inline>
+  // ===== Мега-меню «Услуги»: hover-intent + удержание (pin) =====
+  (function () {
+    var mega = document.querySelector('.nav-mega');
+    var caret = mega && mega.querySelector('.mega-caret');
+    if (!mega || !caret) return;
+
+    // Флаг: JS активен → CSS-hover отключается, показом рулит этот скрипт.
+    document.documentElement.classList.add('mega-js');
+
+    var closeTimer = null;
+    var CLOSE_DELAY = 260; // мс «форы», чтобы успеть довести мышь до панели
+
+    function open() {
+      clearTimeout(closeTimer);
+      mega.classList.add('is-open');
+      caret.setAttribute('aria-expanded', 'true');
+    }
+    function close() {
+      clearTimeout(closeTimer);
+      mega.classList.remove('is-open', 'is-pinned');
+      caret.setAttribute('aria-expanded', 'false');
+    }
+    function scheduleClose() {
+      if (mega.classList.contains('is-pinned')) return; // закреплено — не закрываем
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(close, CLOSE_DELAY);
+    }
+
+    // Наведение мышью (.mega — DOM-потомок .nav-mega, событие ловится несмотря на full-width)
+    mega.addEventListener('mouseenter', open);
+    mega.addEventListener('mouseleave', scheduleClose);
+
+    // Клик по стрелке — закрепить/открепить (текст «Услуги» остаётся ссылкой)
+    caret.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (mega.classList.contains('is-pinned')) {
+        close();
+      } else {
+        open();
+        mega.classList.add('is-pinned');
+      }
+    });
+
+    // Клавиатура: открытие по фокусу внутри, закрытие при уходе фокуса
+    mega.addEventListener('focusin', open);
+    mega.addEventListener('focusout', function (e) {
+      if (!mega.contains(e.relatedTarget)) scheduleClose();
+    });
+
+    // Esc — снять закрепление, закрыть, вернуть фокус на стрелку
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && mega.classList.contains('is-open')) { close(); caret.focus(); }
+    });
+    // Клик вне меню — закрыть
+    document.addEventListener('click', function (e) {
+      if (mega.classList.contains('is-open') && !mega.contains(e.target)) close();
+    });
+  })();
+
+  (function () {
+    var toggle = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('mobile-nav');
+    if (!toggle || !menu) return;
+    function open(state) {
+      if (state) { menu.removeAttribute('hidden'); toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Закрыть меню'); toggle.classList.add('is-open'); }
+      else { menu.setAttribute('hidden', ''); toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Открыть меню'); toggle.classList.remove('is-open'); }
+    }
+    toggle.addEventListener('click', function () { open(menu.hasAttribute('hidden')); });
+    // Закрытие по клику на пункт, по Esc и по клику вне меню
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) open(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hasAttribute('hidden')) { open(false); toggle.focus(); } });
+    document.addEventListener('click', function (e) { if (!menu.hasAttribute('hidden') && !menu.contains(e.target) && !toggle.contains(e.target)) open(false); });
+  })();
+</script>
