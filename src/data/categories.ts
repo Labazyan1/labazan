@@ -37,6 +37,7 @@ export const categories: Category[] = [
       { label: 'Подключение и настройка 1С', slug: 'integraciya-1c', note: 'Товары, остатки, цены и заказы синхронно с сайтом.' },
       { label: 'AI-чат-боты', slug: 'ai-chat-boty', note: 'Боты для Instagram Direct, Telegram и WhatsApp, интеграция с CRM.' },
       { label: 'AI-автоматизация процессов', slug: 'ai-avtomatizaciya', note: 'Разбор заявок, интеграции, авто-отчёты, разгрузка рутины.' },
+      { label: 'Аналитика данных', slug: 'analitika-dannyh', note: 'Тренды, прогнозы и отчёты по вашим данным для решений.' },
       { label: 'Версия для слабовидящих и сайты по 44-ФЗ', slug: 'dostupnaya-sreda', note: 'Доступная среда по ГОСТ и WCAG — под госзакупки и требования закона.' },
       { label: 'Аудит сайта', slug: 'audit-sajta', note: 'Техника, скорость, юзабилити и SEO с планом правок.' },
       { label: 'Поддержка и сопровождение', slug: 'soprovozhdenie', note: 'Доработки, обновления, бэкапы и безопасность.' },

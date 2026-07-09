@@ -1,18 +1,127 @@
 ---
-// Форма заявки. Отправляет данные в PHP-обработчик /api/lead.php на хостинге,
-// который пересылает заявку в Telegram. Секреты — в lead-config.php на сервере (РФ).
+// Форма заявки. Отправляет данные в PHP-обработчик /api/lead.php на хостинге.
+// Основной приёмник (152-ФЗ) — РФ-почта домена через MTA Beget (ПД не покидают РФ);
+// Telegram + n8n→CRM подключаются после снятия паузы РКН (~24.07.2026). Секреты — в
+// lead-config.php на сервере (РФ). Переключатель цели показывает релевантные поля.
 const { compact = false } = Astro.props;
+const s = compact ? '-c' : '';
 ---
 <form class="contact-form" action="/api/lead.php" method="post" data-action="/api/lead.php">
-  <label for={compact ? 'name-c' : 'name'}>Как вас зовут</label>
-  <input id={compact ? 'name-c' : 'name'} name="name" required placeholder="Имя" autocomplete="name" />
-  <label for={compact ? 'contact-c' : 'contact-field'}>Телефон или почта</label>
-  <input id={compact ? 'contact-c' : 'contact-field'} name="contact" required placeholder="Куда прислать смету" autocomplete="on" inputmode="text" />
-  <label for={compact ? 'task-c' : 'task'}>Задача</label>
-  <textarea id={compact ? 'task-c' : 'task'} name="task" placeholder="Например: нужен сайт и реклама для салона"></textarea>
+  <fieldset class="goal-switch">
+    <legend>Что вам нужно?</legend>
+    <div class="goal-opts" role="radiogroup" aria-label="Что вам нужно">
+      <label class="goal-pill"><input type="radio" name="goal" value="Сайт" checked /><span>Мне нужен сайт</span></label>
+      <label class="goal-pill"><input type="radio" name="goal" value="Реклама" /><span>Реклама</span></label>
+      <label class="goal-pill"><input type="radio" name="goal" value="Автоматизация" /><span>Автоматизация</span></label>
+      <label class="goal-pill"><input type="radio" name="goal" value="Всё в комплексе" /><span>Всё в комплексе</span></label>
+      <label class="goal-pill"><input type="radio" name="goal" value="Свой вариант" /><span>Свой вариант</span></label>
+    </div>
+  </fieldset>
+
+  <label for={`name${s}`}>Как вас зовут</label>
+  <input id={`name${s}`} name="name" required placeholder="Имя" autocomplete="name" />
+
+  <label for={`contact${s}`}>Телефон или почта</label>
+  <input id={`contact${s}`} name="contact" required placeholder="Куда прислать смету" autocomplete="on" inputmode="text" />
+
+  <!-- Цель: Сайт -->
+  <div class="goal-fields" data-goal="Сайт">
+    <label class="gf">Тип сайта
+      <select name="site_type">
+        <option>Лендинг</option>
+        <option>Корпоративный сайт</option>
+        <option>Интернет-магазин</option>
+        <option>Веб-приложение</option>
+        <option>Пока не знаю</option>
+      </select>
+    </label>
+    <label class="gf">Текущий сайт (если есть)
+      <input name="site_url" placeholder="ссылка или «нет»" inputmode="url" />
+    </label>
+    <label class="gf">Детали
+      <textarea name="site_details" placeholder="Коротко о задаче"></textarea>
+    </label>
+  </div>
+
+  <!-- Цель: Реклама -->
+  <div class="goal-fields" data-goal="Реклама">
+    <label class="gf">Канал
+      <select name="ads_channel">
+        <option>Яндекс Директ</option>
+        <option>Таргет VK</option>
+        <option>Программатик</option>
+        <option>Посоветуйте</option>
+      </select>
+    </label>
+    <label class="gf">Посадочная страница
+      <select name="ads_landing">
+        <option>Сайт уже есть</option>
+        <option>Нужен и лендинг</option>
+      </select>
+    </label>
+    <label class="gf">Детали
+      <textarea name="ads_details" placeholder="Что рекламируем, ориентир по бюджету"></textarea>
+    </label>
+  </div>
+
+  <!-- Цель: Автоматизация -->
+  <div class="goal-fields" data-goal="Автоматизация">
+    <label class="gf">Что автоматизировать
+      <select name="auto_what">
+        <option>Чат-бот для клиентов</option>
+        <option>Приём и разбор заявок</option>
+        <option>Интеграции CRM и 1С</option>
+        <option>Другое</option>
+      </select>
+    </label>
+    <label class="gf">CRM уже есть?
+      <select name="auto_crm">
+        <option>Да</option>
+        <option>Нет</option>
+        <option>Не знаю</option>
+      </select>
+    </label>
+    <label class="gf">Детали
+      <textarea name="auto_details" placeholder="Какой процесс отнимает время"></textarea>
+    </label>
+  </div>
+
+  <!-- Цель: Всё в комплексе -->
+  <div class="goal-fields" data-goal="Всё в комплексе">
+    <span class="gf-label">Что интересует</span>
+    <div class="goal-checks">
+      <label><input type="checkbox" name="complex" value="Сайт" /><span>Сайт</span></label>
+      <label><input type="checkbox" name="complex" value="Реклама" /><span>Реклама</span></label>
+      <label><input type="checkbox" name="complex" value="SEO" /><span>SEO</span></label>
+      <label><input type="checkbox" name="complex" value="SMM" /><span>SMM</span></label>
+      <label><input type="checkbox" name="complex" value="Автоматизация" /><span>Автоматизация</span></label>
+      <label><input type="checkbox" name="complex" value="Дизайн" /><span>Дизайн</span></label>
+    </div>
+    <label class="gf">О бизнесе и цели
+      <textarea name="complex_about" placeholder="Пара слов о бизнесе и что хотите получить"></textarea>
+    </label>
+  </div>
+
+  <!-- Цель: Свой вариант -->
+  <div class="goal-fields" data-goal="Свой вариант">
+    <label class="gf">Задача
+      <textarea name="task" placeholder="Опишите задачу своими словами"></textarea>
+    </label>
+  </div>
+
   <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
-  <label class="consent-check" for={compact ? 'consent-c' : 'consent'}>
-    <input type="checkbox" id={compact ? 'consent-c' : 'consent'} name="consent" required value="1" />
+  {/*
+    АКТИВИРОВАТЬ вместе с включением Telegram/Instagram-каналов (после ~24.07.2026,
+    когда РКН завершит рассмотрение уведомления о трансграничной передаче).
+    Тогда основание «согласие субъекта» должно явно покрывать трансграничную передачу —
+    заменить <span> ниже на этот текст:
+
+    Я согласен на обработку персональных данных, включая их трансграничную передачу
+    в мессенджеры и социальные сети (Telegram — ОАЭ, Instagram/Meta — США), согласно
+    <a href="/privacy">политике обработки персональных данных</a> в соответствии с 152-ФЗ.
+  */}
+  <label class="consent-check" for={`consent${s}`}>
+    <input type="checkbox" id={`consent${s}`} name="consent" required value="1" />
     <span>Я согласен на обработку персональных данных согласно <a href="/privacy">политике обработки персональных данных</a> в соответствии с 152-ФЗ.</span>
   </label>
   <button type="submit" class="btn btn-primary">Получить смету <span class="arrow">→</span></button>
@@ -24,7 +133,25 @@ const { compact = false } = Astro.props;
   (function () {
     if (window.__leadFormInit) return;
     window.__leadFormInit = true;
+
+    // Скрытые группы полей отключаем, чтобы они не попадали в payload.
+    // Показ/скрытие делает CSS :has() — работает и без JS; тут только чистим отправку.
+    function syncGoal(form) {
+      var goal = (form.querySelector('input[name="goal"]:checked') || {}).value;
+      form.querySelectorAll('.goal-fields').forEach(function (grp) {
+        var active = grp.getAttribute('data-goal') === goal;
+        grp.querySelectorAll('input, select, textarea').forEach(function (el) {
+          el.disabled = !active;
+        });
+      });
+    }
+
     document.querySelectorAll('.contact-form').forEach(function (form) {
+      syncGoal(form);
+      form.querySelectorAll('input[name="goal"]').forEach(function (r) {
+        r.addEventListener('change', function () { syncGoal(form); });
+      });
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var status = form.querySelector('.form-status');
@@ -44,7 +171,7 @@ const { compact = false } = Astro.props;
           })
           .then(function (r) {
             // Успех — только если сервер явно вернул {ok:true}, а не просто HTTP 2xx.
-            if (r.data && r.data.ok === true) { show('Заявка отправлена. Вернёмся со сметой в течение дня.'); form.reset(); }
+            if (r.data && r.data.ok === true) { show('Заявка отправлена. Вернёмся со сметой в течение дня.'); form.reset(); syncGoal(form); }
             else if (r.status === 503) { show('Форма ещё настраивается. Напишите нам на почту, пожалуйста.', false); }
             else if (r.status === 429) { show('Слишком много попыток. Подождите минуту и попробуйте снова.', false); }
             else { show('Не удалось отправить. Напишите нам на почту, пожалуйста.', false); }
@@ -57,8 +184,34 @@ const { compact = false } = Astro.props;
 </script>
 
 <style>
+  .goal-switch{border:0;padding:0;margin:0 0 4px}
+  .goal-switch legend{padding:0;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .goal-opts{display:flex;flex-wrap:wrap;gap:8px}
+  .goal-pill{position:relative;cursor:pointer}
+  .goal-pill input{position:absolute;opacity:0;width:0;height:0}
+  .goal-pill span{display:inline-block;padding:8px 13px;border:1px solid color-mix(in srgb, currentColor 18%, transparent);border-radius:999px;font-size:14px;line-height:1;color:var(--muted);transition:border-color .15s, color .15s, background .15s}
+  .goal-pill input:checked + span{border-color:var(--accent);color:var(--fg, currentColor);background:color-mix(in srgb, var(--accent) 12%, transparent)}
+  .goal-pill input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+
+  .goal-fields{display:none;grid-template-columns:1fr;gap:12px;margin-top:2px}
+  .contact-form:has(input[name="goal"][value="Сайт"]:checked) .goal-fields[data-goal="Сайт"],
+  .contact-form:has(input[name="goal"][value="Реклама"]:checked) .goal-fields[data-goal="Реклама"],
+  .contact-form:has(input[name="goal"][value="Автоматизация"]:checked) .goal-fields[data-goal="Автоматизация"],
+  .contact-form:has(input[name="goal"][value="Всё в комплексе"]:checked) .goal-fields[data-goal="Всё в комплексе"],
+  .contact-form:has(input[name="goal"][value="Свой вариант"]:checked) .goal-fields[data-goal="Свой вариант"]{display:grid}
+
+  .gf{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+  .gf select,.gf input,.gf textarea{font:inherit}
+  .gf-label{font-size:13px;color:var(--muted)}
+  .goal-checks{display:flex;flex-wrap:wrap;gap:8px}
+  .goal-checks label{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border:1px solid color-mix(in srgb, currentColor 18%, transparent);border-radius:10px;font-size:14px;color:var(--muted);cursor:pointer}
+  .goal-checks input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+  .goal-checks label:has(input:checked){border-color:var(--accent);color:var(--fg, currentColor)}
+
   .form-status{margin-top:6px;font-size:14px;color:var(--ok)}
   .consent-check{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.45;color:var(--muted);cursor:pointer}
   .consent-check input{margin-top:2px;flex:0 0 auto;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
   .consent-check a{color:var(--accent);text-decoration:underline}
+
+  @media (prefers-reduced-motion: reduce){ .goal-pill span{transition:none} }
 </style>

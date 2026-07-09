@@ -6,6 +6,10 @@
 header('X-Content-Type-Options: nosniff');
 
 // Секреты лежат в отдельном файле lead-config.php (его создаёшь на сервере).
+// ОСНОВНОЙ приёмник (152-ФЗ): российская почта на домене (сервер Beget в РФ).
+// ПД не покидают РФ → трансграничной передачи нет. Заполняется в lead-config.php.
+$LEAD_EMAIL = '';        // куда слать заявки, напр. lead@labazan.ru (ящик Beget/РФ)
+$LEAD_EMAIL_FROM = '';   // адрес отправителя на домене, напр. noreply@labazan.ru
 $BOT_TOKEN = '';
 $CHAT_ID = '';
 // Единый приёмник лидов (n8n). Пусто = дублирование в CRM выключено, форма работает как раньше.
@@ -175,15 +179,85 @@ if ($consent !== '1' && strcasecmp((string) $consent, 'on') !== 0) {
     out(['ok' => false, 'error' => 'consent'], 422);
 }
 
-// Аддитивно дублируем валидный лид в единый приёмник n8n (fire-and-forget).
-// Всё в стороне от Telegram-логики: результат и ошибки игнорируются, ответ клиенту не меняется.
+// Переключатель цели заявки: собираем аккуратный структурированный текст.
+// Читаем только поля, относящиеся к выбранной цели, — устойчиво и без JS.
+$allowed_goals = ['Сайт', 'Реклама', 'Автоматизация', 'Всё в комплексе', 'Свой вариант'];
+$goal = clean($_POST['goal'] ?? '', 40);
+if (!in_array($goal, $allowed_goals, true)) {
+    $goal = 'Заявка';
+}
+
+$parts = [];
+if ($goal === 'Сайт') {
+    $v = clean($_POST['site_type'] ?? '', 60);      if ($v !== '') $parts[] = 'Тип сайта: ' . $v;
+    $v = clean($_POST['site_url'] ?? '', 200);      if ($v !== '') $parts[] = 'Текущий сайт: ' . $v;
+    $v = clean($_POST['site_details'] ?? '', 1500); if ($v !== '') $parts[] = $v;
+} elseif ($goal === 'Реклама') {
+    $v = clean($_POST['ads_channel'] ?? '', 60);    if ($v !== '') $parts[] = 'Канал: ' . $v;
+    $v = clean($_POST['ads_landing'] ?? '', 60);    if ($v !== '') $parts[] = 'Посадочная: ' . $v;
+    $v = clean($_POST['ads_details'] ?? '', 1500);  if ($v !== '') $parts[] = $v;
+} elseif ($goal === 'Автоматизация') {
+    $v = clean($_POST['auto_what'] ?? '', 60);      if ($v !== '') $parts[] = 'Автоматизировать: ' . $v;
+    $v = clean($_POST['auto_crm'] ?? '', 40);       if ($v !== '') $parts[] = 'CRM: ' . $v;
+    $v = clean($_POST['auto_details'] ?? '', 1500); if ($v !== '') $parts[] = $v;
+} elseif ($goal === 'Всё в комплексе') {
+    $items = $_POST['complex'] ?? [];
+    if (is_array($items)) {
+        $clean_items = [];
+        foreach (array_slice($items, 0, 10) as $it) {
+            $it = clean($it, 40);
+            if ($it !== '') $clean_items[] = $it;
+        }
+        if ($clean_items) $parts[] = 'Направления: ' . implode(', ', $clean_items);
+    }
+    $v = clean($_POST['complex_about'] ?? '', 1500); if ($v !== '') $parts[] = $v;
+} else {
+    if ($task !== '') $parts[] = $task;
+}
+$details = implode("\n", $parts);
+if ($details === '') {
+    $details = $task; // фолбэк: свободная задача, если структурные поля пусты
+}
+
+// ОСНОВНОЙ канал (152-ФЗ): российская почта через сервер Beget (в РФ).
+// mail() уходит на локальный MTA хостинга — ПД не покидают РФ, трансграничной
+// передачи нет. Тема/адреса статичны или из allowlist; пользовательский ввод идёт
+// только в тело письма (заголовки не строятся из $_POST → нет header-инъекции).
+$mail_ok = false;
+if ($LEAD_EMAIL !== '' && filter_var($LEAD_EMAIL, FILTER_VALIDATE_EMAIL)) {
+    $subject = 'Заявка с labazan.ru: ' . $goal; // $goal — из allowlist, безопасно
+    $body = "Новая заявка с сайта labazan.ru\n\n"
+          . "Цель: {$goal}\n"
+          . "Имя: {$name}\n"
+          . "Контакт: {$contact}\n"
+          . ($details !== '' ? "\n{$details}\n" : '')
+          . "\nСогласие на обработку ПД: да\n"
+          . 'Время: ' . date('Y-m-d H:i:s');
+    $from = ($LEAD_EMAIL_FROM !== '' && filter_var($LEAD_EMAIL_FROM, FILTER_VALIDATE_EMAIL))
+        ? $LEAD_EMAIL_FROM : $LEAD_EMAIL;
+    $headers = "From: " . $from . "\r\n"
+             . "Content-Type: text/plain; charset=UTF-8\r\n"
+             . "Content-Transfer-Encoding: 8bit\r\n"
+             . "X-Mailer: labazan-lead";
+    $enc_subject = function_exists('mb_encode_mimeheader')
+        ? mb_encode_mimeheader($subject, 'UTF-8', 'B') : $subject;
+    $mail_ok = @mail($LEAD_EMAIL, $enc_subject, $body, $headers);
+}
+
+// ДОП. канал: единый приёмник n8n (ВМ) → CRM + Telegram-уведомление о заявке.
+// Ждём ответ вебхука (он отвечает сразу, ~0.2с, до записи в CRM), чтобы подтвердить
+// успех клиенту. Прямой Telegram ниже — тихий фолбэк на случай недоступности n8n.
+$n8n_ok = false;
 if ($N8N_WEBHOOK_URL !== '' && function_exists('curl_init')) {
+    // JSON_INVALID_UTF8_SUBSTITUTE: даже если во входных данных проскочит битый UTF-8
+    // (боты, экзотические клиенты), json_encode НЕ вернёт false — иначе тело ушло бы
+    // пустым и лид потерялся бы молча. Нормальная форма (UTF-8) отдаёт валидный JSON.
     $n8n_body = json_encode([
         'name'    => $name,
         'contact' => $contact,
-        'task'    => $task,
-        'source'  => 'site:labazan.ru',
-    ], JSON_UNESCAPED_UNICODE);
+        'task'    => $details,
+        'source'  => 'site:labazan.ru / ' . $goal,
+    ], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
     $n8n_ch = curl_init($N8N_WEBHOOK_URL);
     curl_setopt_array($n8n_ch, [
         CURLOPT_POST             => true,
@@ -193,59 +267,76 @@ if ($N8N_WEBHOOK_URL !== '' && function_exists('curl_init')) {
             'Content-Type: application/json',
             'X-Webhook-Secret: ' . $N8N_WEBHOOK_SECRET,
         ],
-        CURLOPT_CONNECTTIMEOUT_MS => 800,
-        CURLOPT_TIMEOUT_MS        => 1500,
+        CURLOPT_CONNECTTIMEOUT_MS => 1500,
+        CURLOPT_TIMEOUT_MS        => 4000,
     ]);
-    @curl_exec($n8n_ch);
+    $n8n_resp = curl_exec($n8n_ch);
+    $n8n_code = (int) curl_getinfo($n8n_ch, CURLINFO_HTTP_CODE);
     curl_close($n8n_ch);
+    // Успех рельса — HTTP 200 и тело {"ok":true}.
+    if ($n8n_code === 200 && is_string($n8n_resp) && $n8n_resp !== '') {
+        $nj = json_decode($n8n_resp, true);
+        $n8n_ok = is_array($nj) && !empty($nj['ok']);
+    }
 }
 
-if ($BOT_TOKEN === '' || $CHAT_ID === '') {
-    out(['ok' => false, 'error' => 'not_configured'], 503);
-}
+// ФОЛБЭК-канал: прямой Telegram с сайта. Нужен ТОЛЬКО если рельс n8n не сработал —
+// иначе уведомление уже ушло через n8n (ВМ), и повторно слать не нужно. Важно ещё и для
+// скорости: на Beget исходящий на api.telegram.org заблокирован, и лишний вызов впустую
+// висел бы до таймаута на каждой успешной заявке. Успех = сработал ХОТЯ БЫ ОДИН канал.
+$tg_ok = false;
+if (!$n8n_ok && $BOT_TOKEN !== '' && $CHAT_ID !== '') {
+    $text = "🟠 Новая заявка с labazan.ru\n\n"
+          . "🎯 Цель: {$goal}\n"
+          . "Имя: {$name}\n"
+          . "Контакт: {$contact}\n"
+          . ($details !== '' ? "\n{$details}\n" : '')
+          . "\nСогласие на обработку ПД: да";
 
-$text = "🟠 Новая заявка с labazan.ru\n\n"
-      . "Имя: {$name}\n"
-      . "Контакт: {$contact}\n"
-      . "Задача: " . ($task !== '' ? $task : '—') . "\n"
-      . "Согласие на обработку ПД: да";
-
-$payload = http_build_query([
-    'chat_id' => $CHAT_ID,
-    'text' => $text,
-    'disable_web_page_preview' => 'true',
-]);
-
-$url = "https://api.telegram.org/bot{$BOT_TOKEN}/sendMessage";
-$response = false;
-$httpCode = 0;
-
-if (function_exists('curl_init')) {
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_POST => true,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POSTFIELDS => $payload,
-        CURLOPT_TIMEOUT => 15,
+    $payload = http_build_query([
+        'chat_id' => $CHAT_ID,
+        'text' => $text,
+        'disable_web_page_preview' => 'true',
     ]);
-    $response = curl_exec($ch);
-    $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-} else {
-    // Запасной путь, если cURL выключен на хостинге.
-    $ctx = stream_context_create(['http' => [
-        'method' => 'POST',
-        'header' => 'Content-Type: application/x-www-form-urlencoded',
-        'content' => $payload,
-        'timeout' => 15,
-        'ignore_errors' => true,
-    ]]);
-    $response = @file_get_contents($url, false, $ctx);
-    $httpCode = $response !== false ? 200 : 0;
+
+    $url = "https://api.telegram.org/bot{$BOT_TOKEN}/sendMessage";
+    $response = false;
+    $httpCode = 0;
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_TIMEOUT => 10,
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    } else {
+        // Запасной путь, если cURL выключен на хостинге.
+        $ctx = stream_context_create(['http' => [
+            'method' => 'POST',
+            'header' => 'Content-Type: application/x-www-form-urlencoded',
+            'content' => $payload,
+            'timeout' => 10,
+            'ignore_errors' => true,
+        ]]);
+        $response = @file_get_contents($url, false, $ctx);
+        $httpCode = $response !== false ? 200 : 0;
+    }
+    $tg_ok = ($httpCode === 200 && tg_ok($response));
 }
 
-// Успех — только если и HTTP 200, и тело ответа Telegram содержит "ok":true.
-if ($httpCode === 200 && tg_ok($response)) {
+// Успех, если заявка доставлена ХОТЯ БЫ одним каналом (email РФ / n8n / Telegram).
+if ($mail_ok || $n8n_ok || $tg_ok) {
     out(['ok' => true]);
 }
+// Ни один канал не настроен — форма ещё не сконфигурирована.
+if ($LEAD_EMAIL === '' && $N8N_WEBHOOK_URL === '' && ($BOT_TOKEN === '' || $CHAT_ID === '')) {
+    out(['ok' => false, 'error' => 'not_configured'], 503);
+}
+// Каналы настроены, но недоступны — временная ошибка доставки.
 out(['ok' => false, 'error' => 'telegram'], 502);
