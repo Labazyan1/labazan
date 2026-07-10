@@ -15,11 +15,19 @@
     var el = document.getElementById('cookie-banner');
     if (!el) return;
     try { if (localStorage.getItem(KEY) === '1') return; } catch (e) {}
+    var root = document.documentElement;
+    // Высота баннера → CSS-переменная, чтобы a11y-виджет приподнялся ровно над ним.
+    var setH = function () { root.style.setProperty('--cookie-h', el.offsetHeight + 'px'); };
     el.hidden = false;
+    root.classList.add('cookie-visible');
+    setH();
+    window.addEventListener('resize', setH);
     requestAnimationFrame(function () { el.classList.add('show'); });
     var btn = document.getElementById('cookie-ok');
     if (btn) btn.addEventListener('click', function () {
       try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      root.classList.remove('cookie-visible');
+      window.removeEventListener('resize', setH);
       el.classList.remove('show');
       el.addEventListener('transitionend', function () { el.hidden = true; }, { once: true });
       setTimeout(function () { el.hidden = true; }, 400);
