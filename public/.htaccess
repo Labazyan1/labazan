@@ -7,8 +7,9 @@
   # HSTS — только по HTTPS (сертификат Beget/Certbot)
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
   # CSP: 'unsafe-inline' в script/style нужен под inline-скрипты Astro и заинлайненные стили;
-  # шрифты — Google Fonts; заявка уходит POST на свой /api (connect-src 'self').
-  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'"
+  # шрифты — Google Fonts; заявка уходит POST на свой /api; виджет-бот шлёт fetch на
+  # bot.labazan.ru (РФ-ВМ) — поэтому он в connect-src.
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://bot.labazan.ru; form-action 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'"
 </IfModule>
 
 # Запрет прямого доступа к файлу с секретами бота
