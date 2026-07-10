@@ -57,6 +57,7 @@ const botUrl = import.meta.env.PUBLIC_BOT_URL ?? 'https://bot.labazan.ru';
       <span>Я согласен на обработку персональных данных согласно <a href="/privacy" target="_blank" rel="noopener">политике обработки персональных данных</a> в соответствии с 152-ФЗ.</span>
     </label>
     <button type="submit" class="chat-send chat-lead-submit">Отправить заявку</button>
+    <button type="button" class="chat-lead-cancel" id="chat-lead-cancel">← Вернуться к чату</button>
   </form>
 
   <form class="chat-input" id="chat-input">
@@ -110,7 +111,10 @@ const botUrl = import.meta.env.PUBLIC_BOT_URL ?? 'https://bot.labazan.ru';
   .chat-field input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   .chat-consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.4}
   .chat-consent a{color:var(--accent)}
-  .chat-consent input{margin-top:2px;flex:none}
+  .chat-consent input{margin-top:1px;flex:none;width:16px;height:16px}
+  .chat-consent span{flex:1;min-width:0}
+  .chat-lead-cancel{background:none;border:0;color:var(--muted);font-size:13px;cursor:pointer;padding:8px;text-decoration:underline;align-self:center}
+  .chat-lead-cancel:hover{color:var(--text)}
   .chat-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
   .chat-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);background:var(--ink-2)}
@@ -238,6 +242,15 @@ const botUrl = import.meta.env.PUBLIC_BOT_URL ?? 'https://bot.labazan.ru';
       var nameInput = leadForm.querySelector('input[name="name"]');
       if (nameInput) nameInput.focus();
     }
+
+    // Передумал оставлять заявку — вернуться к диалогу с ботом
+    var leadCancel = document.getElementById('chat-lead-cancel');
+    if (leadCancel) leadCancel.addEventListener('click', function () {
+      leadForm.setAttribute('hidden', '');
+      clearStatus();
+      addMsg('Хорошо, спрашивайте дальше — я на связи.', 'bot');
+      if (msgInput) msgInput.focus();
+    });
 
     // Отправка вопроса в /chat
     inputForm.addEventListener('submit', function (e) {
