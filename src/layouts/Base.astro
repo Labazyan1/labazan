@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import A11y from '../components/A11y.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import ChatWidget from '../components/ChatWidget.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -80,6 +81,7 @@ const org = {
   <Footer />
   <A11y />
   <CookieBanner />
+  <ChatWidget />
   <script is:inline>
     // Плавное появление блоков при скролле. Inline — чтобы не зависеть от папки _astro.
     (function () {
