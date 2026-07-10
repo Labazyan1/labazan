@@ -1,0 +1,303 @@
+---
+// ИИ-бот-консультант. Плавающая кнопка bottom-RIGHT (bottom-left занят A11y).
+// Чистый inline-JS без фреймворков — работает на статике Beget, не зависит от _astro.
+// Бэкенд (YandexGPT + защита) на РФ-ВМ: URL в PUBLIC_BOT_URL. ПД собирает только мини-форма
+// заявки (consent + honeypot), сам чат ПД не запрашивает. Стили глобальные, т.к. сообщения
+// создаются скриптом и не получают scoped-атрибут Astro.
+import { site } from '../data/site';
+// Адрес бэкенда бота публичный (виден в HTML) — не секрет. Дефолт = прод, локально
+// переопределяется через .env (PUBLIC_BOT_URL). Так CI-сборка знает адрес без секретов.
+const botUrl = import.meta.env.PUBLIC_BOT_URL ?? 'https://bot.labazan.ru';
+---
+<button
+  class="chat-toggle"
+  type="button"
+  aria-expanded="false"
+  aria-controls="chat-panel"
+  aria-label="Открыть чат с консультантом"
+  title="Задать вопрос консультанту"
+  data-bot-url={botUrl}
+  data-email={site.email}
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H8l-4 4V5a1 1 0 0 1 1-1Zm3 5v2h10V9H7Zm0 4v2h7v-2H7Z"/>
+  </svg>
+</button>
+
+<div id="chat-panel" class="chat-panel" role="dialog" aria-modal="true" aria-label="Чат с консультантом Лабазан" hidden>
+  <div class="chat-head">
+    <div>
+      <strong>Консультант Лабазан</strong>
+      <span>Отвечаем по услугам и ценам</span>
+    </div>
+    <button type="button" class="chat-close" aria-label="Закрыть чат" title="Закрыть">✕</button>
+  </div>
+
+  <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="История переписки"></div>
+
+  <p class="chat-status" id="chat-status" role="status" aria-live="polite" hidden></p>
+
+  <!-- Мини-форма заявки: ПД (имя+контакт), consent обязателен, honeypot. Скрыта по умолчанию. -->
+  <form class="chat-lead" id="chat-lead" hidden novalidate>
+    <p class="chat-lead-title">Оставьте заявку — свяжемся с ответом и деталями:</p>
+    <label class="chat-field">
+      <span>Имя</span>
+      <input type="text" name="name" autocomplete="name" maxlength="120" required />
+    </label>
+    <label class="chat-field">
+      <span>Телефон или email</span>
+      <input type="text" name="contact" autocomplete="tel" maxlength="160" required />
+    </label>
+    <!-- honeypot: скрыт от людей, боты заполняют -->
+    <div class="chat-hp" aria-hidden="true">
+      <label>Компания<input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <label class="chat-consent">
+      <input type="checkbox" name="consent" value="1" required />
+      <span>Я согласен на обработку персональных данных согласно <a href="/privacy" target="_blank" rel="noopener">политике обработки персональных данных</a> в соответствии с 152-ФЗ.</span>
+    </label>
+    <button type="submit" class="chat-send chat-lead-submit">Отправить заявку</button>
+  </form>
+
+  <form class="chat-input" id="chat-input">
+    <label class="chat-sr" for="chat-msg">Ваш вопрос</label>
+    <input id="chat-msg" name="message" type="text" maxlength="2000" autocomplete="off"
+      placeholder="Спросите про услугу, срок или цену…" required />
+    <button type="submit" class="chat-send" aria-label="Отправить">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M3 20.5 21 12 3 3.5 6 12l-3 8.5Z"/>
+      </svg>
+    </button>
+  </form>
+</div>
+
+<style is:global>
+  .chat-toggle{position:fixed;right:18px;bottom:18px;z-index:300;width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--accent-ink);border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.45)}
+  .chat-toggle svg{width:26px;height:26px}
+  .chat-toggle:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  html.cookie-visible .chat-toggle{bottom:calc(var(--cookie-h,0px) + 34px)}
+
+  .chat-panel{position:fixed;right:18px;bottom:82px;z-index:300;width:360px;max-width:calc(100vw - 36px);height:min(560px,calc(100vh - 120px));display:flex;flex-direction:column;background:var(--surface,#11151B);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.55);overflow:hidden}
+  .chat-panel[hidden]{display:none}
+  html.cookie-visible .chat-panel{bottom:calc(var(--cookie-h,0px) + 98px)}
+
+  .chat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--ink-2)}
+  .chat-head strong{display:block;font-family:var(--mono);font-size:15px;color:var(--text)}
+  .chat-head span{font-size:12px;color:var(--muted)}
+  .chat-close{background:none;border:0;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 6px;line-height:1;border-radius:4px}
+  .chat-close:hover{color:var(--text)}
+
+  .chat-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .chat-msg{max-width:85%;padding:10px 13px;border-radius:10px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+  .chat-msg.bot{align-self:flex-start;background:var(--ink);border:1px solid var(--line);color:var(--text)}
+  .chat-msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink)}
+  .chat-typing{align-self:flex-start;color:var(--muted);font-size:13px;font-family:var(--mono)}
+  .chat-typing i{display:inline-block;width:5px;height:5px;margin:0 1px;border-radius:50%;background:var(--muted);animation:chatblink 1s infinite}
+  .chat-typing i:nth-child(2){animation-delay:.2s}
+  .chat-typing i:nth-child(3){animation-delay:.4s}
+  @keyframes chatblink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+  .chat-status{margin:0;padding:8px 16px;font-size:13px;color:var(--muted);border-top:1px solid var(--line-soft)}
+  .chat-status[hidden]{display:none}
+  .chat-status.err{color:var(--accent)}
+  .chat-status a{color:var(--accent);text-decoration:underline}
+
+  .chat-lead{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;background:var(--ink-2)}
+  .chat-lead[hidden]{display:none}
+  .chat-lead-title{margin:0;font-size:13px;color:var(--muted)}
+  .chat-field{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+  .chat-field input{background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px 12px;color:var(--text);font-family:var(--sans);font-size:14px}
+  .chat-field input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .chat-consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.4}
+  .chat-consent a{color:var(--accent)}
+  .chat-consent input{margin-top:2px;flex:none}
+  .chat-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+  .chat-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);background:var(--ink-2)}
+  .chat-input input{flex:1;background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--text);font-family:var(--sans);font-size:14px}
+  .chat-input input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .chat-send{flex:none;display:flex;align-items:center;justify-content:center;background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:0 14px;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:14px}
+  .chat-send:disabled{opacity:.5;cursor:default}
+  .chat-lead-submit{padding:11px}
+  .chat-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  @media (max-width:480px){
+    .chat-panel{right:10px;left:10px;width:auto;max-width:none;bottom:78px}
+    .chat-toggle{right:14px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .chat-typing i{animation:none}
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    if (window.__chatWidgetInit) return;
+    window.__chatWidgetInit = true;
+
+    var toggle = document.querySelector('.chat-toggle');
+    var panel = document.getElementById('chat-panel');
+    if (!toggle || !panel) return;
+    var BOT_URL = (toggle.getAttribute('data-bot-url') || '').replace(/\/+$/, '');
+    var EMAIL = toggle.getAttribute('data-email') || 'labazan@gmail.com';
+
+    var log = document.getElementById('chat-log');
+    var statusEl = document.getElementById('chat-status');
+    var inputForm = document.getElementById('chat-input');
+    var msgInput = document.getElementById('chat-msg');
+    var leadForm = document.getElementById('chat-lead');
+    var closeBtn = panel.querySelector('.chat-close');
+
+    var sessionId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random();
+    var history = []; // {role, content}, последние реплики
+    var greeted = false;
+    var busy = false;
+
+    var MAILTO = 'mailto:' + EMAIL;
+
+    function addMsg(text, who) {
+      var el = document.createElement('div');
+      el.className = 'chat-msg ' + (who === 'user' ? 'user' : 'bot');
+      el.textContent = text;
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function showStatus(html, isErr) {
+      statusEl.innerHTML = html;
+      statusEl.classList.toggle('err', !!isErr);
+      statusEl.hidden = false;
+    }
+    function clearStatus() { statusEl.hidden = true; statusEl.innerHTML = ''; }
+
+    var typingEl = null;
+    function showTyping(on) {
+      if (on) {
+        if (typingEl) return;
+        typingEl = document.createElement('div');
+        typingEl.className = 'chat-typing';
+        typingEl.setAttribute('aria-label', 'Консультант печатает');
+        typingEl.innerHTML = '<i></i><i></i><i></i>';
+        log.appendChild(typingEl);
+        log.scrollTop = log.scrollHeight;
+      } else if (typingEl) {
+        typingEl.remove(); typingEl = null;
+      }
+    }
+
+    function focusable() {
+      return [].slice.call(panel.querySelectorAll('button:not([disabled]),input:not([disabled]),a[href]'))
+        .filter(function (el) { return el.offsetParent !== null; });
+    }
+
+    function openPanel(open) {
+      if (open) {
+        panel.removeAttribute('hidden');
+        toggle.setAttribute('aria-expanded', 'true');
+        if (!greeted) {
+          greeted = true;
+          addMsg('Здравствуйте! Подскажу по услугам, срокам и ценам агентства. Что вас интересует?', 'bot');
+        }
+        if (msgInput) msgInput.focus();
+      } else {
+        panel.setAttribute('hidden', '');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    }
+
+    toggle.addEventListener('click', function () { openPanel(panel.hasAttribute('hidden')); });
+    if (closeBtn) closeBtn.addEventListener('click', function () { openPanel(false); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hasAttribute('hidden')) openPanel(false);
+    });
+
+    // Focus-trap внутри диалога
+    panel.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var f = focusable();
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    function offerLead() {
+      if (!leadForm.hasAttribute('hidden')) return;
+      leadForm.removeAttribute('hidden');
+      var nameInput = leadForm.querySelector('input[name="name"]');
+      if (nameInput) nameInput.focus();
+    }
+
+    // Отправка вопроса в /chat
+    inputForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (busy || !BOT_URL) { if (!BOT_URL) showStatus('Чат временно недоступен. Напишите нам: <a href="' + MAILTO + '">' + EMAIL + '</a>', true); return; }
+      var text = (msgInput.value || '').trim();
+      if (!text) return;
+      busy = true; clearStatus();
+      addMsg(text, 'user');
+      history.push({ role: 'user', content: text });
+      if (history.length > 10) history = history.slice(-10);
+      msgInput.value = '';
+      inputForm.querySelector('.chat-send').disabled = true;
+      showTyping(true);
+
+      fetch(BOT_URL + '/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: sessionId, message: text, history: history })
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        showTyping(false);
+        if (data && data.ok && data.reply) {
+          addMsg(data.reply, 'bot');
+          history.push({ role: 'assistant', content: data.reply });
+          if (data.escalate) offerLead();
+        } else {
+          throw new Error('bad_reply');
+        }
+      }).catch(function () {
+        showTyping(false);
+        showStatus('Не удалось получить ответ. Напишите нам: <a href="' + MAILTO + '">' + EMAIL + '</a>', true);
+      }).then(function () {
+        busy = false;
+        inputForm.querySelector('.chat-send').disabled = false;
+        if (msgInput) msgInput.focus();
+      });
+    });
+
+    // Отправка заявки в /escalate (ПД, мимо LLM)
+    leadForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (busy || !BOT_URL) return;
+      var name = leadForm.querySelector('input[name="name"]').value.trim();
+      var contact = leadForm.querySelector('input[name="contact"]').value.trim();
+      var company = leadForm.querySelector('input[name="company"]').value;
+      var consent = leadForm.querySelector('input[name="consent"]').checked;
+      if (!name || !contact) { showStatus('Заполните имя и контакт.', true); return; }
+      if (!consent) { showStatus('Отметьте согласие на обработку персональных данных.', true); return; }
+      busy = true; clearStatus();
+      var submit = leadForm.querySelector('.chat-lead-submit');
+      submit.disabled = true;
+
+      fetch(BOT_URL + '/escalate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, contact: contact, message: 'Заявка из чата', consent: '1', company: company })
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        if (data && data.ok) {
+          leadForm.setAttribute('hidden', '');
+          addMsg('Спасибо! Заявка принята, скоро свяжемся.', 'bot');
+          clearStatus();
+        } else {
+          throw new Error('escalate_failed');
+        }
+      }).catch(function () {
+        showStatus('Не удалось отправить заявку. Напишите нам: <a href="' + MAILTO + '">' + EMAIL + '</a>', true);
+      }).then(function () {
+        busy = false; submit.disabled = false;
+      });
+    });
+  })();
+</script>
