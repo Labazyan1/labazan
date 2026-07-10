@@ -3,10 +3,11 @@
 // Основной приёмник (152-ФЗ) — РФ-почта домена через MTA Beget (ПД не покидают РФ);
 // Telegram + n8n→CRM подключаются после снятия паузы РКН (~24.07.2026). Секреты — в
 // lead-config.php на сервере (РФ). Переключатель цели показывает релевантные поля.
+import { site } from '../data/site';
 const { compact = false } = Astro.props;
 const s = compact ? '-c' : '';
 ---
-<form class="contact-form" action="/api/lead.php" method="post" data-action="/api/lead.php">
+<form class="contact-form" action="/api/lead.php" method="post" data-action="/api/lead.php" data-email={site.email}>
   <fieldset class="goal-switch">
     <legend>Что вам нужно?</legend>
     <div class="goal-opts" role="radiogroup" aria-label="Что вам нужно">
@@ -125,7 +126,7 @@ const s = compact ? '-c' : '';
     <span>Я согласен на обработку персональных данных согласно <a href="/privacy">политике обработки персональных данных</a> в соответствии с 152-ФЗ.</span>
   </label>
   <button type="submit" class="btn btn-primary">Получить смету <span class="arrow">→</span></button>
-  <p class="form-status" role="status" aria-live="polite" hidden></p>
+  <p class="form-status" id={`form-status${s}`} tabindex="-1" role="status" aria-live="polite" hidden></p>
 </form>
 
 <script is:inline>
@@ -158,11 +159,24 @@ const s = compact ? '-c' : '';
         var btn = form.querySelector('button[type=submit]');
         if (!form.checkValidity()) { form.reportValidity(); return; }
         var action = form.dataset.action || '/api/lead.php';
-        var show = function (msg, ok) {
+        // ok!==false → успех; mail=true → дописываем кликабельный mailto как запасной канал.
+        var show = function (msg, ok, mail) {
           if (!status) return;
+          var isErr = ok === false;
           status.hidden = false;
           status.textContent = msg;
-          status.style.color = ok === false ? 'var(--accent)' : 'var(--ok)';
+          if (mail && form.dataset.email) {
+            status.appendChild(document.createTextNode(' '));
+            var a = document.createElement('a');
+            a.href = 'mailto:' + form.dataset.email;
+            a.textContent = form.dataset.email;
+            status.appendChild(a);
+          }
+          // Ошибку объявляем ассертивно (alert) и переводим фокус на сообщение,
+          // чтобы её точно заметили с клавиатуры и в скринридере.
+          status.setAttribute('role', isErr ? 'alert' : 'status');
+          status.style.color = isErr ? 'var(--accent)' : 'var(--ok)';
+          if (isErr) { try { status.focus(); } catch (e) {} }
         };
         if (btn) btn.disabled = true;
         fetch(action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
@@ -172,11 +186,11 @@ const s = compact ? '-c' : '';
           .then(function (r) {
             // Успех — только если сервер явно вернул {ok:true}, а не просто HTTP 2xx.
             if (r.data && r.data.ok === true) { show('Заявка отправлена. Вернёмся со сметой в течение дня.'); form.reset(); syncGoal(form); }
-            else if (r.status === 503) { show('Форма ещё настраивается. Напишите нам на почту, пожалуйста.', false); }
+            else if (r.status === 503) { show('Форма ещё настраивается. Напишите нам на почту:', false, true); }
             else if (r.status === 429) { show('Слишком много попыток. Подождите минуту и попробуйте снова.', false); }
-            else { show('Не удалось отправить. Напишите нам на почту, пожалуйста.', false); }
+            else { show('Не удалось отправить. Напишите нам на почту:', false, true); }
           })
-          .catch(function () { show('Нет связи с сервером. Напишите нам на почту, пожалуйста.', false); })
+          .catch(function () { show('Нет связи с сервером. Напишите нам на почту:', false, true); })
           .finally(function () { if (btn) btn.disabled = false; });
       });
     });
@@ -209,6 +223,8 @@ const s = compact ? '-c' : '';
   .goal-checks label:has(input:checked){border-color:var(--accent);color:var(--fg, currentColor)}
 
   .form-status{margin-top:6px;font-size:14px;color:var(--ok)}
+  .form-status a{color:inherit;text-decoration:underline}
+  .form-status:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .consent-check{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.45;color:var(--muted);cursor:pointer}
   .consent-check input{margin-top:2px;flex:0 0 auto;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
   .consent-check a{color:var(--accent);text-decoration:underline}
