@@ -1,0 +1,79 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { productsLive, productsSoon } from '../../data/products';
+
+const meta = {
+  title: 'Продукты: QR-стол, AI-консультант, CRM | Лабазан',
+  description:
+    'Наши собственные продукты: QR-стол для кафе, AI-консультант для сайта с защитой, облачная CRM. Работающие инструменты и ранний доступ к новым.',
+};
+---
+<Base title={meta.title} description={meta.description} path="/produkty">
+  <section class="page-hero">
+    <div class="hero-grid"></div>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="/">Главная</a> / Продукты</p>
+      <h1>Наши продукты</h1>
+      <p class="lead">Это не «сделаем для вас» — это наши собственные инструменты, которые мы построили и развиваем. Часть уже работает у клиентов, часть открываем по раннему доступу.</p>
+    </div>
+  </section>
+
+  <section class="section" id="live">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">В бою · работают</span>
+        <h2>Готовые продукты</h2>
+        <p>Проверены на реальных клиентах — можно внедрять сейчас.</p>
+      </div>
+      <div class="hub-grid">
+        {productsLive.map((p) => (
+          p.href ? (
+            <a class="hub-item" href={p.href}>
+              <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
+              <span class="hub-note">{p.note}</span>
+              <span class="hub-note" style="opacity:.7">Кому: {p.audience}. {p.hrefLabel}</span>
+            </a>
+          ) : (
+            <a class="hub-item" href="/#contact">
+              <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
+              <span class="hub-note">{p.note}</span>
+              <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
+            </a>
+          )
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="soon">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">В разработке · ранний доступ</span>
+        <h2>Скоро</h2>
+        <p>Строим прямо сейчас. Оставьте заявку — подключим первыми и с особыми условиями.</p>
+      </div>
+      <div class="hub-grid">
+        {productsSoon.map((p) => (
+          <a class="hub-item hub-item--stub" href="/#contact">
+            <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в разработке</span></span>
+            <span class="hub-note">{p.note}</span>
+            <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="cta-wrap reveal">
+        <div>
+          <h2>Хотите продукт под свой бизнес или ранний доступ?</h2>
+          <p>Опишите задачу — покажем, что уже готово, и подключим к тому, что скоро. Бесплатно и без обязательств.</p>
+        </div>
+        <ContactForm compact={true} />
+      </div>
+    </div>
+  </section>
+</Base>
