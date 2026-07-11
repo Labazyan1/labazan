@@ -22,6 +22,7 @@ export const operator = {
 
 export const nav = [
   { href: '/#services', label: 'Услуги' },
+  { href: '/produkty', label: 'Продукты' },
   { href: '/#packages', label: 'Пакеты' },
   { href: '/#process', label: 'Как работаем' },
   { href: '/blog', label: 'Блог' },
