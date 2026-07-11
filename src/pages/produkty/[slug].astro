@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { products, statusLabel } from '../../data/products';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+const { product } = Astro.props;
+const others = products.filter((p) => p.slug !== product.slug);
+
+const ctaText =
+  product.status === 'live' ? 'Обсудить внедрение' : 'Хочу ранний доступ';
+const ctaHead =
+  product.status === 'live'
+    ? 'Хотите этот продукт? Обсудим внедрение.'
+    : 'Заберите ранний доступ';
+const ctaSub =
+  product.status === 'live'
+    ? 'Опишите задачу — покажем демо, посчитаем внедрение под ваш бизнес. Бесплатно и без обязательств.'
+    : 'Оставьте заявку — позовём первыми на запуск и дадим особые условия. Ничего платить сейчас не нужно.';
+
+const meta = {
+  title: `${product.name} — ${product.tagline} | Лабазан`,
+  description: product.lead,
+};
+---
+<Base title={meta.title} description={meta.description} path={`/produkty/${product.slug}`}>
+  <section class="page-hero">
+    <div class="hero-grid"></div>
+    <div class="wrap">
+      <p class="breadcrumb"><a href="/">Главная</a> / <a href="/produkty">Продукты</a> / {product.name}</p>
+      <h1>{product.name}</h1>
+      <p class="lead">{product.lead}</p>
+      <div class="hero-actions" style="margin-top:30px">
+        <a href="#zayavka" class="btn btn-primary">{ctaText} <span class="arrow">→</span></a>
+        <a href="/produkty" class="btn btn-ghost">Все продукты</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div class="prose">
+        <p style="font-size:19px;color:var(--text)">{product.about}</p>
+
+        <h2>Что внутри</h2>
+        <ul>{product.includes.map((i) => <li>{i}</li>)}</ul>
+
+        <h2>Кому подходит</h2>
+        <p>{product.audience.charAt(0).toUpperCase() + product.audience.slice(1)}.</p>
+      </div>
+
+      <aside>
+        <div class="aside-card">
+          <h4>О продукте</h4>
+          <div class="ticket-row" style="padding-left:0;padding-right:0"><span class="k">Статус</span><span class="v" style="color:var(--accent)">{statusLabel[product.status]}</span></div>
+          <div class="ticket-row" style="padding-left:0;padding-right:0;border-bottom:0"><span class="k">Тип</span><span class="v">наш продукт</span></div>
+          <a href="#zayavka" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px">{ctaText}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="zayavka">
+    <div class="wrap">
+      <div class="cta-wrap reveal">
+        <div>
+          <h2>{ctaHead}</h2>
+          <p>{ctaSub}</p>
+        </div>
+        <ContactForm compact={true} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Ещё продукты</span><h2>Другие продукты</h2></div>
+      <div class="hub-grid">
+        {others.map((p) => (
+          <a class="hub-item" href={`/produkty/${p.slug}`}>
+            <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">{statusLabel[p.status]}</span></span>
+            <span class="hub-note">{p.note}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
