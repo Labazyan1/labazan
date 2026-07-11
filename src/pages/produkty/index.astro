@@ -23,62 +23,68 @@ const meta = {
     </div>
   </section>
 
-  <section class="section" id="live">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="eyebrow">В бою · работают</span>
-        <h2>Готовые продукты</h2>
-        <p>Проверены на реальных клиентах — можно внедрять сейчас.</p>
+  {live.length > 0 && (
+    <section class="section" id="live">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">В бою · работают</span>
+          <h2>Готовые продукты</h2>
+          <p>Проверены на реальных клиентах — можно внедрять сейчас.</p>
+        </div>
+        <div class="hub-grid">
+          {live.map((p) => (
+            <a class="hub-item" href={`/produkty/${p.slug}`}>
+              <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
+              <span class="hub-note">{p.note}</span>
+              <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
+            </a>
+          ))}
+        </div>
       </div>
-      <div class="hub-grid">
-        {live.map((p) => (
-          <a class="hub-item" href={`/produkty/${p.slug}`}>
-            <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
-            <span class="hub-note">{p.note}</span>
-            <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section class="section" id="soon">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="eyebrow">В разработке · ранний доступ</span>
-        <h2>Скоро</h2>
-        <p>Строим прямо сейчас. Оставьте заявку — подключим первыми и с особыми условиями.</p>
+  {soon.length > 0 && (
+    <section class="section" id="soon">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">В разработке · ранний доступ</span>
+          <h2>Скоро</h2>
+          <p>Строим прямо сейчас. Оставьте заявку — подключим первыми и с особыми условиями.</p>
+        </div>
+        <div class="hub-grid">
+          {soon.map((p) => (
+            <a class="hub-item" href={`/produkty/${p.slug}`}>
+              <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в разработке</span></span>
+              <span class="hub-note">{p.note}</span>
+              <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
+            </a>
+          ))}
+        </div>
       </div>
-      <div class="hub-grid">
-        {soon.map((p) => (
-          <a class="hub-item" href={`/produkty/${p.slug}`}>
-            <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в разработке</span></span>
-            <span class="hub-note">{p.note}</span>
-            <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section class="section" id="planned">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="eyebrow">В планах · дорожная карта</span>
-        <h2>Строим дальше</h2>
-        <p>Продукты, которые проектируем. Кода ещё нет — показываем, куда движемся. Интересно — оставьте заявку, позовём на закрытый запуск.</p>
+  {planned.length > 0 && (
+    <section class="section" id="planned">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">В планах · дорожная карта</span>
+          <h2>Строим дальше</h2>
+          <p>Продукты, которые проектируем. Кода ещё нет — показываем, куда движемся. Интересно — оставьте заявку, позовём на закрытый запуск.</p>
+        </div>
+        <div class="hub-grid">
+          {planned.map((p) => (
+            <a class="hub-item" href={`/produkty/${p.slug}`}>
+              <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в планах</span></span>
+              <span class="hub-note">{p.note}</span>
+              <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
+            </a>
+          ))}
+        </div>
       </div>
-      <div class="hub-grid">
-        {planned.map((p) => (
-          <a class="hub-item" href={`/produkty/${p.slug}`}>
-            <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в планах</span></span>
-            <span class="hub-note">{p.note}</span>
-            <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <section class="section" id="contact">
     <div class="wrap">
