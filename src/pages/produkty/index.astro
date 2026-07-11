@@ -1,12 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ContactForm from '../../components/ContactForm.astro';
-import { productsLive, productsSoon, productsPlanned } from '../../data/products';
+import { products } from '../../data/products';
+
+const live = products.filter((p) => p.status === 'live');
+const soon = products.filter((p) => p.status === 'soon');
+const planned = products.filter((p) => p.status === 'planned');
 
 const meta = {
-  title: 'Продукты: QR-стол, AI-консультант, CRM | Лабазан',
+  title: 'Продукты: QR-стол, CRM, MediaDesk | Лабазан',
   description:
-    'Наши собственные продукты: QR-стол для кафе, AI-консультант для сайта с защитой, облачная CRM. Работающие инструменты и ранний доступ к новым.',
+    'Наши собственные продукты: QR-стол для кафе (в бою), облачная CRM (в разработке), MediaDesk, GoalManager, CoffeeOS (в планах). Работающие инструменты и ранний доступ.',
 };
 ---
 <Base title={meta.title} description={meta.description} path="/produkty">
@@ -15,7 +19,7 @@ const meta = {
     <div class="wrap">
       <p class="breadcrumb"><a href="/">Главная</a> / Продукты</p>
       <h1>Наши продукты</h1>
-      <p class="lead">Это не «сделаем для вас» — это наши собственные инструменты, которые мы построили и развиваем. Часть уже работает у клиентов, часть открываем по раннему доступу.</p>
+      <p class="lead">Это не «сделаем для вас» — это наши собственные инструменты, которые мы построили и развиваем. Часть уже работает у клиентов, часть открываем по раннему доступу, часть проектируем.</p>
     </div>
   </section>
 
@@ -27,20 +31,12 @@ const meta = {
         <p>Проверены на реальных клиентах — можно внедрять сейчас.</p>
       </div>
       <div class="hub-grid">
-        {productsLive.map((p) => (
-          p.href ? (
-            <a class="hub-item" href={p.href}>
-              <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
-              <span class="hub-note">{p.note}</span>
-              <span class="hub-note" style="opacity:.7">Кому: {p.audience}. {p.hrefLabel}</span>
-            </a>
-          ) : (
-            <a class="hub-item" href="/#contact">
-              <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
-              <span class="hub-note">{p.note}</span>
-              <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
-            </a>
-          )
+        {live.map((p) => (
+          <a class="hub-item" href={`/produkty/${p.slug}`}>
+            <span class="hub-h">{p.name} — {p.tagline}<span class="arrow">→</span></span>
+            <span class="hub-note">{p.note}</span>
+            <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
+          </a>
         ))}
       </div>
     </div>
@@ -54,8 +50,8 @@ const meta = {
         <p>Строим прямо сейчас. Оставьте заявку — подключим первыми и с особыми условиями.</p>
       </div>
       <div class="hub-grid">
-        {productsSoon.map((p) => (
-          <a class="hub-item hub-item--stub" href="/#contact">
+        {soon.map((p) => (
+          <a class="hub-item" href={`/produkty/${p.slug}`}>
             <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в разработке</span></span>
             <span class="hub-note">{p.note}</span>
             <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
@@ -73,8 +69,8 @@ const meta = {
         <p>Продукты, которые проектируем. Кода ещё нет — показываем, куда движемся. Интересно — оставьте заявку, позовём на закрытый запуск.</p>
       </div>
       <div class="hub-grid">
-        {productsPlanned.map((p) => (
-          <a class="hub-item hub-item--stub" href="/#contact">
+        {planned.map((p) => (
+          <a class="hub-item" href={`/produkty/${p.slug}`}>
             <span class="hub-h">{p.name} — {p.tagline}<span class="hub-tag">в планах</span></span>
             <span class="hub-note">{p.note}</span>
             <span class="hub-note" style="opacity:.7">Кому: {p.audience}.</span>
