@@ -6,6 +6,15 @@ import A11y from '../components/A11y.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import ChatWidget from '../components/ChatWidget.astro';
 import { site } from '../data/site';
+// Само-хостинг шрифтов (без внешних Google Fonts): woff2 бандлятся в сборку,
+// кириллица включена. Веса: Golos Text 400/500/600, JetBrains Mono 500/600/700/800.
+import '@fontsource/golos-text/400.css';
+import '@fontsource/golos-text/500.css';
+import '@fontsource/golos-text/600.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '@fontsource/jetbrains-mono/600.css';
+import '@fontsource/jetbrains-mono/700.css';
+import '@fontsource/jetbrains-mono/800.css';
 
 interface Props {
   title?: string;
@@ -66,9 +75,6 @@ const org = {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
   <meta name="theme-color" content="#0D1014" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json" set:html={JSON.stringify(org)} is:inline />
 </head>

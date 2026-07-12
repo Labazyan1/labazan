@@ -68,6 +68,8 @@ img{max-width:100%;display:block}
 .nav-links a:hover{color:var(--text)}
 .nav-cta{display:flex;align-items:center;gap:18px}
 .nav-status{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.nav-phone{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);white-space:nowrap}
+.nav-phone:hover{color:var(--accent)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2.4s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,213,152,.45)}70%{box-shadow:0 0 0 7px rgba(62,213,152,0)}100%{box-shadow:0 0 0 0 rgba(62,213,152,0)}}
 
@@ -211,23 +213,6 @@ html:not(.mega-js) .nav-mega:hover .mega,html:not(.mega-js) .mega:hover{opacity:
 .pkg .btn{margin-top:auto;justify-content:center}
 .pkg-link{font-family:var(--mono);font-size:12px;color:var(--accent);text-decoration:none;text-align:center;margin-top:12px}
 .pkg-link:hover{text-decoration:underline}
-
-/* SUBSCRIPTION */
-.subs-panel{border:1px solid var(--accent);border-radius:6px;padding:34px 30px;background:linear-gradient(180deg,rgba(255,90,31,.05),transparent)}
-.subs-panel .section-head{margin-bottom:28px}
-.subs{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.subs .pkg{background:var(--ink)}
-.subs-badge{align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:4px 10px;margin-bottom:16px}
-.subs-vs{color:var(--muted);font-size:13px;margin-top:8px}
-.subs-term{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0 0 18px}
-.subs-note{color:var(--muted);font-size:13px;line-height:1.6;margin-top:22px;max-width:760px}
-.subs-note a{color:var(--accent);text-decoration:none;white-space:nowrap}
-.subs-note a:hover{text-decoration:underline}
-.subs-guarantee{margin-top:22px;padding:16px 18px;border:1px solid var(--accent);border-radius:6px;background:rgba(255,90,31,.05);font-size:15px;line-height:1.6;color:var(--text)}
-.subs-guarantee strong{color:var(--accent);font-family:var(--mono)}
-.subs-hybrid{color:var(--muted);font-size:14px;line-height:1.6;margin-top:14px;max-width:760px}
-.subs-hybrid a{color:var(--accent);text-decoration:none;white-space:nowrap}
-.subs-hybrid a:hover{text-decoration:underline}
 .qa-cta{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:14px;color:var(--accent);text-decoration:none}
 .qa-cta:hover{text-decoration:underline}
 .pre-cta-faq{max-width:760px;margin:0 auto 40px}
@@ -267,6 +252,21 @@ html:not(.mega-js) .nav-mega:hover .mega,html:not(.mega-js) .mega:hover{opacity:
 .tcard h4{font-family:var(--mono);font-size:16px;font-weight:600;margin-bottom:10px}
 .tcard p{font-size:14px;color:var(--muted)}
 .trust-who{margin-top:22px;padding:16px 20px;border:1px dashed var(--line);border-radius:6px;color:var(--text);font-size:15px;line-height:1.6}
+/* Блок честности «не всем нужен сайт» */
+.honesty{max-width:760px;padding:32px 34px;border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:6px;background:var(--ink-2)}
+.honesty h2{font-family:var(--mono);font-weight:700;font-size:clamp(22px,3vw,30px);margin:14px 0 14px}
+.honesty p{color:var(--muted);font-size:17px;line-height:1.65}
+/* Строка про оплату под пакетами */
+.pkgs-foot{margin-top:26px;color:var(--muted);font-size:15px;line-height:1.6;max-width:820px}
+.pkgs-foot a{color:var(--accent);text-decoration:none;white-space:nowrap}
+.pkgs-foot a:hover{text-decoration:underline}
+/* Риск-реверс: CTA-ряд под карточками */
+.risk-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+/* Подробные контакты у формы (коммерческий фактор) */
+.cta-contacts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;margin-top:20px;font-family:var(--mono);font-size:14px}
+.cta-contacts a{color:var(--accent);text-decoration:none}
+.cta-contacts a:hover{text-decoration:underline}
+.cta-contacts span{color:var(--muted)}
 .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .review{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:26px;display:flex;flex-direction:column;gap:14px;margin:0}
 .review .r-result{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent)}
@@ -313,6 +313,7 @@ form .btn{justify-content:center;margin-top:6px}
 .foot ul{list-style:none;display:flex;flex-direction:column;gap:10px}
 .foot ul a{color:var(--muted);font-size:15px}
 .foot ul a:hover{color:var(--accent)}
+.foot-hours{color:var(--muted-2);font-size:14px}
 .foot-legal{display:flex;justify-content:space-between;align-items:center;padding-top:26px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--muted);flex-wrap:wrap;gap:8px 20px}
 .foot-legal a{color:var(--muted)}
 .foot-legal a:hover{color:var(--accent)}
@@ -366,11 +367,12 @@ form .btn{justify-content:center;margin-top:6px}
 
 /* RESPONSIVE */
 @media (max-width:960px){
+  .nav-phone{display:none}
   .hero-inner{grid-template-columns:1fr;gap:40px}
   .spec-header{display:none}
   .spec-row{grid-template-columns:1fr;gap:8px;padding:22px}
   .spec-row .s-price{text-align:left}
-  .pkgs,.cases,.trust,.post-list,.dirs,.hub-grid,.subs,.reviews{grid-template-columns:1fr}
+  .pkgs,.cases,.trust,.post-list,.dirs,.hub-grid,.reviews{grid-template-columns:1fr}
   .mega-inner{grid-template-columns:repeat(2,1fr);gap:24px}
   .steps{grid-template-columns:1fr 1fr}
   .step:nth-child(2){border-right:0}
