@@ -366,8 +366,12 @@ form .btn{justify-content:center;margin-top:6px}
 .reveal.in{opacity:1;transform:none}
 
 /* RESPONSIVE */
+/* Мёртвая зона ~961–1250px: пунктов + телефон + статус не влезают в .wrap (1180px)
+   и CTA обрезается overflow-x. Прячем телефон и статус раньше, до сборки в бургер. */
+@media (max-width:1150px){
+  .nav-phone,.nav-status{display:none}
+}
 @media (max-width:960px){
-  .nav-phone{display:none}
   .hero-inner{grid-template-columns:1fr;gap:40px}
   .spec-header{display:none}
   .spec-row{grid-template-columns:1fr;gap:8px;padding:22px}
@@ -384,7 +388,7 @@ form .btn{justify-content:center;margin-top:6px}
 @media (max-width:640px){
   body{font-size:16px}
   .section{padding:72px 0}
-  .nav-links,.nav-status{display:none}
+  .nav-links{display:none}
   /* CTA в шапке скрываем: она дублируется в бургер-меню (.nav-mobile-cta).
      Иначе «Рассчитать проект» рядом с гамбургером переносится и рвёт 68px-шапку. */
   .nav-cta{display:none}
