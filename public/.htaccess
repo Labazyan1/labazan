@@ -9,13 +9,24 @@
   # CSP: 'unsafe-inline' в script/style нужен под inline-скрипты Astro и заинлайненные стили;
   # шрифты — Google Fonts; заявка уходит POST на свой /api; виджет-бот шлёт fetch на
   # bot.labazan.ru (РФ-ВМ) — поэтому он в connect-src.
-  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://bot.labazan.ru; form-action 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'"
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://bot.labazan.ru; form-action 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'"
 </IfModule>
 
 # Запрет прямого доступа к файлу с секретами бота
 <FilesMatch "lead-config.*\.php$">
   Require all denied
 </FilesMatch>
+
+# 301-редиректы удалённых услуг → на ближайшую релевантную страницу.
+# Без #-фрагментов (краулеры их игнорируют); ведём на существующую услугу,
+# чтобы передать ссылочный вес, а не на общий хаб, где это возможно.
+<IfModule mod_alias.c>
+  RedirectMatch 301 ^/uslugi/kontent-plan/?$ /uslugi/vedenie-socsetej/
+  RedirectMatch 301 ^/uslugi/reels-shorts/?$ /uslugi/video-reklama/
+  RedirectMatch 301 ^/uslugi/audit-sajta/?$ /uslugi/seo-prodvizhenie/
+  RedirectMatch 301 ^/uslugi/kartochki-marketplejsy/?$ /uslugi/
+  RedirectMatch 301 ^/uslugi/analitika-dannyh/?$ /uslugi/
+</IfModule>
 
 # Сжатие
 <IfModule mod_deflate.c>

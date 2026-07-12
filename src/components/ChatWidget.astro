@@ -152,7 +152,7 @@ const botUrl = import.meta.env.PUBLIC_BOT_URL ?? 'https://bot.labazan.ru';
     var panel = document.getElementById('chat-panel');
     if (!toggle || !panel) return;
     var BOT_URL = (toggle.getAttribute('data-bot-url') || '').replace(/\/+$/, '');
-    var EMAIL = toggle.getAttribute('data-email') || 'labazan@gmail.com';
+    var EMAIL = toggle.getAttribute('data-email') || 'info@labazan.ru';
 
     var log = document.getElementById('chat-log');
     var statusEl = document.getElementById('chat-status');

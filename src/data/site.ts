@@ -6,10 +6,12 @@ export const site = {
   tagline: 'Digital-студия полного цикла',
   description:
     'Разработка сайтов, SEO и GEO/AEO, реклама и поддержка. Фиксированная смета, точные сроки, работа по договору.',
-  email: 'labazan@gmail.com',
+  email: 'info@labazan.ru',
   phone: '+7 916 503-05-83',
   phoneHref: 'tel:+79165030583',
   telegram: 'https://t.me/labazantg',
+  hours: 'Сб–Чт 10:00–20:00, пятница выходной',
+  hoursShort: 'Сб–Чт 10–20',
 };
 
 // Оператор персональных данных (152-ФЗ). Единая точка правды для политики и футера.

@@ -37,6 +37,7 @@ const restNav = nav.filter((item) => item.label !== 'Услуги');
       {restNav.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
     <div class="nav-cta">
+      <a href={site.phoneHref} class="nav-phone" aria-label={`Позвонить ${site.phone}`}>{site.phone}</a>
       <span class="nav-status"><span class="dot"></span>Принимаем заказы</span>
       <a href="/#contact" class="btn btn-primary">Рассчитать проект</a>
     </div>
