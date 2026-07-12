@@ -29,6 +29,8 @@ const description =
           <div class="field"><input id="ad" inputmode="numeric" value="40 000" aria-label="Рекламный бюджет в месяц"><span class="cur">₽</span></div></div>
         <div class="row"><label for="paid">Заказов с рекламы в месяц</label>
           <div class="field"><input id="paid" inputmode="numeric" value="20" aria-label="Заказов с рекламы в месяц"><span class="cur">шт</span></div></div>
+        <div class="row"><label for="ltv">Клиент приносит за всё время (LTV), ₽</label>
+          <div class="field"><input id="ltv" inputmode="numeric" value="30 000" aria-label="Пожизненная ценность клиента в рублях"><span class="cur">₽</span></div></div>
         <div class="mini"><span>Один заказ с рекламы обошёлся в</span><span class="v" id="cppaid">2 000 ₽</span></div>
       </div>
 
@@ -42,9 +44,11 @@ const description =
         <div class="drop"><span id="dropText">дешевле на </span><b id="dropv">40%</b></div>
       </div>
 
+      <div class="ltvbox">Платный клиент стоит <b id="ltvCac">2 000 ₽</b>, приносит <b id="ltvVal">30 000 ₽</b> за всё время. Окупается <b class="x" id="ltvX">×15</b>.</div>
+
       <p class="note">Дешёвые заказы с рекламы <b>размазывают ваш фикс на больше заказов</b>, и каждый заказ, даже
-        старый, обходится дешевле. Реклама не добавляет новых огромных расходов, она догружает то, за что вы уже
-        платите. Работает, пока есть свободная ёмкость под новые заказы.</p>
+        старый, обходится дешевле. А платный клиент возвращает вложенное многократно. Реклама не добавляет новых
+        огромных расходов, она догружает то, за что вы уже платите. Работает, пока есть свободная ёмкость под новые заказы.</p>
 
       <a class="cta" href={site.telegram} rel="noopener">Посчитаю по вашим цифрам и покажу, где взять дешёвые заказы</a>
       <p class="cta-sub">Напишите в Telegram слово <b>САЙТ</b>, разберу ваш случай без обязательств.</p>
@@ -88,6 +92,9 @@ const description =
   .ba .u{font-size:11px;color:var(--muted)}
   .drop{text-align:center;margin-top:10px;font-size:13px;color:var(--muted)}
   .drop b{color:var(--ok);font-weight:700}
+  .ltvbox{font-family:var(--sans);font-size:14px;line-height:1.5;color:var(--muted);text-align:center;background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .ltvbox b{color:var(--text);font-weight:700}
+  .ltvbox .x{color:var(--ok)}
 
   .note{font-size:14px;line-height:1.55;color:var(--muted)}
   .note b{color:var(--text);font-weight:600}
@@ -101,12 +108,14 @@ const description =
   (function () {
     var fmt = function (n) { return Math.round(n).toLocaleString('ru-RU').replace(/,/g, ' '); };
     var num = function (v) { return parseInt(String(v).replace(/[^\d]/g, ''), 10) || 0; };
-    var ids = ['fixed', 'cur', 'ad', 'paid'], el = {};
+    var ids = ['fixed', 'cur', 'ad', 'paid', 'ltv'], el = {};
     ids.forEach(function (i) { el[i] = document.getElementById(i); });
     if (!el.fixed) return;
     var cplNow = document.getElementById('cplNow'), cppaid = document.getElementById('cppaid'),
         wasEl = document.getElementById('was'), nowEl = document.getElementById('now'),
-        dropText = document.getElementById('dropText'), dropv = document.getElementById('dropv');
+        dropText = document.getElementById('dropText'), dropv = document.getElementById('dropv'),
+        ltvCac = document.getElementById('ltvCac'), ltvVal = document.getElementById('ltvVal'), ltvX = document.getElementById('ltvX');
+    var roiFmt = function (r) { return r >= 10 ? String(Math.round(r)) : String(Math.round(r * 10) / 10).replace('.', ','); };
     var anim = null;
     function animateTo(node, target) {
       if (anim) cancelAnimationFrame(anim);
@@ -120,8 +129,13 @@ const description =
       var now1 = cur > 0 ? fixed / cur : 0;
       var perPaid = paid > 0 ? ad / paid : 0;
       var blended = (cur + paid) > 0 ? (fixed + ad) / (cur + paid) : 0;
+      var ltv = num(el.ltv.value);
+      var roi = perPaid > 0 ? ltv / perPaid : 0;
       cplNow.textContent = fmt(now1) + ' ₽';
       cppaid.textContent = fmt(perPaid) + ' ₽';
+      ltvCac.textContent = fmt(perPaid) + ' ₽';
+      ltvVal.textContent = fmt(ltv) + ' ₽';
+      ltvX.textContent = roi > 0 ? '×' + roiFmt(roi) : '—';
       wasEl.textContent = fmt(now1);
       var drop = now1 > 0 ? Math.round((1 - blended / now1) * 100) : 0;
       if (drop > 0) { dropText.textContent = 'дешевле на '; dropv.textContent = drop + '%'; }
