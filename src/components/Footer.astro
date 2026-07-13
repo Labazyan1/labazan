@@ -1,6 +1,7 @@
 ---
 import { site, operator } from '../data/site';
 import { categories } from '../data/categories';
+import A11y from './A11y.astro';
 ---
 <footer class="site-footer">
   <div class="wrap">
@@ -30,6 +31,7 @@ import { categories } from '../data/categories';
     <div class="foot-legal">
       <span>{operator.name}. {operator.statusShort}. ИНН {operator.inn}</span>
       <a href="/privacy">Политика обработки персональных данных</a>
+      <A11y />
     </div>
     <div class="foot-bottom">
       <span>© {new Date().getFullYear()} {site.name}. Все права защищены.</span>

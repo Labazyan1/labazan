@@ -25,6 +25,8 @@ const s = compact ? '-c' : '';
   <label for={`contact${s}`}>Телефон или почта</label>
   <input id={`contact${s}`} name="contact" required placeholder="Куда прислать смету" autocomplete="on" inputmode="text" />
 
+  <details class="form-more">
+    <summary>Уточнить детали <span>(необязательно)</span></summary>
   <!-- Цель: Сайт -->
   <div class="goal-fields" data-goal="Сайт">
     <label class="gf">Тип сайта
@@ -109,6 +111,7 @@ const s = compact ? '-c' : '';
       <textarea name="task" placeholder="Опишите задачу своими словами"></textarea>
     </label>
   </div>
+  </details>
 
   <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
   {/*
@@ -221,6 +224,14 @@ const s = compact ? '-c' : '';
   .goal-checks label{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border:1px solid color-mix(in srgb, currentColor 18%, transparent);border-radius:10px;font-size:14px;color:var(--muted);cursor:pointer}
   .goal-checks input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
   .goal-checks label:has(input:checked){border-color:var(--accent);color:var(--fg, currentColor)}
+
+  .form-more{margin:2px 0}
+  .form-more>summary{list-style:none;cursor:pointer;font-family:var(--sans);font-size:14px;color:var(--muted);display:inline-flex;align-items:center;gap:8px;padding:6px 0}
+  .form-more>summary::-webkit-details-marker{display:none}
+  .form-more>summary::before{content:'+';font-family:var(--mono);color:var(--accent);font-weight:700}
+  .form-more[open]>summary::before{content:'–'}
+  .form-more>summary span{color:var(--muted-2)}
+  .form-more .goal-fields{margin-top:10px}
 
   .form-status{margin-top:6px;font-size:14px;color:var(--ok)}
   .form-status a{color:inherit;text-decoration:underline}
