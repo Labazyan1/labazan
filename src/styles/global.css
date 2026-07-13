@@ -60,10 +60,11 @@ img{max-width:100%;display:block}
   position:sticky;top:0;z-index:50;background:rgba(13,16,20,.78);
   backdrop-filter:blur(12px);border-bottom:1px solid var(--line-soft);
 }
-.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.site-header .wrap{max-width:1280px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:36px;height:68px}
 .logo{font-family:var(--mono);font-weight:800;font-size:19px;letter-spacing:.02em;display:flex;align-items:center;gap:2px}
 .logo .br{color:var(--accent)}
-.nav-links{display:flex;gap:28px;font-size:15px;color:var(--muted)}
+.nav-links{display:flex;gap:26px;font-size:15px;color:var(--muted);white-space:nowrap}
 .nav-links a{transition:color .15s ease}
 .nav-links a:hover{color:var(--text)}
 .nav-cta{display:flex;align-items:center;gap:18px}
@@ -370,6 +371,13 @@ form .btn{justify-content:center;margin-top:6px}
    и CTA обрезается overflow-x. Прячем телефон и статус раньше, до сборки в бургер. */
 @media (max-width:1150px){
   .nav-phone,.nav-status{display:none}
+  .nav{gap:22px}
+}
+/* Ниже 900px строка пунктов + кнопка перестают помещаться комфортно — уходим в бургер. */
+@media (max-width:900px){
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-toggle{display:flex}
 }
 @media (max-width:960px){
   .hero-inner{grid-template-columns:1fr;gap:40px}
@@ -388,11 +396,8 @@ form .btn{justify-content:center;margin-top:6px}
 @media (max-width:640px){
   body{font-size:16px}
   .section{padding:72px 0}
-  .nav-links{display:none}
-  /* CTA в шапке скрываем: она дублируется в бургер-меню (.nav-mobile-cta).
-     Иначе «Рассчитать проект» рядом с гамбургером переносится и рвёт 68px-шапку. */
-  .nav-cta{display:none}
-  .nav-toggle{display:flex}
+  /* Навигация уходит в бургер уже с 900px (см. выше): .nav-links/.nav-cta скрыты,
+     .nav-toggle показан. CTA дублируется в бургер-меню (.nav-mobile-cta). */
   .steps{grid-template-columns:1fr}
   .step{border-right:0;border-bottom:1px solid var(--line-soft)}
   .foot{grid-template-columns:1fr}
