@@ -18,6 +18,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+/* Липкая шапка (68px) перекрывает верх якоря — сдвигаем точку прокрутки. */
+.section[id],#zayavka,#main-content{scroll-margin-top:88px}
 body{
   background:var(--ink);color:var(--text);font-family:var(--sans);
   font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
