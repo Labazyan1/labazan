@@ -22,6 +22,23 @@
     heroBg.style.transform = `translate3d(0, ${(-scrollY * 0.12).toFixed(1)}px, 0)`;
   }
 
+  // Параллакс-слой едет вверх на 12% скролла и иначе оголил бы снизу статический
+  // лён (на html), который двигался бы с обычной скоростью — отсюда «параллакс
+  // только сверху». Делаем слой выше вьюпорта ровно на макс. сдвиг (0.12 * прокрутка),
+  // чтобы медленный фон покрывал ВСЮ страницу без статической полосы.
+  function sizeHeroBg() {
+    if (!heroBg) return;
+    if (reduceMotion.matches || !wide.matches) {
+      heroBg.style.height = '';
+      heroBg.style.bottom = '';
+      return;
+    }
+    const vh = window.innerHeight;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
+    heroBg.style.bottom = 'auto';
+    heroBg.style.height = Math.ceil(vh + maxScroll * 0.12 + 2) + 'px';
+  }
+
   function render() {
     renderedScroll += (targetScroll - renderedScroll) * 0.11;
     renderBackground(renderedScroll);
@@ -58,19 +75,26 @@
 
   window.addEventListener('resize', () => {
     targetScroll = window.scrollY;
+    sizeHeroBg();
     requestRender();
   }, { passive: true });
 
+  // Высота документа может подрасти после дозагрузки шрифтов/картинок.
+  window.addEventListener('load', sizeHeroBg);
+
   wide.addEventListener?.('change', () => {
     if (heroBg) heroBg.style.transform = '';
+    sizeHeroBg();
     requestRender();
   });
 
   reduceMotion.addEventListener?.('change', () => {
     if (heroBg && reduceMotion.matches) heroBg.style.transform = '';
+    sizeHeroBg();
     requestRender();
   });
 
+  sizeHeroBg();
   requestRender();
 })();
 
