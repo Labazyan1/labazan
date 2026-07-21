@@ -1,15 +1,13 @@
-name: Deploy to Beget
+name: Deploy to Beget (static v2)
 
-# Автодеплой: push в main -> сборка Astro -> заливка dist/ по FTPS в Beget.
-# Ручной запуск — вкладка Actions -> Run workflow.
+# v2 — плоская статика (без Astro-сборки). Только ручной запуск (Actions -> Run workflow),
+# чтобы контролировать момент боевого выката. Заливка dist-каталога ./site/ по FTPS.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
   group: deploy-beget
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -18,19 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build (strip-config чистит секреты из dist)
-        run: npm run build
-
-      - name: Deploy to Beget via FTPS
+      - name: Deploy static site to Beget via FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -38,13 +24,12 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
-          # Содержимое dist/ -> в docroot домена.
-          local-dir: ./dist/
+          local-dir: ./site/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          # НЕ трогать серверный конфиг с секретами почты/Telegram и служебные файлы.
-          # Исключённые пути не заливаются И не удаляются с сервера.
+          # Неразрушающая заливка: v1-осиротевшие файлы НЕ удаляются (чистим руками после).
+          dangerous-clean-slate: false
+          # Секреты формы и служебное на сервере не трогаем.
           exclude: |
             **/lead-config.php
             **/.git*
-            **/node_modules/**
-            **/.htpasswd
+            **/.ftp-deploy-sync-state.json
