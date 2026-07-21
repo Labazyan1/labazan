@@ -156,7 +156,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   gap: 8px;
   align-items: center;
   color: var(--indigo);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -166,7 +166,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .breadcrumbs {
   padding-block: 16px 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.02em;
 }
 .breadcrumbs a {
