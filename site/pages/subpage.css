@@ -211,7 +211,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .page__kicker {
   margin: 14px 0 0;
   color: var(--indigo);
-  font-size: clamp(15px, 2vw, 18px);
+  font-size: clamp(17px, 2vw, 20px);
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -220,7 +220,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   margin: 18px 0 0;
   max-width: 62ch;
   color: color-mix(in srgb, var(--ink) 84%, transparent);
-  font-size: clamp(15px, 1.6vw, 18px);
+  font-size: clamp(17px, 1.6vw, 20px);
   line-height: 1.6;
   text-wrap: pretty;
 }
@@ -392,7 +392,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
 }
 .cookie-banner.is-visible { opacity: 1; transform: none; }
-.cookie-banner__text { margin: 0; font-size: 13px; line-height: 1.6; color: var(--indigo); }
+.cookie-banner__text { margin: 0; font-size: 15px; line-height: 1.6; color: var(--indigo); }
 .cookie-banner__text a { color: var(--madder); text-decoration: underline; }
 .cookie-banner__actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .cookie-banner__btn {
