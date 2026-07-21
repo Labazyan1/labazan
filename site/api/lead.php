@@ -15,6 +15,10 @@ $LEAD_EMAIL = '';
 $LEAD_EMAIL_FROM = '';
 $N8N_WEBHOOK_URL = '';
 $N8N_WEBHOOK_SECRET = '';
+// Уведомление о лиде. По умолчанию берём уже существующий бот (v1-ключи $BOT_TOKEN/$CHAT_ID
+// в серверном конфиге); $TG_BOT_TOKEN/$TG_CHAT_ID — необязательный override под отдельного бота.
+$BOT_TOKEN = '';
+$CHAT_ID = '';
 $TG_BOT_TOKEN = '';
 $TG_CHAT_ID = '';
 foreach ([__DIR__ . '/lead-config.php', __DIR__ . '/../lead-config.php'] as $cfg) {
@@ -35,6 +39,7 @@ labazan_lead_run([
     'lead_email_from' => $LEAD_EMAIL_FROM,
     'n8n_url'         => $N8N_WEBHOOK_URL,
     'n8n_secret'      => $N8N_WEBHOOK_SECRET,
-    'tg_bot_token'    => $TG_BOT_TOKEN, // статичный пинг «пришёл лид», без ПД
-    'tg_chat_id'      => $TG_CHAT_ID,
+    // статичный пинг «пришёл лид» (без ПД): отдельный бот, если задан, иначе текущий v1-бот
+    'tg_bot_token'    => $TG_BOT_TOKEN !== '' ? $TG_BOT_TOKEN : $BOT_TOKEN,
+    'tg_chat_id'      => $TG_CHAT_ID !== '' ? $TG_CHAT_ID : $CHAT_ID,
 ]);
