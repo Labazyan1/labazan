@@ -4,8 +4,9 @@
 // rate-limit, обязательное согласие, санитайз, mail() РФ + опц. n8n→РФ-CRM.
 //
 // 152-ФЗ: ПД граждан РФ идут ТОЛЬКО в российские приёмники (почта на домене, сервер Beget в РФ,
-// и n8n на РФ-ВМ → РФ-CRM). На диске не хранятся — только пересылка. Трансграничной передачи нет.
+// и n8n на РФ-ВМ → РФ-CRM). На диске не хранятся — только пересылка. Трансграничной передачи ПД нет.
 // Telegram-ник принимается лишь как ТЕКСТ контакта в письме; сайт по нему ничего никуда не шлёт.
+// В Telegram уходит ТОЛЬКО статичное уведомление «пришёл лид» без единого поля формы (не ПД).
 //
 // Секреты — в отдельном lead-config.php рядом (в .gitignore, создаётся на сервере).
 // В репозитории только lead-config.sample.php. Без конфига форма отвечает «not_configured».
@@ -14,6 +15,8 @@ $LEAD_EMAIL = '';
 $LEAD_EMAIL_FROM = '';
 $N8N_WEBHOOK_URL = '';
 $N8N_WEBHOOK_SECRET = '';
+$TG_BOT_TOKEN = '';
+$TG_CHAT_ID = '';
 foreach ([__DIR__ . '/lead-config.php', __DIR__ . '/../lead-config.php'] as $cfg) {
     if (is_file($cfg)) { require $cfg; break; }
 }
@@ -32,4 +35,6 @@ labazan_lead_run([
     'lead_email_from' => $LEAD_EMAIL_FROM,
     'n8n_url'         => $N8N_WEBHOOK_URL,
     'n8n_secret'      => $N8N_WEBHOOK_SECRET,
+    'tg_bot_token'    => $TG_BOT_TOKEN, // статичный пинг «пришёл лид», без ПД
+    'tg_chat_id'      => $TG_CHAT_ID,
 ]);
