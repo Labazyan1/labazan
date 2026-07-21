@@ -1,0 +1,15 @@
+# Приём формы: наружу открыт только lead.php (эндпоинт POST).
+# Прямой HTTP-доступ к секретам (lead-config.php), образцу и ядру запрещён.
+# На require из PHP это не влияет (файловая система), только на запрос по URL.
+
+<FilesMatch "^(lead-config\.php|lead-config\.sample\.php|lead-core\.php)$">
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    # Apache 2.2 (на всякий случай)
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

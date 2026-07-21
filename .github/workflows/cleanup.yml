@@ -1,0 +1,35 @@
+name: Cleanup v1 orphans on Beget
+
+# Точечно удаляет v1-файлы, которых нет в v2. Ручной запуск ПОСЛЕ успешного деплоя и проверки.
+# СОХРАНЯЕТ: v2-файлы, lead/*.pdf (лид-магниты), api/lead-config.php, favicon.svg, privacy/.
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Remove v1 orphans
+        env:
+          S: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          D: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          lftp -c "set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" \"$S\"; cd \"$D\"; \
+            rm -f labazan-site-full.zip; \
+            rm -f sitemap-0.xml; \
+            rm -f sitemap-index.xml; \
+            rm -f og.png; \
+            rm -f api/check-lead.php; \
+            rm -rf _astro; \
+            rm -rf blog; \
+            rm -rf produkty; \
+            rm -rf uslugi; \
+            rm -rf lead/stoimost-lida; \
+            "
+          echo '--- осталось на сервере ---'
+          lftp -c "set ftp:ssl-force true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" \"$S\"; cd \"$D\"; find" | sort | head -100
