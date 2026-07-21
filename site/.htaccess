@@ -1,0 +1,45 @@
+# ═══════════════════════════════════════════════════════════════════
+# 301-редиректы старых URL labazan.ru (v1 многостраничник → v2 одностраничник).
+# v2 заменяет весь сайт: узкий лендинг соло-Рамазана + лид-магниты.
+# Старые разделы (услуги/продукты/блог) свёрнуты на главную, чтобы не плодить
+# 404 и не терять ссылочный вес. Apache (Beget). На nginx-beta правила инертны.
+#
+# ВАЖНО: новые страницы v2 (/, /privacy/, /nuzhen-li-sajt/, /pochemu-net-zayavok/,
+# /okupitsya-reklama/, /api/, /assets/) под шаблоны ниже НЕ попадают — их не трогаем.
+# /privacy/ совпадает на обоих сайтах → отдельного правила не нужно (DirectorySlash
+# сам добавит слеш для /privacy). Специальных правил на нём нет, чтобы избежать петли.
+# ═══════════════════════════════════════════════════════════════════
+
+<IfModule mod_alias.c>
+    # Лид-магнит «стоимость лида» ближе всего к калькулятору окупаемости рекламы.
+    RedirectMatch 301 ^/lead/stoimost-lida(/.*)?$ /okupitsya-reklama/
+
+    # Каталог услуг и все страницы услуг → на главную.
+    RedirectMatch 301 ^/uslugi(/.*)?$ /
+
+    # Раздел продуктов и все карточки продуктов → на главную.
+    RedirectMatch 301 ^/produkty(/.*)?$ /
+
+    # Блог и все статьи → на главную.
+    RedirectMatch 301 ^/blog(/.*)?$ /
+</IfModule>
+
+# Канонизация: единый адрес https://labazan.ru (без www), совпадает с <link canonical>.
+# Учитываем прокси Beget (SSL терминируется на балансировщике → проверяем и X-Forwarded-Proto,
+# иначе возможна петля редиректов). Если владелец включит «Force HTTPS» и www-склейку
+# в панели Beget — эти правила просто не сработают повторно (двойного редиректа не будет).
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # http → https
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # www → без www
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Своя страница 404 с путём на главную (в стиле сайта).
+ErrorDocument 404 /404.html

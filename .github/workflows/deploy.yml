@@ -1,7 +1,8 @@
 name: Deploy to Beget (static v2)
 
-# v2 — плоская статика (без Astro-сборки). Только ручной запуск (Actions -> Run workflow),
-# чтобы контролировать момент боевого выката. Заливка dist-каталога ./site/ по FTPS.
+# v2 — плоская статика (без Astro-сборки). Только ручной запуск.
+# Заливка ./site/ по FTPS. Пред-шаг стирает remote sync-state, чтобы заливка была
+# ЧИСТО ДОБАВЛЯЮЩЕЙ (v1-осиротевшие файлы не удаляются автоматически — чистим отдельным workflow).
 on:
   workflow_dispatch:
 
@@ -16,6 +17,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clear remote sync-state (additive deploy)
+        env:
+          S: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          D: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" \"$S\"; rm -f \"$D/.ftp-deploy-sync-state.json\"" || true
+
       - name: Deploy static site to Beget via FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -26,9 +37,7 @@ jobs:
           port: 21
           local-dir: ./site/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          # Неразрушающая заливка: v1-осиротевшие файлы НЕ удаляются (чистим руками после).
           dangerous-clean-slate: false
-          # Секреты формы и служебное на сервере не трогаем.
           exclude: |
             **/lead-config.php
             **/.git*
