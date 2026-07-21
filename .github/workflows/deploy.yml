@@ -1,8 +1,7 @@
 name: Deploy to Beget (static v2)
 
-# v2 — плоская статика (без Astro-сборки). Только ручной запуск.
-# Заливка ./site/ по FTPS. Пред-шаг стирает remote sync-state, чтобы заливка была
-# ЧИСТО ДОБАВЛЯЮЩЕЙ (v1-осиротевшие файлы не удаляются автоматически — чистим отдельным workflow).
+# v2 — плоская статика. Ручной запуск. Заливка ./site/ по FTPS.
+# Пред-шаг стирает remote sync-state → чисто добавляющая заливка.
 on:
   workflow_dispatch:
 
@@ -16,6 +15,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Lint PHP (форм-эндпоинт не должен уехать с синтакс-ошибкой)
+        run: |
+          for f in site/api/*.php; do echo "lint $f"; php -l "$f"; done
 
       - name: Clear remote sync-state (additive deploy)
         env:
