@@ -1,0 +1,32 @@
+name: Backup Beget server
+
+# Полный бэкап текущего docroot (v1 + серверные файлы) ДО выката v2. Ручной запуск.
+on:
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Mirror docroot
+        env:
+          S: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          D: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          mkdir -p server-backup
+          lftp -c "set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" \"$S\"; mirror --verbose --parallel=4 \"$D\" server-backup"
+          echo '--- backed up tree ---'
+          find server-backup -type f | sort | head -200
+          tar czf server-backup.tgz server-backup
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: beget-server-backup
+          path: server-backup.tgz
+          retention-days: 5
