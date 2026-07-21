@@ -35,7 +35,7 @@
   --field: #e9e0cb;            /* фоновый лён */
   --panel: #f2ebd8;            /* приподнятые поверхности (карточки) */
   --ink: #2b211a;              /* тёмная шерсть — основной текст */
-  --muted: #6f6555;
+  --muted: #5f5647; /* контраст 5.5:1 на #e9e0cb (было #6f6555 = 4.36, ниже WCAG AA) */
   --madder: #9c2f23;           /* марена — акцент, кнопки, кайма */
   --indigo: #2a3b55;           /* индиго — вторичный текст */
   --ochre: #b97f2e;            /* охра — только декор, не текст */
@@ -265,8 +265,8 @@ main {
   margin: 0;
   max-width: 42ch;
   color: color-mix(in srgb, var(--ink) 84%, transparent);
-  font-size: clamp(15px, 1.4vw, 19px);
-  line-height: 1.55;
+  font-size: clamp(17px, 1.7vw, 21px);
+  line-height: 1.6;
   text-wrap: balance;
   text-shadow: 0 2px 3px rgba(var(--sh), .16), 0 8px 18px rgba(var(--sh), .12);
 }
@@ -284,7 +284,7 @@ main {
   gap: 10px;
   padding: 9px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .estimate div:first-child { border-top: 1px solid var(--line); }
@@ -475,11 +475,11 @@ main {
 }
 
 .questions__heading > p:last-child {
-  max-width: 200px;
+  max-width: 240px;
   margin: 12px 0 0;
   color: var(--muted);
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
 .deck {
@@ -861,7 +861,7 @@ main {
   max-width: 580px;
   margin: 26px 0 0;
   color: color-mix(in srgb, var(--ink) 84%, transparent);
-  font-size: clamp(15px, 1.4vw, 18px);
+  font-size: clamp(17px, 1.7vw, 20px);
   line-height: 1.6;
 }
 
@@ -888,12 +888,12 @@ main {
 .steps__num {
   color: var(--madder);
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .steps__name {
   color: var(--ink);
-  font-size: clamp(16px, 2vw, 21px);
+  font-size: clamp(17px, 2vw, 22px);
   font-weight: 700;
 }
 
@@ -902,7 +902,8 @@ main {
 .steps__desc {
   grid-column: 1 / -1;
   color: var(--indigo);
-  font-size: 12px;
+  font-size: 15px;
+  line-height: 1.55;
   text-align: left;
 }
 
@@ -910,7 +911,7 @@ main {
   max-width: 640px;
   margin: 36px 0 0;
   color: var(--madder);
-  font-size: clamp(15px, 1.6vw, 19px);
+  font-size: clamp(17px, 1.8vw, 21px);
   font-weight: 700;
   line-height: 1.5;
 }
@@ -979,8 +980,8 @@ main {
   grid-column: 2;
   margin: 0;
   color: var(--indigo);
-  font-size: clamp(12px, 3.2vw, 14px);
-  line-height: 1.55;
+  font-size: clamp(15px, 3.2vw, 17px);
+  line-height: 1.6;
 }
 
 @media (min-width: 760px) {
@@ -1033,7 +1034,7 @@ main {
   max-width: 44ch;
   margin: 22px 0 0;
   color: var(--muted);
-  font-size: clamp(12px, 3vw, 14px);
+  font-size: clamp(15px, 3vw, 17px);
   line-height: 1.55;
 }
 
@@ -1088,7 +1089,7 @@ main {
 
 .report__rows dt {
   color: var(--indigo);
-  font-size: clamp(12px, 3.4vw, 15px);
+  font-size: clamp(14px, 3.4vw, 16px);
 }
 
 .report__rows dd {
@@ -1215,7 +1216,7 @@ main {
   flex: 1;
   margin: 0;
   color: var(--indigo);
-  font-size: clamp(12px, 3.2vw, 14px);
+  font-size: clamp(15px, 3.2vw, 17px);
   line-height: 1.55;
 }
 
@@ -1224,7 +1225,7 @@ main {
   padding-top: 14px;
   border-top: 1px dotted color-mix(in srgb, var(--ochre) 60%, transparent);
   color: var(--madder);
-  font-size: clamp(12px, 3vw, 14px);
+  font-size: clamp(15px, 3vw, 17px);
   font-weight: 700;
 }
 
@@ -1232,7 +1233,7 @@ main {
   max-width: 56ch;
   margin: 28px 0 0;
   color: var(--muted);
-  font-size: clamp(12px, 3vw, 14px);
+  font-size: clamp(15px, 3vw, 17px);
   line-height: 1.55;
 }
 
@@ -1272,7 +1273,7 @@ main {
   max-width: 44ch;
   margin: 20px 0 0;
   color: var(--madder);
-  font-size: clamp(14px, 3.4vw, 18px);
+  font-size: clamp(16px, 3.4vw, 20px);
   font-weight: 700;
   line-height: 1.5;
 }
@@ -1297,13 +1298,13 @@ main {
 .about__estimate dt {
   color: var(--indigo);
   font-family: var(--font-mono);
-  font-size: clamp(11px, 3vw, 13px);
+  font-size: clamp(13px, 3vw, 15px);
 }
 
 .about__estimate dd {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(14px, 3.6vw, 17px);
+  font-size: clamp(15px, 3.6vw, 18px);
   font-weight: 700;
 }
 
@@ -1357,7 +1358,7 @@ main {
   list-style: none;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(15px, 4vw, 21px);
+  font-size: clamp(17px, 4vw, 22px);
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -1400,7 +1401,7 @@ main {
   margin: 0;
   padding: 0 4px 22px;
   color: var(--indigo);
-  font-size: clamp(13px, 3.4vw, 16px);
+  font-size: clamp(15px, 3.4vw, 18px);
   line-height: 1.6;
 }
 
@@ -1442,7 +1443,7 @@ main {
   align-items: center;
   gap: 9px;
   color: var(--indigo);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1478,7 +1479,7 @@ main {
 .lead__field label {
   color: var(--indigo);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1521,7 +1522,7 @@ main {
   gap: 11px;
   align-items: start;
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -1546,7 +1547,7 @@ main {
 
 .lead__status {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
   min-height: 1em;
 }
@@ -1585,7 +1586,7 @@ main {
   background: color-mix(in srgb, var(--panel) 92%, transparent);
   box-shadow: var(--elev-3);
   color: var(--ink);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
   opacity: 0;
