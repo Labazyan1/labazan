@@ -133,6 +133,53 @@ function lead_out($data, array $theme, $code = 200) {
 }
 
 /**
+ * Статичное Telegram-уведомление о новом лиде. Текст СТРОГО фиксированный: ни одного
+ * поля из формы (ПД остаются в РФ-почте, в мессенджер не уходят). Таймаут 3с. Любая
+ * ошибка/недоступность (напр. Beget режет исходящий на api.telegram.org) проглатывается
+ * и НЕ влияет ни на заявку, ни на ответ формы. Токен/chat_id задаёт владелец на сервере.
+ */
+function labazan_tg_notify($token, $chat_id) {
+    if (!is_string($token) || !is_string($chat_id) || $token === '' || $chat_id === '') return;
+    if (!function_exists('curl_init')) return;
+    $ch = curl_init('https://api.telegram.org/bot' . $token . '/sendMessage');
+    if ($ch === false) return;
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POSTFIELDS     => http_build_query([
+            'chat_id' => $chat_id,
+            'text'    => 'Новый лид на labazan.ru. Детали на почте.',
+            'disable_web_page_preview' => 'true',
+        ]),
+        CURLOPT_CONNECTTIMEOUT => 3,
+        CURLOPT_TIMEOUT        => 3,
+    ]);
+    @curl_exec($ch);
+    @curl_close($ch);
+}
+
+/**
+ * Успешный ответ {ok:true} формы, затем (уже после закрытия соединения с клиентом)
+ * фоновый Telegram-пинг. Так пинг не задерживает и не меняет ответ формы. Заявка важнее.
+ */
+function lead_out_ok_then_ping(array $theme, $tg_token, $tg_chat) {
+    http_response_code(200);
+    if (lead_wants_json()) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
+    } else {
+        header('Content-Type: text/html; charset=utf-8');
+        echo lead_html_response(['ok' => true], $theme);
+    }
+    // PHP-FPM: отдаём ответ клиенту немедленно, пинг — фоном после этого.
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
+    labazan_tg_notify($tg_token, $tg_chat);
+    exit;
+}
+
+/**
  * Полный приём заявки. $o - настройки инструмента:
  *   allowed_hosts[]  - домены для origin-проверки
  *   host_label       - подпись домена в письме/теме/источнике (напр. 'audit.labazan.ru')
@@ -252,7 +299,8 @@ function labazan_lead_run(array $o) {
 
     // Успех, если заявка ушла ХОТЯ БЫ одним российским каналом (почта РФ / n8n→РФ-CRM).
     if ($mail_ok || $n8n_ok) {
-        lead_out(['ok' => true], $theme);
+        // Ответ форме сразу, потом фоновый статичный Telegram-пинг (без ПД).
+        lead_out_ok_then_ping($theme, $o['tg_bot_token'] ?? '', $o['tg_chat_id'] ?? '');
     }
     // Ни один канал не настроен - форма ещё не сконфигурирована.
     if ($lead_email === '' && $n8n_url === '') {
