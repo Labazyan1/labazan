@@ -1,0 +1,369 @@
+/* ══════════════════════════════════════════════════════════════════
+   Лабазан — калькулятор «Окупится ли реклама».
+   Ковровая тема: токены берём из subpage.css (подключается раньше).
+   Только числа, что реально считаются, на экране. Вид — как весь сайт.
+   ══════════════════════════════════════════════════════════════════ */
+
+.calc {
+  width: min(600px, 100%);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Карточка ввода ────────────────────────────────────────────────── */
+.calc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 18px 18px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  border-top: 1px solid rgba(255, 253, 245, .7);
+  background: linear-gradient(160deg, #f4eddb, #ece2c9);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), var(--elev-3);
+}
+
+.calc-card__title {
+  color: var(--ochre);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Переключатель способа задать прибыль ──────────────────────────── */
+.calc-toggle {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.calc-toggle button {
+  flex: 1;
+  min-height: 42px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms var(--ease-out), color 140ms var(--ease-out);
+}
+.calc-toggle button.is-on {
+  background: linear-gradient(160deg, #fbf5e6, #f1e7cf);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(var(--sh), .12);
+}
+
+/* ВАЖНО: перекрывает атрибут hidden (в старой версии display:flex его съедал). */
+.calc-pane[hidden] { display: none; }
+.calc-pane { display: flex; flex-direction: column; gap: 13px; }
+
+/* ── Поле ввода ─────────────────────────────────────────────────────── */
+.calc-row { display: flex; flex-direction: column; gap: 6px; }
+.calc-row > label {
+  color: var(--indigo);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.calc-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, #fff 42%, var(--field));
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.calc-field:focus-within {
+  border-color: var(--madder);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--madder) 22%, transparent);
+}
+.calc-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: 0;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 19px;
+}
+.calc-field .calc-cur {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+/* Селект ниши. */
+.calc-field--select { padding: 0; }
+.calc-field--select select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 42px 0 14px;
+  border: 0;
+  border-radius: 9px;
+  background-color: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232b211a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.calc-field--select select:focus-visible { outline: none; }
+
+/* Диапазон теоретической цены лида: два числа с разделителем. */
+.calc-hero__range {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 12px 0 0;
+}
+.calc-hero__range .calc-sep {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 7vw, 38px);
+  color: var(--muted);
+}
+
+/* Строка «сколько можете платить». */
+.calc-payline {
+  padding: 16px 18px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ink) 3%, transparent);
+}
+.calc-payline__lead {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--ink);
+}
+.calc-payline__lead b { font-family: var(--font-mono); color: var(--indigo); }
+.calc-payline__sub {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+.calc-payline__sub b { color: var(--ink); font-weight: 700; font-family: var(--font-mono); }
+
+/* Мини-строка «прибыль с продажи» под чек+маржа. */
+.calc-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+.calc-mini b { color: var(--ink); font-family: var(--font-mono); font-size: 16px; }
+
+/* Коридор от–до. */
+.calc-corridor {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 10px;
+}
+/* Grid-элементы по умолчанию min-width:auto и распирают контейнер (поле вылезало
+   за карточку справа). Разрешаем колонкам сжиматься. */
+.calc-corridor .calc-row { min-width: 0; }
+.calc-corridor .calc-dash { color: var(--muted); padding-bottom: 15px; }
+
+/* Пояснение под полем: почему спрашиваем и что делать, если не знаете. */
+.calc-note {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+.calc-note b { color: var(--ink); font-weight: 700; }
+.calc-note a { color: var(--madder); font-weight: 700; }
+
+/* ── Главный результат ─────────────────────────────────────────────── */
+.calc-hero {
+  text-align: center;
+  padding: 24px 18px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--ochre) 55%, var(--line));
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--ochre) 12%, transparent), transparent 60%),
+    linear-gradient(160deg, #f6efdd, #efe6cd);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), var(--elev-3);
+}
+.calc-hero__label {
+  color: var(--ochre);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.calc-hero__big {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.calc-hero__big .calc-n {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(46px, 13vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--indigo);
+}
+.calc-hero__big .calc-u {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--indigo);
+}
+.calc-hero__sub {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+.calc-hero__sub b { color: var(--ink); font-weight: 700; font-family: var(--font-mono); }
+.calc-hero__warn {
+  margin: 13px 0 0;
+  padding-top: 13px;
+  border-top: 1px dashed color-mix(in srgb, var(--ochre) 40%, transparent);
+  font-size: 13px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+.calc-hero__warn b { color: var(--ink); font-weight: 700; }
+
+/* ── Вердикт: тон задаёт цвет ───────────────────────────────────────── */
+.calc-verdict {
+  padding: 16px 18px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--muted);
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+.calc-verdict__title {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.calc-verdict__text { margin: 0; font-size: 14.5px; line-height: 1.6; color: color-mix(in srgb, var(--ink) 86%, transparent); }
+
+.calc-verdict[data-tone="ok"]   { border-left-color: #2f7a3f; background: color-mix(in srgb, #2f7a3f 8%, transparent); }
+.calc-verdict[data-tone="warn"] { border-left-color: var(--ochre); background: color-mix(in srgb, var(--ochre) 10%, transparent); }
+.calc-verdict[data-tone="bad"]  { border-left-color: var(--madder); background: color-mix(in srgb, var(--madder) 8%, transparent); }
+.calc-verdict[data-tone="ok"]   .calc-verdict__title { color: #256232; }
+.calc-verdict[data-tone="warn"] .calc-verdict__title { color: #8a5e1f; }
+.calc-verdict[data-tone="bad"]  .calc-verdict__title { color: var(--madder); }
+
+/* ── Чувствительность к конверсии ───────────────────────────────────── */
+.calc-sens {
+  padding: 16px 18px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, #f4eddb, #ece2c9);
+}
+.calc-sens__label {
+  color: var(--ochre);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.calc-sens__row { display: flex; gap: 9px; margin-top: 13px; }
+.calc-sens__col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, #fff 34%, var(--field));
+}
+.calc-sens__col .k { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.calc-sens__col .v { font-family: var(--font-mono); font-weight: 700; font-size: 16px; color: var(--ink); }
+.calc-sens__note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+
+/* ── Вторичные строки: возврат по границам коридора ─────────────────── */
+.calc-secondary {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 18px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ink) 3%, transparent);
+}
+.calc-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 11px 0;
+  font-size: 13.5px;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+.calc-line + .calc-line { border-top: 1px solid var(--line); }
+.calc-line .k { flex: 0 1 auto; }
+.calc-line .k b { color: var(--ink); font-family: var(--font-mono); font-weight: 700; font-size: 12.5px; }
+.calc-line .dots { flex: 1 1 auto; border-bottom: 1px dotted var(--muted); transform: translateY(-3px); min-width: 16px; }
+.calc-line .v { flex: 0 0 auto; font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: #256232; }
+
+/* ── Мостик к разведке ──────────────────────────────────────────────── */
+.calc-bridge {
+  margin: 0;
+  padding: 15px 18px;
+  border-radius: 0 12px 12px 0;
+  border-left: 3px solid var(--madder);
+  background: linear-gradient(160deg, #f4eddb, #ece2c9);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+.calc-bridge b { color: var(--ink); font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  .calc-toggle button, .calc-field input, .calc-field { transition-duration: 0ms; }
+}
+
+/* ── Embed-режим (?embed=1): страница встроена iframe'ом в другую страницу.
+   Прячем всю обвязку, оставляем только калькулятор; фон прозрачный. ───── */
+html.is-embed, html.is-embed body { background: transparent; }
+html.is-embed body::before { display: none; }
+html.is-embed .page-header,
+html.is-embed .breadcrumbs,
+html.is-embed .page__intro,
+html.is-embed .lead,
+html.is-embed .page-footer,
+html.is-embed section[aria-labelledby="more-tools"],
+html.is-embed .calc-bridge { display: none; }
+html.is-embed .page { padding: 0; }
+html.is-embed .page__section { margin: 0; padding: 0; }
+html.is-embed .page__section::before { display: none; }

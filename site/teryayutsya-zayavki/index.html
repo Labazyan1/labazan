@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Приём заявок: отвечает за минуту 24/7, чтобы обращения не терялись | Лабазан</title>
+    <meta
+      name="description"
+      content="Бот отвечает на каждое обращение за минуту — ночью, в выходной и в пятницу, квалифицирует и передаёт готовый контакт. Посчитайте, сколько заявок вы теряете и сколько это в деньгах. Бесплатно."
+    />
+    <meta name="theme-color" content="#e9e0cb" />
+    <link rel="canonical" href="https://labazan.ru/teryayutsya-zayavki/" />
+    <meta name="robots" content="index,follow" />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Лабазан" />
+    <meta property="og:title" content="Приём заявок: отвечает за минуту 24/7, чтобы обращения не терялись" />
+    <meta property="og:description" content="Бот отвечает на каждое обращение за минуту, квалифицирует и передаёт готовый контакт. Посчитайте, сколько заявок теряется." />
+    <meta property="og:url" content="https://labazan.ru/teryayutsya-zayavki/" />
+    <meta property="og:image" content="https://labazan.ru/assets/og-image.png" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Приём заявок: отвечает за минуту 24/7" />
+    <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
+    <link rel="stylesheet" href="../pages/subpage.css?v=slot28" />
+    <link rel="stylesheet" href="../assets/lead-form.css?v=slot28" />
+    <link rel="stylesheet" href="../assets/calc-reklama.css?v=slot28" />
+    <script src="../assets/analytics.js?v=slot28" defer></script>
+    <script src="../assets/consent.js?v=slot28" defer></script>
+    <script src="../assets/lead-form.js?v=slot28" defer></script>
+    <script src="../assets/calc-loss.js?v=slot28" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К содержанию</a>
+
+    <!-- header: идентичен на всех ветках; логотип ведёт на / -->
+    <header class="page-header">
+      <a class="page-header__brand" href="../" aria-label="Лабазан, на главную">ЛАБАЗАН<span>.</span></a>
+      <p class="page-header__meta"><span>Дагестан</span> · <span>Яндекс</span></p>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a href="../">Главная</a> <span aria-hidden="true">→</span>
+      <span aria-current="page">Приём заявок</span>
+    </nav>
+
+    <main id="main" class="page">
+      <!-- 1. Интро -->
+      <section class="page__intro" aria-labelledby="intro-title">
+        <p class="page__tag">ПРИЁМ ЗАЯВОК</p>
+        <h1 id="intro-title">Заявки приходят, но теряются?</h1>
+        <p class="page__kicker">Отвечает за минуту — ночью, в выходной и в пятницу</p>
+        <p class="page__lead">
+          Бот отвечает на каждое обращение мгновенно, квалифицирует и передаёт
+          вам готовый контакт. Сайт и реклама приводят заявку — приём заявок
+          не даёт ей потеряться.
+        </p>
+        <a class="cta__button" href="#lead">Получить бесплатный разбор</a>
+      </section>
+
+      <!-- 2. Калькулятор потерянных заявок — встроен прямо в страницу -->
+      <section class="page__section" aria-label="Калькулятор потерянных заявок">
+        <div class="calc" data-loss>
+
+          <div class="calc-card">
+            <p class="calc-card__title">ваши обращения</p>
+
+            <div class="calc-row">
+              <label for="l-leads">Обращений в месяц</label>
+              <div class="calc-field">
+                <input id="l-leads" data-el="leads" inputmode="numeric" value="60" aria-label="Обращений в месяц" />
+                <span class="calc-cur">шт</span>
+              </div>
+            </div>
+
+            <div class="calc-row">
+              <label for="l-speed">За сколько в среднем отвечаете</label>
+              <div class="calc-field calc-field--select">
+                <select id="l-speed" data-el="speed" aria-label="Среднее время ответа">
+                  <option value="0.08">за 5 минут</option>
+                  <option value="1" selected>в течение часа</option>
+                  <option value="3">за пару часов</option>
+                  <option value="6">за полдня</option>
+                  <option value="16">к следующему дню</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="calc-row">
+              <label for="l-off">Доля обращений вне рабочего времени, %</label>
+              <div class="calc-field">
+                <input id="l-off" data-el="offshare" inputmode="numeric" value="40" aria-label="Доля обращений вне рабочего времени в процентах" />
+                <span class="calc-cur">%</span>
+              </div>
+            </div>
+
+            <div class="calc-row">
+              <label for="l-check">Средний чек, ₽</label>
+              <div class="calc-field">
+                <input id="l-check" data-el="check" inputmode="numeric" placeholder="например, 20 000" aria-label="Средний чек в рублях" />
+                <span class="calc-cur">₽</span>
+              </div>
+            </div>
+            <p class="calc-note">
+              Ночь, выходные и часы, когда ответить некому, — обычно 30–50% обращений.
+              Впишите свою долю, если знаете точнее.
+            </p>
+          </div>
+
+          <!-- Результат -->
+          <div class="calc-payline">
+            <p class="calc-payline__lead">Теряется примерно
+              <b data-el="lostVal">0</b> обращений в месяц</p>
+            <p class="calc-payline__sub">Это <b data-el="moneyVal">–</b> недополученной выручки в месяц.
+              Считаем консервативно: продажей становится каждое пятое обращение.</p>
+          </div>
+
+          <!-- Вердикт -->
+          <div class="calc-verdict" data-el="verdict" data-tone="empty" role="status" aria-live="polite">
+            <p class="calc-verdict__title" data-el="vTitle">Сколько заявок утекает?</p>
+            <p class="calc-verdict__text" data-el="vText">Впишите число обращений и средний чек, чтобы увидеть оценку.</p>
+          </div>
+
+          <!-- Мостик к услуге -->
+          <p class="calc-bridge">
+            Приём заявок отвечает на каждое обращение <b>за минуту, круглосуточно</b>: уточняет, что нужно,
+            и передаёт вам готовый контакт с сутью запроса. Вы перезваниваете уже тёплому клиенту,
+            а не разбираете пропущенные. Это не замена вам, а страховка от потерь, пока вы заняты, спите
+            или отдыхаете.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3. Что делает приём заявок -->
+      <section class="page__section" aria-labelledby="what-title">
+        <h2 id="what-title">Что делает приём заявок</h2>
+        <ul class="checklist">
+          <li>Отвечает на обращение за минуту — в чате на сайте, в мессенджере, круглосуточно.</li>
+          <li>Задаёт пару уточняющих вопросов и понимает, что человеку нужно.</li>
+          <li>Передаёт вам готовый контакт с сутью запроса — вы сразу перезваниваете по делу.</li>
+          <li>Не пропускает ночь, выходные и пятницу: обращение не остаётся без ответа.</li>
+        </ul>
+      </section>
+
+      <!-- 4. Что вы получите -->
+      <section class="page__section" aria-labelledby="result-title">
+        <h2 id="result-title">Что вы получите на выходе</h2>
+        <ul class="checklist">
+          <li>Меньше потерянных обращений: заявка не остывает, пока ждёт ответа.</li>
+          <li>Тёплые контакты вместо пропущенных: перезваниваете тем, кто уже написал, что хочет.</li>
+          <li>Учёт обращений: видно, сколько пришло, откуда и что с ними стало.</li>
+        </ul>
+      </section>
+
+      <!-- 5. Бесплатно -->
+      <section class="page__section" aria-labelledby="free-title">
+        <h2 id="free-title">Бесплатно и ни к чему не обязывает</h2>
+        <p>
+          Разбор ничего не стоит. Посмотрю ваш поток обращений и честно скажу, есть ли смысл ставить
+          приём заявок или потери и так небольшие.
+        </p>
+      </section>
+
+      <section class="page__section" aria-labelledby="more-tools">
+        <h2 id="more-tools">Другие бесплатные инструменты</h2>
+        <ul class="tools-links">
+          <li><a href="../pochemu-net-zayavok/">Аудит сайта</a></li>
+          <li><a href="../okupitsya-reklama/">Окупится ли реклама</a></li>
+          <li><a href="../nuzhen-li-sajt/">Нужен ли сайт</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Форма заявки -->
+    <section class="lead" id="lead" aria-labelledby="lead-title">
+      <div class="lead__grid">
+        <div class="lead__intro">
+          <p class="lead__eyebrow">ЗАЯВКА</p>
+          <h2 class="lead__title" id="lead-title">Посмотрю, сколько заявок вы теряете</h2>
+          <p class="lead__subtitle">
+            Пришлите нишу и как приходят обращения. Посмотрю поток и скажу, стоит ли ставить
+            приём заявок. Бесплатно.
+          </p>
+          <p class="lead__sign">Рамазан <i></i> отвечаю в течение рабочего дня</p>
+        </div>
+
+        <form class="lead__form" action="../api/lead.php" method="post" novalidate data-lead-form>
+          <div class="lead__field">
+            <label for="lead-biz">Чем занимаетесь</label>
+            <input
+              id="lead-biz"
+              name="name"
+              type="text"
+              required
+              aria-required="true"
+              autocomplete="organization"
+              maxlength="120"
+              placeholder="Например: кухни на заказ"
+            />
+          </div>
+
+          <div class="lead__field">
+            <label for="lead-contact">Телефон или Telegram</label>
+            <input
+              id="lead-contact"
+              name="contact"
+              type="text"
+              required
+              aria-required="true"
+              autocomplete="tel"
+              maxlength="160"
+              placeholder="+7… или @username"
+            />
+          </div>
+
+          <div class="lead__hp" aria-hidden="true">
+            <label for="lead-company">Не заполняйте это поле</label>
+            <input id="lead-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <input type="hidden" name="goal" value="Бесплатный разбор" />
+          <input type="hidden" name="source" value="teryayutsya-zayavki" />
+          <input type="hidden" name="calc" value="" />
+
+          <label class="lead__consent">
+            <input type="checkbox" name="consent" value="1" required aria-required="true" />
+            <span>
+              Нажимая, соглашаюсь на
+              <a href="../privacy/">обработку персональных данных</a>.
+              Никакого спама, один разбор, одно сообщение.
+            </span>
+          </label>
+
+          <button class="lead__submit" type="submit">
+            <span>Получить разбор</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M5 15 15 5M7 5h8v8" />
+            </svg>
+          </button>
+
+          <p class="lead__status" data-lead-status role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="lead__result" data-lead-result hidden role="status" aria-live="polite">
+          <p class="lead__result-badge">Заявка принята</p>
+          <p class="lead__result-lead">Посмотрю ваш поток обращений и скажу, сколько уходит и стоит ли ставить приём заявок.</p>
+          <p class="lead__result-note">Отвечу в течение рабочего дня в тот контакт, что вы оставили.</p>
+          <p class="lead__result-fast">Хотите быстрее, напишите в <a href="https://t.me/labazantg" target="_blank" rel="noopener">Telegram</a>.</p>
+          <p class="lead__result-plan">Нужен подробный разбор с планом и приоритетами? <a href="https://t.me/labazantg" target="_blank" rel="noopener" data-plan-link>Напишите, расскажу условия</a>.</p>
+        </div>
+
+        <div class="lead__error" data-lead-error hidden role="alert">
+          <p>Не удалось отправить заявку. Напишите напрямую в <a href="https://t.me/labazantg" target="_blank" rel="noopener">Telegram</a>, отвечу там же. Или попробуйте ещё раз через минуту.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- footer: идентичен на всех ветках -->
+    <footer class="page-footer section--dark">
+      <p class="page-footer__req">Муталиев Рамазан Ахмедович · Самозанятый (НПД) · ИНН 057201620432 · Дагестан</p>
+      <p><a href="../privacy/">Политика обработки персональных данных</a></p>
+      <p class="page-footer__year">© 2026 Лабазан</p>
+    </footer>
+  </body>
+</html>
