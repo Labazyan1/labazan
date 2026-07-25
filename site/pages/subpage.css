@@ -42,6 +42,13 @@
   --ochre: #b97f2e;
   --cream: #f2e9d4;
   --line: rgba(43, 33, 26, .16);
+  /* Поверхности и акценты — через переменные, чтобы темы секций их переключали. */
+  --card-grad: linear-gradient(160deg, #f4eddb, #ece2c9);
+  --card-radial: rgba(156, 47, 35, .05);
+  --card-topline: rgba(255, 253, 245, .75);
+  --input-bg: color-mix(in srgb, #fff 42%, var(--field));
+  --btn-fill: var(--madder);
+  --focus-ring: color-mix(in srgb, var(--madder) 24%, transparent);
   --sh: 62, 36, 22;
   --elev-3:
     0 2px 4px rgba(var(--sh), .10),
@@ -55,6 +62,33 @@
   --font-display: "Unbounded", Arial, sans-serif;
   --font-body: "Manrope", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Тема секции — тот же механизм, что на главной (styles.css).
+   Секция-обёртка переопределяет токены, компоненты читают их через var().
+   Светлые секции прозрачны (виден лён), тёмные — непрозрачный фон.
+   ══════════════════════════════════════════════════════════════════ */
+.section--light {
+  --ink: #2b211a;
+  --muted: #5f5647;
+  --indigo: #2a3b55;
+  --field: #e9e0cb;
+  --panel: #f2ebd8;
+  --line: rgba(43, 33, 26, .16);
+  --madder: #9c2f23;
+  --card-grad: linear-gradient(160deg, #f4eddb, #ece2c9);
+  --card-radial: rgba(156, 47, 35, .05);
+  --card-topline: rgba(255, 253, 245, .75);
+  --input-bg: color-mix(in srgb, #fff 42%, var(--field));
+  --btn-fill: var(--madder);
+  --focus-ring: color-mix(in srgb, var(--madder) 24%, transparent);
+}
+.section--dark {
+  /* Чередование полос: еле заметный тёплый слой поверх льна (без изображения). */
+  position: relative;
+  z-index: 1;
+  background-color: rgba(43, 31, 20, .08);
 }
 
 *,
@@ -334,6 +368,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .cta__button:active { transform: scale(0.97); }
 
+/* CTA-кнопка в герое подстраницы: скроллит к форме этой же страницы (#lead). */
+.page__intro .cta__button { margin-top: 28px; }
+
 /* ── Футер ─────────────────────────────────────────────────────────── */
 .page-footer {
   margin-top: clamp(40px, 7vw, 72px);
@@ -369,6 +406,34 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .page-header { min-height: 84px; }
   .page { padding-top: clamp(36px, 5vw, 52px); }
 }
+
+/* ── Перекрёстные ссылки на другие инструменты (низ подстраниц) ───── */
+.tools-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 68ch;
+}
+.tools-links li { border-top: 1px solid var(--line); }
+.tools-links li:last-child { border-bottom: 1px solid var(--line); }
+.tools-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 4px;
+  color: var(--madder);
+  font-size: clamp(16px, 2vw, 18px);
+  font-weight: 600;
+  text-decoration: none;
+  transition: padding-left 160ms var(--ease-out);
+}
+.tools-links a::after { content: "→"; color: var(--ochre); flex: 0 0 auto; }
+.tools-links a:hover { text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) {
+  .tools-links a:hover { padding-left: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .tools-links a { transition: none; } }
 
 /* ══ Cookie-баннер + consent-гейт (152-ФЗ), общий с главной ══ */
 .cookie-banner {

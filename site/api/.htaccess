@@ -1,8 +1,14 @@
-# Приём формы: наружу открыт только lead.php (эндпоинт POST).
-# Прямой HTTP-доступ к секретам (lead-config.php), образцу и ядру запрещён.
+# Наружу открыты только эндпоинты POST: lead.php (форма), check-html.php и
+# check-speed.php (автопроверка сайта). Прямой HTTP-доступ к секретам, образцам
+# конфигов, ядру формы и include-библиотеке движка (_audit-lib.php) запрещён.
 # На require из PHP это не влияет (файловая система), только на запрос по URL.
+#
+#   ^_.*\.php        — библиотека движка _audit-lib.php (не эндпоинт)
+#   audit-config…    — ключ PSI и потолки (секреты)
+#   lead-config…     — приёмники лида (секреты)
+#   lead-core.php    — общий include формы
 
-<FilesMatch "^(lead-config\.php|lead-config\.sample\.php|lead-core\.php)$">
+<FilesMatch "^(lead-config\.php|lead-config\.sample\.php|lead-core\.php|audit-config\.php|audit-config\.sample\.php|_.*\.php)$">
     # Apache 2.4
     <IfModule mod_authz_core.c>
         Require all denied

@@ -43,5 +43,6 @@ jobs:
           dangerous-clean-slate: false
           exclude: |
             **/lead-config.php
+            **/audit-config.php
             **/.git*
             **/.ftp-deploy-sync-state.json

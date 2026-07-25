@@ -1,0 +1,4 @@
+
+# Секреты движка автопроверки (ключ PSI) — только на сервере
+audit-config.php
+**/audit-config.php
