@@ -1,0 +1,34 @@
+name: Put audit-config on Beget
+
+# Кладёт api/audit-config.php (секрет — ключ PageSpeed Insights) на прод-Beget по FTPS.
+# Ключ живёт ТОЛЬКО в GitHub Secret PSI_API_KEY, в исходники репозитория не попадает.
+# Обычный деплой (deploy.yml) этот файл исключает — сюда он едет отдельно и не перезаписывается.
+# Ручной запуск. Идемпотентно: можно перезапускать для обновления ключа.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-beget
+  cancel-in-progress: false
+
+jobs:
+  put:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload api/audit-config.php via FTPS
+        env:
+          S: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          D: ${{ secrets.FTP_SERVER_DIR }}
+          KEY: ${{ secrets.PSI_API_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then echo "PSI_API_KEY secret пуст"; exit 1; fi
+          sudo apt-get update && sudo apt-get install -y lftp
+          # Собираем файл из секрета. Значение не логируется (маскируется как secret).
+          umask 077
+          printf "<?php\n\$PSI_API_KEY = '%s';\n" "$KEY" > audit-config.php
+          lftp -c "set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" \"$S\"; put -O \"$D/api\" audit-config.php"
+          rm -f audit-config.php
+          echo "audit-config.php залит в $D/api"
