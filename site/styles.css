@@ -41,6 +41,13 @@
   --ochre: #b97f2e;            /* охра — только декор, не текст */
   --cream: #f2e9d4;            /* слоновая кость — текст на марене */
   --line: rgba(43, 33, 26, .16);
+  /* Поверхности и акценты — через переменные, чтобы темы секций их переключали. */
+  --card-grad: linear-gradient(160deg, #f4eddb, #ece2c9);
+  --card-radial: rgba(156, 47, 35, .05);
+  --card-topline: rgba(255, 253, 245, .75);
+  --input-bg: color-mix(in srgb, #fff 42%, var(--field));
+  --btn-fill: var(--madder);
+  --focus-ring: color-mix(in srgb, var(--madder) 24%, transparent);
   --sh: 62, 36, 22;            /* тёплый тон теней */
   --elev-2:
     0 1px 2px rgba(var(--sh), .06),
@@ -59,6 +66,38 @@
   --font-display: "Unbounded", Arial, sans-serif;
   --font-body: "Manrope", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Тема секции — единый механизм светлых/тёмных полос.
+   Секция-обёртка переопределяет токены (фон, текст, приглушённый,
+   границы, карточки, поля, ссылки, фокус-ринг), компоненты внутри
+   читают их через var(). Цвета внутри секций НЕ хардкодим.
+   Светлые секции остаются прозрачными (виден льняной параллакс),
+   тёмные получают непрозрачный фон и перекрывают лён.
+   ══════════════════════════════════════════════════════════════════ */
+.section--light {
+  --ink: #2b211a;
+  --muted: #5f5647;
+  --indigo: #2a3b55;
+  --field: #e9e0cb;
+  --panel: #f2ebd8;
+  --line: rgba(43, 33, 26, .16);
+  --madder: #9c2f23;
+  --card-grad: linear-gradient(160deg, #f4eddb, #ece2c9);
+  --card-radial: rgba(156, 47, 35, .05);
+  --card-topline: rgba(255, 253, 245, .75);
+  --input-bg: color-mix(in srgb, #fff 42%, var(--field));
+  --btn-fill: var(--madder);
+  --focus-ring: color-mix(in srgb, var(--madder) 24%, transparent);
+}
+.section--dark {
+  /* Чередование полос: ЕЛЕ ЗАМЕТНЫЙ тёплый слой поверх льна (без изображения).
+     Тему не меняем и текст не трогаем — только чуть притемняем фон, чтобы
+     соседний блок читался как отдельный. Практически на грани. */
+  position: relative;
+  z-index: 1;
+  background-color: rgba(43, 31, 20, .08);
 }
 
 *,
@@ -335,7 +374,7 @@ main {
   border-radius: 8px;
   border: 0;
   border-top: 1px solid rgba(255, 255, 255, .28);
-  background: var(--madder);
+  background: var(--btn-fill);
   color: var(--cream);
   font-size: 15px;
   font-weight: 800;
@@ -962,10 +1001,10 @@ main {
   padding: 22px 20px;
   border-radius: 14px;
   border: 1px solid var(--line);
-  border-top: 1px solid rgba(255, 253, 245, .75);
+  border-top: 1px solid var(--card-topline);
   background:
-    radial-gradient(circle at 92% 0%, rgba(156, 47, 35, .05), transparent 42%),
-    linear-gradient(160deg, #f4eddb, #ece2c9);
+    radial-gradient(circle at 92% 0%, var(--card-radial), transparent 42%),
+    var(--card-grad);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), var(--elev-2);
 }
 
@@ -1048,6 +1087,16 @@ main {
   color: var(--muted);
   font-size: clamp(15px, 3vw, 17px);
   line-height: 1.55;
+}
+
+.report__caption {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: clamp(13px, 2.6vw, 15px);
+  letter-spacing: 0.02em;
+  text-align: center;
 }
 
 .report__card {
@@ -1142,6 +1191,156 @@ main {
   }
 
   .report__card { justify-self: end; }
+}
+
+/* Две части «Доказательства»: отбраковка + путь заявки. Те же карточки, во всю ячейку. */
+.report__extra {
+  display: grid;
+  gap: clamp(18px, 4vw, 28px);
+  margin-top: clamp(28px, 5vw, 44px);
+}
+.report__card--extra {
+  width: 100%;
+  padding: 20px 22px;
+}
+@media (min-width: 760px) {
+  .report__extra {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .report__card--extra { justify-self: stretch; }
+}
+
+/* А. Отбраковка обращений */
+.filter__bar {
+  display: flex;
+  gap: 5px;
+  height: 46px;
+  margin: 16px 0 12px;
+}
+.filter__seg {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  border-radius: 9px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.filter__seg--good { background: var(--madder); color: var(--cream); }
+.filter__seg--bad {
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+  color: var(--muted);
+}
+.filter__legend {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.filter__k { font-weight: 700; }
+.filter__k::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border-radius: 2px;
+  vertical-align: baseline;
+}
+.filter__k--good { color: var(--madder); }
+.filter__k--good::before { background: var(--madder); }
+.filter__k--bad { color: var(--ink); margin-left: 10px; }
+.filter__k--bad::before { background: color-mix(in srgb, var(--ink) 22%, transparent); }
+.filter__reasons {
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+}
+.filter__reasons li {
+  display: flex;
+  gap: 11px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px dotted color-mix(in srgb, var(--ochre) 55%, transparent);
+  color: var(--indigo);
+  font-size: 14px;
+}
+.filter__reasons li b {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+.filter__note {
+  margin: 4px 0 0;
+  color: var(--madder);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Б. Путь одной заявки */
+.path {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.path__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 14px;
+  padding-bottom: 18px;
+}
+.path__step:last-child { padding-bottom: 0; }
+.path__step::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 20px;
+  bottom: -2px;
+  width: 2px;
+  background: color-mix(in srgb, var(--madder) 28%, transparent);
+}
+.path__step:last-child::before { display: none; }
+.path__dot {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 2px solid var(--madder);
+  background: var(--panel);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--madder) 8%, transparent);
+}
+.path__step--done .path__dot { background: var(--madder); }
+.path__t {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.path__time {
+  color: var(--madder);
+  font-variant-numeric: tabular-nums;
+}
+.path__s {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.path__chip {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 3px 10px;
+  border: 1px solid color-mix(in srgb, var(--madder) 40%, transparent);
+  border-radius: 999px;
+  color: var(--madder);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 /* ── Блок 5 · Тарифы ──────────────────────────────────────────────── */
@@ -1251,12 +1450,17 @@ main {
 
 @media (min-width: 760px) {
   .pricing__grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     margin-top: 52px;
     gap: 20px;
   }
 
   .pricing__card { padding: 32px 30px; }
+}
+
+/* Четыре тарифа: на широком — в один ряд, ровно (без сироты). */
+@media (min-width: 1080px) {
+  .pricing__grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 /* ── Блок 6 · Обо мне ─────────────────────────────────────────────── */
@@ -2887,6 +3091,28 @@ main {
     width: auto;
   }
 }
+
+/* Выносная строка под блоком трёх вопросов: «ещё нет сайта?» → проверка спроса. */
+.questions-more {
+  margin: 0 auto;
+  padding: clamp(18px, 4vw, 34px) 0 6px;
+  text-align: center;
+}
+.questions-more a {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--indigo);
+  text-decoration: none;
+  border-bottom: 1px dotted color-mix(in srgb, var(--indigo) 50%, transparent);
+  padding-bottom: 2px;
+  transition: color .18s ease, border-color .18s ease;
+}
+.questions-more a:hover,
+.questions-more a:focus-visible {
+  color: var(--madder);
+  border-color: color-mix(in srgb, var(--madder) 60%, transparent);
+}
+.questions-more b { font-style: normal; font-weight: 700; }
 
 /* ══════════════════════════════════════════════════════════════════
    Футер оператора (152-ФЗ): реквизиты · контакты · политика ПД.

@@ -191,6 +191,8 @@ function lead_out_ok_then_ping(array $theme, $tg_token, $tg_chat) {
  *   accept_telegram  - принимать ли Telegram-ник как контакт (радар: true)
  *   build_details    - callable($_POST):string - строка контекста для менеджера (чистить внутри!)
  *   lead_email, lead_email_from, n8n_url, n8n_secret - секреты (из конфига проекта)
+ *   ingest_key       - Bearer-ключ прямого CRM-ingest; задан → шлём в n8n_url как
+ *                      Authorization: Bearer (вместо X-Webhook-Secret). n8n_url тогда = URL ingest.
  */
 function labazan_lead_run(array $o) {
     header('X-Content-Type-Options: nosniff');
@@ -276,6 +278,13 @@ function labazan_lead_run(array $o) {
             'task'    => $details,
             'source'  => $host_label . ' / ' . $goal,
         ], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+        // Авторизация приёмника. Прямой CRM-ingest (crm.labazan.ru/api/ingest/lead) ждёт
+        // Bearer-ключ тенанта в Authorization; старый вебхук n8n — X-Webhook-Secret. Если задан
+        // ingest_key → прямой ingest (n8n выведен из контура 25.07.2026), иначе прежний n8n.
+        // Тело/проверка ответа ({ok:true}) у обоих одинаковы — меняется только заголовок.
+        $auth_header = !empty($o['ingest_key'])
+            ? 'Authorization: Bearer ' . $o['ingest_key']
+            : 'X-Webhook-Secret: ' . ($o['n8n_secret'] ?? '');
         $ch = curl_init($n8n_url);
         curl_setopt_array($ch, [
             CURLOPT_POST              => true,
@@ -283,7 +292,7 @@ function labazan_lead_run(array $o) {
             CURLOPT_POSTFIELDS        => $n8n_body,
             CURLOPT_HTTPHEADER        => [
                 'Content-Type: application/json',
-                'X-Webhook-Secret: ' . ($o['n8n_secret'] ?? ''),
+                $auth_header,
             ],
             CURLOPT_CONNECTTIMEOUT_MS => 1500,
             CURLOPT_TIMEOUT_MS        => 4000,

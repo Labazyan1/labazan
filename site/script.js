@@ -536,66 +536,9 @@
   }
 })();
 
-/* Форма заявки #lead: клиентская валидация + честный фолбэк, если приём не настроен.
-   Никогда не сообщаем «отправлено», пока сервер не подтвердил {ok:true}. */
-(() => {
-  const form = document.querySelector('[data-lead-form]');
-  if (!form) return;
-  const status = form.querySelector('[data-lead-status]');
-  const submit = form.querySelector('button[type="submit"]');
-
-  function setStatus(msg, kind) {
-    if (!status) return;
-    status.textContent = msg;
-    if (kind) status.dataset.kind = kind;
-    else status.removeAttribute('data-kind');
-  }
-
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    // Родная проверка required-полей и обязательного согласия.
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    setStatus('Отправляю…', 'pending');
-    if (submit) submit.disabled = true;
-
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: new FormData(form),
-      });
-
-      let data = null;
-      try { data = await res.json(); } catch (_) { /* не JSON: статик-хостинг без PHP */ }
-
-      if (res.ok && data && data.ok) {
-        form.reset();
-        setStatus('Готово. Рамазан свяжется с вами в течение рабочего дня.', 'ok');
-        if (typeof window.labazanGoal === 'function') window.labazanGoal('form_submit');
-      } else if (data && data.error === 'consent') {
-        setStatus('Отметьте согласие на обработку персональных данных.', 'error');
-      } else if (data && data.error === 'validation') {
-        setStatus('Проверьте контакт: телефон, email или Telegram-ник.', 'error');
-      } else if (data && data.error === 'rate_limited') {
-        setStatus('Слишком много попыток. Подождите минуту и попробуйте снова.', 'error');
-      } else if (data && data.error) {
-        setStatus('Не удалось отправить. Напишите напрямую в Telegram или позвоните.', 'error');
-      } else {
-        // Нет валидного JSON: на превью статик-сервер без PHP. Не врём про отправку.
-        setStatus('Форма заработает после переноса на рабочий хостинг. Пока напишите напрямую в Telegram или позвоните.', 'error');
-      }
-    } catch (_) {
-      setStatus('Сеть недоступна. Напишите напрямую в Telegram или позвоните.', 'error');
-    } finally {
-      if (submit) submit.disabled = false;
-    }
-  });
-})();
+/* Форма заявки #lead: логика вынесена в общий assets/lead-form.js
+   (единый обработчик + защита от двойной отправки + цель Метрики с source
+   + плавный скролл к форме). Подключается на всех страницах. */
 
 /* Клик по WebGL-ковру. Оверлей-ссылка [data-loom-hit] следует за активным ковром:
    читаем класс is-active (его ставит станок в setActiveCopy) и берём href текстовой

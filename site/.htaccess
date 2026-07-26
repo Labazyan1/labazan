@@ -14,6 +14,10 @@
     # Лид-магнит «стоимость лида» ближе всего к калькулятору окупаемости рекламы.
     RedirectMatch 301 ^/lead/stoimost-lida(/.*)?$ /okupitsya-reklama/
 
+    # Калькулятор рекламы больше не отдельная страница: он встроен прямо в
+    # /okupitsya-reklama/. Старый URL склеиваем туда же, чтобы не терять вес и ссылки.
+    RedirectMatch 301 ^/kalkulyator-reklamy(/.*)?$ /okupitsya-reklama/
+
     # Каталог услуг и все страницы услуг → на главную.
     RedirectMatch 301 ^/uslugi(/.*)?$ /
 

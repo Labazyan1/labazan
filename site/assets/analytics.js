@@ -43,12 +43,17 @@
   }
 
   /* Отправка цели. Срабатывает только если счётчик уже загружен (согласие дано)
-     и ID валиден — иначе тихо выходим, чтобы не копить очередь без согласия. */
-  window.labazanGoal = function (name) {
+     и ID валиден — иначе тихо выходим, чтобы не копить очередь без согласия.
+     params — необязательные параметры цели (напр. { source: 'nuzhen-li-sajt' }),
+     уходят в Метрику 4-м аргументом reachGoal. */
+  window.labazanGoal = function (name, params) {
     if (!window.__ymLoaded || typeof window.ym !== 'function') return;
     var id = validId();
     if (!id) return;
-    try { window.ym(id, 'reachGoal', name); } catch (e) {}
+    try {
+      if (params) window.ym(id, 'reachGoal', name, params);
+      else window.ym(id, 'reachGoal', name);
+    } catch (e) {}
   };
 
   window.labazanLoadAnalytics = loadMetrika;

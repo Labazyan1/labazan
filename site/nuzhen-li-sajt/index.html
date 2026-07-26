@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#e9e0cb" />
     <link rel="canonical" href="https://labazan.ru/nuzhen-li-sajt/" />
     <meta name="robots" content="index,follow" />
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Лабазан" />
@@ -23,9 +23,11 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Нужен ли мне сайт? Разбор ниши бесплатно" />
     <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
-    <link rel="stylesheet" href="../pages/subpage.css?v=slot22" />
-    <script src="/assets/analytics.js?v=slot22" defer></script>
-    <script src="/assets/consent.js?v=slot22" defer></script>
+    <link rel="stylesheet" href="../pages/subpage.css?v=slot28" />
+    <link rel="stylesheet" href="../assets/lead-form.css?v=slot28" />
+    <script src="../assets/analytics.js?v=slot28" defer></script>
+    <script src="../assets/consent.js?v=slot28" defer></script>
+    <script src="../assets/lead-form.js?v=slot28" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
@@ -48,8 +50,10 @@
         <h1 id="intro-title">Нужен ли мне сайт?</h1>
         <p class="page__kicker">Если всё держится на рекомендациях</p>
         <p class="page__lead">
-          Проверим спрос до разработки и скажем, нужна ли вам страница.
+          Опишите нишу и город, разберу вручную и отвечу за рабочий день:
+          нужна ли отдельная страница или пока хватит карточек в 2ГИС и на картах.
         </p>
+        <a class="cta__button" href="#lead">Получить разбор ниши</a>
       </section>
 
       <!-- 2. Что проверяем -->
@@ -84,15 +88,103 @@
         </p>
       </section>
 
-      <!-- 5. CTA -->
-      <section class="cta" aria-labelledby="cta-title">
-        <h2 id="cta-title" class="cta__title">Проверим вашу нишу</h2>
-        <a class="cta__button" data-cta href="../#lead">Записаться на бесплатный разбор</a>
+      <section class="page__section" aria-labelledby="more-tools">
+        <h2 id="more-tools">Другие бесплатные инструменты</h2>
+        <ul class="tools-links">
+          <li><a href="../pochemu-net-zayavok/">Аудит сайта</a></li>
+          <li><a href="../okupitsya-reklama/">Окупится ли реклама</a></li>
+          <li><a href="../teryayutsya-zayavki/">Обработка заявок</a></li>
+        </ul>
       </section>
     </main>
 
+    <!-- ЗАМЕТКА (ручная работа): подзаголовок обещает ЖИВОЙ ручной разбор ниши.
+         При нуле клиентов это осознанно: живой разбор конвертит сильнее автогенерата.
+         Когда появится автоматический инструмент — переписать заголовок/подзаголовок. -->
+    <section class="lead" id="lead" aria-labelledby="lead-title">
+      <div class="lead__grid">
+        <div class="lead__intro">
+          <p class="lead__eyebrow">ЗАЯВКА</p>
+          <h2 class="lead__title" id="lead-title">Проверю вашу нишу бесплатно</h2>
+          <p class="lead__subtitle">
+            Напишите, чем занимаетесь и в каком городе. Посмотрю спрос и цену клика
+            и скажу честно: нужна вам страница или пока хватит карточек.
+          </p>
+          <p class="lead__sign">Рамазан <i></i> отвечаю в течение рабочего дня</p>
+        </div>
+
+        <form class="lead__form" action="../api/lead.php" method="post" novalidate data-lead-form>
+          <div class="lead__field">
+            <label for="lead-biz">Чем занимаетесь</label>
+            <input
+              id="lead-biz"
+              name="name"
+              type="text"
+              required
+              aria-required="true"
+              autocomplete="organization"
+              maxlength="120"
+              placeholder="Например: кухни на заказ"
+            />
+          </div>
+
+          <div class="lead__field">
+            <label for="lead-contact">Телефон или Telegram</label>
+            <input
+              id="lead-contact"
+              name="contact"
+              type="text"
+              required
+              aria-required="true"
+              autocomplete="tel"
+              maxlength="160"
+              placeholder="+7… или @username"
+            />
+          </div>
+
+          <div class="lead__hp" aria-hidden="true">
+            <label for="lead-company">Не заполняйте это поле</label>
+            <input id="lead-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <input type="hidden" name="goal" value="Бесплатный разбор" />
+          <input type="hidden" name="source" value="nuzhen-li-sajt" />
+
+          <label class="lead__consent">
+            <input type="checkbox" name="consent" value="1" required aria-required="true" />
+            <span>
+              Нажимая, соглашаюсь на
+              <a href="../privacy/">обработку персональных данных</a>.
+              Никакого спама, один разбор, одно сообщение.
+            </span>
+          </label>
+
+          <button class="lead__submit" type="submit">
+            <span>Получить разбор</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M5 15 15 5M7 5h8v8" />
+            </svg>
+          </button>
+
+          <p class="lead__status" data-lead-status role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="lead__result" data-lead-result hidden role="status" aria-live="polite">
+          <p class="lead__result-badge">Заявка принята</p>
+          <p class="lead__result-lead">Посмотрю спрос по вашей теме в вашем городе, цену клика и кто уже в выдаче. Скажу честно, нужна отдельная страница или пока хватит карточек.</p>
+          <p class="lead__result-note">Отвечу в течение рабочего дня в тот контакт, что вы оставили.</p>
+          <p class="lead__result-fast">Хотите быстрее, напишите в <a href="https://t.me/labazantg" target="_blank" rel="noopener">Telegram</a>.</p>
+          <p class="lead__result-plan">Нужен подробный разбор с планом и приоритетами? <a href="https://t.me/labazantg" target="_blank" rel="noopener" data-plan-link>Напишите, расскажу условия</a>.</p>
+        </div>
+
+        <div class="lead__error" data-lead-error hidden role="alert">
+          <p>Не удалось отправить заявку. Напишите напрямую в <a href="https://t.me/labazantg" target="_blank" rel="noopener">Telegram</a>, отвечу там же. Или попробуйте ещё раз через минуту.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- footer: идентичен на всех трёх ветках -->
-    <footer class="page-footer">
+    <footer class="page-footer section--dark">
       <p class="page-footer__req">Муталиев Рамазан Ахмедович · Самозанятый (НПД) · ИНН 057201620432 · Дагестан</p>
       <p><a href="../privacy/">Политика обработки персональных данных</a></p>
       <p class="page-footer__year">© 2026 Лабазан</p>
