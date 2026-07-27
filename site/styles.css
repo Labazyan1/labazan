@@ -220,10 +220,59 @@
     .hero__title em { font-style: normal; color: var(--stamp); }
     .hero__lead { margin-top: clamp(14px, 2vw, 20px); max-width: 46ch; font-size: clamp(1rem, 1.5vw, 1.15rem); color: rgba(20,18,16,.82); }
     .hero .ledger { max-width: 46ch; }
+    @media (min-width: 900px) {
+      .hero__grid { grid-template-columns: 1.15fr .85fr; align-items: center; }
+    }
+
+    /* Виджет проверки сайта: польза на первом экране, без заявки.
+       GET на /pochemu-net-zayavok/?url=… — audit.js там подхватит и запустит. */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+    }
+    .hero__check { align-self: center; transform: rotate(.4deg); }
+    @media (max-width: 899.98px) { .hero__check { transform: none; } }
+    .hero__check-title {
+      font-family: var(--font-display); font-weight: 500;
+      font-size: clamp(1.15rem, 2vw, 1.45rem); letter-spacing: -.01em;
+    }
+    .hero__check-sub { margin-top: 8px; font-size: .92rem; color: rgba(20,18,16,.78); }
+    .hero__check-form { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .hero__check-form input {
+      flex: 1 1 180px; min-width: 0;
+      font: inherit; color: var(--ink);
+      background: rgba(255, 255, 255, .5);
+      border: 1px solid var(--glass-line);
+      padding: 12px 14px;
+      border-radius: var(--radius-s);
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .hero__check-form input::placeholder { color: rgba(20,18,16,.42); }
+    .hero__check-form input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, .72);
+      border-color: var(--stamp);
+      box-shadow: 0 0 0 3px rgba(200, 40, 28, .16);
+    }
+    .hero__check-form button {
+      font-family: var(--font-display); font-weight: 500; font-size: .95rem;
+      background: var(--stamp); color: var(--paper);
+      border: 0; cursor: pointer;
+      padding: 12px 20px;
+      border-radius: var(--radius-s);
+      box-shadow: 0 1px 2px rgba(200, 40, 28, .2), 0 6px 16px rgba(200, 40, 28, .22);
+      transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .hero__check-form button:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(200,40,28,.18), 0 14px 30px rgba(200,40,28,.3); }
+    }
+    .hero__check-form button:active { transform: translateY(0) scale(.97); transition-duration: .1s; }
+    .hero__check-form button:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+    .hero__check-alt { margin-top: 14px; font-size: .88rem; color: rgba(20,18,16,.72); }
 
     /* Стагер входа hero: метка → заголовок → лид → условия → CTA. Только на загрузке. */
     @media (prefers-reduced-motion: no-preference) {
-      .hero__eyebrow, .hero__title--main, .hero__lead, .hero .ledger, .hero .cta, .hero__sign {
+      .hero__eyebrow, .hero__title--main, .hero__lead, .hero .ledger, .hero .cta, .hero__sign, .hero__check {
         animation: rise-in .48s var(--ease-out) both;
       }
       .hero__title--main { animation-delay: .07s; }
@@ -231,6 +280,15 @@
       .hero .ledger      { animation-delay: .21s; }
       .hero .cta         { animation-delay: .27s; }
       .hero__sign        { animation-delay: .27s; }
+      .hero__check       { animation-name: rise-in-check; animation-delay: .36s; }
+    }
+    /* виджет повёрнут — вернуть поворот после анимации */
+    @keyframes rise-in-check {
+      from { opacity: 0; transform: translateY(14px) rotate(.4deg); }
+      to   { opacity: 1; transform: rotate(.4deg); }
+    }
+    @media (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
+      .hero__check { animation-name: rise-in; }
     }
     @keyframes rise-in {
       from { opacity: 0; transform: translateY(14px); }

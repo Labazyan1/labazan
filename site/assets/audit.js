@@ -305,4 +305,15 @@
     if (!looksLikeUrl(v)) { fieldError('Похоже, это не адрес сайта. Пример: mysite.ru'); input.focus(); return; }
     runCheck(v);
   });
+
+  // Автозапуск из hero главной: GET /pochemu-net-zayavok/?url=… —
+  // подставляем адрес, скроллим к проверке и запускаем сразу.
+  try {
+    const q = new URLSearchParams(window.location.search).get('url');
+    if (q && q.trim() !== '') {
+      input.value = q.trim().slice(0, 300);
+      root.scrollIntoView({ behavior: 'auto', block: 'start' });
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  } catch (e) {}
 })();
