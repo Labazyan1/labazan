@@ -12,6 +12,7 @@
     <link rel="canonical" href="https://labazan.ru/nuzhen-li-sajt/" />
     <meta name="robots" content="index,follow" />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Лабазан" />
@@ -23,19 +24,23 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Нужен ли мне сайт? Разбор ниши бесплатно" />
     <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
-    <link rel="stylesheet" href="../pages/subpage.css?v=slot28" />
-    <link rel="stylesheet" href="../assets/lead-form.css?v=slot28" />
-    <script src="../assets/analytics.js?v=slot28" defer></script>
-    <script src="../assets/consent.js?v=slot28" defer></script>
-    <script src="../assets/lead-form.js?v=slot28" defer></script>
+    <link rel="stylesheet" href="../assets/lead-form.css?v=slot29" />
+    <!-- subpage.css последним: системный слой «Гроссбух-стекло» -->
+    <link rel="stylesheet" href="../pages/subpage.css?v=slot29" />
+    <script src="../assets/analytics.js?v=slot29" defer></script>
+    <script src="../assets/consent.js?v=slot29" defer></script>
+    <script src="../assets/lead-form.js?v=slot29" defer></script>
+      <script src="../script.js?v=slot29" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
-
+    <div class="bg-linen" aria-hidden="true"></div>
     <!-- header: идентичен на всех трёх ветках; логотип ведёт на / -->
     <header class="page-header">
-      <a class="page-header__brand" href="../" aria-label="Лабазан, на главную">ЛАБАЗАН<span>.</span></a>
-      <p class="page-header__meta"><span>Дагестан</span> · <span>Яндекс</span></p>
+      <div class="page-header__inner">
+        <a class="page-header__brand" href="../" aria-label="Лабазан, на главную">ЛАБАЗАН<span>.</span></a>
+        <a href="tel:+79653029505">+7 965 302-95-05</a>
+      </div>
     </header>
 
     <nav class="breadcrumbs" aria-label="Хлебные крошки">
@@ -54,6 +59,29 @@
           нужна ли отдельная страница или пока хватит карточек в 2ГИС и на картах.
         </p>
         <a class="cta__button" href="#lead">Получить разбор ниши</a>
+      </section>
+
+      <!-- Возражение: зачем сайт, если есть сарафан и карточки -->
+      <section class="page__section page__section--seamless" aria-labelledby="holes-title">
+        <h2 id="holes-title">Что даёт своя страница</h2>
+        <ul class="holes">
+          <li>
+            <b>Спрос уже есть</b>
+            <h3>Вас ищут в Яндексе прямо сейчас</h3>
+            <p>Люди набирают «кухни на заказ махачкала» каждый день. Без страницы этот спрос достаётся тем, кто в выдаче.</p>
+          </li>
+          <li>
+            <b>Свой актив</b>
+            <h3>Профиль на площадке не ваш</h3>
+            <p>Авито и соцсети меняют правила, поднимают тарифы, блокируют без объяснений. Свою страницу у вас не заберут.</p>
+          </li>
+          <li>
+            <b>Реклама дешевле</b>
+            <h3>Без страницы реклама работает хуже</h3>
+            <p>Директ можно вести и на профиль, но страница под одну услугу превращает те же клики в больше обращений.</p>
+          </li>
+        </ul>
+        <p class="page__bridge">Это не значит, что сайт нужен всем. Бывает, что ниша пока не ищет, и честнее сказать это заранее. Для этого и разбор.</p>
       </section>
 
       <!-- 2. Что проверяем -->
@@ -183,11 +211,17 @@
       </div>
     </section>
 
+    <a class="sticky-cta" href="https://t.me/labazan_consult_bot" target="_blank" rel="noopener" data-sticky-bot>
+      <b aria-hidden="true">✈</b><span>Написать боту</span>
+    </a>
+
     <!-- footer: идентичен на всех трёх ветках -->
-    <footer class="page-footer section--dark">
+    <footer class="page-footer">
+      <div class="page-footer__inner">
       <p class="page-footer__req">Муталиев Рамазан Ахмедович · Самозанятый (НПД) · ИНН 057201620432 · Дагестан</p>
       <p><a href="../privacy/">Политика обработки персональных данных</a></p>
       <p class="page-footer__year">© 2026 Лабазан</p>
+      </div>
     </footer>
   </body>
 </html>

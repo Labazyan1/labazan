@@ -12,6 +12,7 @@
     <link rel="canonical" href="https://labazan.ru/pochemu-net-zayavok/" />
     <meta name="robots" content="index,follow" />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Лабазан" />
@@ -23,21 +24,26 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Почему нет заявок? Аудит пути клиента" />
     <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
-    <link rel="stylesheet" href="../pages/subpage.css?v=slot28" />
-    <link rel="stylesheet" href="../assets/lead-form.css?v=slot28" />
-    <link rel="stylesheet" href="../assets/audit.css?v=slot28" />
-    <script src="../assets/analytics.js?v=slot28" defer></script>
-    <script src="../assets/consent.js?v=slot28" defer></script>
-    <script src="../assets/lead-form.js?v=slot28" defer></script>
-    <script src="../assets/audit.js?v=slot28" defer></script>
+    <link rel="stylesheet" href="../assets/lead-form.css?v=slot29" />
+    <link rel="stylesheet" href="../assets/audit.css?v=slot29" />
+    <!-- subpage.css последним: системный слой «Гроссбух-стекло» переопределяет виджеты -->
+    <link rel="stylesheet" href="../pages/subpage.css?v=slot29" />
+    <script src="../assets/analytics.js?v=slot29" defer></script>
+    <script src="../assets/consent.js?v=slot29" defer></script>
+    <script src="../assets/lead-form.js?v=slot29" defer></script>
+    <script src="../assets/audit.js?v=slot29" defer></script>
+    <script src="../script.js?v=slot29" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">К содержанию</a>
+    <div class="bg-linen" aria-hidden="true"></div>
 
-    <!-- header: идентичен на всех трёх ветках; логотип ведёт на / -->
+    <!-- header: идентичен на всех подстраницах; логотип ведёт на / -->
     <header class="page-header">
-      <a class="page-header__brand" href="../" aria-label="Лабазан, на главную">ЛАБАЗАН<span>.</span></a>
-      <p class="page-header__meta"><span>Дагестан</span> · <span>Яндекс</span></p>
+      <div class="page-header__inner">
+        <a class="page-header__brand" href="../" aria-label="Лабазан, на главную">ЛАБАЗАН<span>.</span></a>
+        <a href="tel:+79653029505">+7 965 302-95-05</a>
+      </div>
     </header>
 
     <nav class="breadcrumbs" aria-label="Хлебные крошки">
@@ -54,7 +60,29 @@
         <p class="page__lead">
           Найдём, где теряются люди: в рекламе, на странице или после звонка.
         </p>
-        <a class="cta__button" href="#check">Проверить свой сайт</a>
+      </section>
+
+      <!-- Боль: три типовые дыры, в которых утекают заявки -->
+      <section class="page__section page__section--seamless" aria-labelledby="holes-title">
+        <h2 id="holes-title">Три дыры, в которые утекают заявки</h2>
+        <ul class="holes">
+          <li>
+            <b>Реклама</b>
+            <h3>Объявление ведёт не туда</h3>
+            <p>Клик по «кухни на заказ» открывает главную, где кухни на четвёртом экране. Человек не ищет, он закрывает.</p>
+          </li>
+          <li>
+            <b>Страница</b>
+            <h3>Сайт молчит первые пять секунд</h3>
+            <p>Долгая загрузка на телефоне, номер не нажимается, форма из восьми полей. До заявки доходят самые упорные.</p>
+          </li>
+          <li>
+            <b>После звонка</b>
+            <h3>Обращение ждёт ответа и остывает</h3>
+            <p>Вечером, в выходной, в сезонный завал. Пока трубку не взяли, человек уже написал конкуренту.</p>
+          </li>
+        </ul>
+        <p class="page__bridge">Первую и вторую дыру можно найти прямо сейчас: проверка ниже занимает полминуты.</p>
       </section>
 
       <!-- 1b. Быстрая автопроверка сайта: поле URL → результат сразу. Проверяет только
@@ -107,6 +135,16 @@
           <li>Аудит пути клиента: карту пути от объявления до звонка с точками потери.</li>
           <li>Где именно утекают заявки и почему.</li>
           <li>Приоритетный список: что чинить первым, что подождёт.</li>
+        </ul>
+      </section>
+
+      <!-- 3b. Доверие: почему разбору можно верить -->
+      <section class="page__section" aria-labelledby="trust-title">
+        <h2 id="trust-title">Почему разбору можно верить</h2>
+        <ul class="trust">
+          <li><span class="k">Кто проверяет</span><span class="fill" aria-hidden="true"></span><span class="v">я лично, не менеджер</span></li>
+          <li><span class="k">Откуда цифры</span><span class="fill" aria-hidden="true"></span><span class="v">из вашей Метрики</span></li>
+          <li><span class="k">Список правок</span><span class="fill" aria-hidden="true"></span><span class="v">ваш, даже если чините сами</span></li>
         </ul>
       </section>
 
@@ -220,11 +258,17 @@
       </div>
     </section>
 
-    <!-- footer: идентичен на всех трёх ветках -->
-    <footer class="page-footer section--dark">
-      <p class="page-footer__req">Муталиев Рамазан Ахмедович · Самозанятый (НПД) · ИНН 057201620432 · Дагестан</p>
-      <p><a href="../privacy/">Политика обработки персональных данных</a></p>
-      <p class="page-footer__year">© 2026 Лабазан</p>
+    <a class="sticky-cta" href="https://t.me/labazan_consult_bot" target="_blank" rel="noopener" data-sticky-bot>
+      <b aria-hidden="true">✈</b><span>Написать боту</span>
+    </a>
+
+    <!-- footer: идентичен на всех подстраницах -->
+    <footer class="page-footer">
+      <div class="page-footer__inner">
+        <p class="page-footer__req">Муталиев Рамазан Ахмедович · Самозанятый (НПД) · ИНН 057201620432 · Дагестан</p>
+        <p><a href="../privacy/">Политика обработки персональных данных</a></p>
+        <p class="page-footer__year">© 2026 Лабазан</p>
+      </div>
     </footer>
   </body>
 </html>
