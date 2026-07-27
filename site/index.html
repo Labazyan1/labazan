@@ -31,11 +31,11 @@
 
   <link rel="preload" as="font" type="font/woff2" crossorigin href="./assets/fonts/manrope-cyrillic-400-normal.woff2" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="./assets/fonts/unbounded-cyrillic-600-normal.woff2" />
-  <link rel="stylesheet" href="./styles.css?v=slot32" />
-  <script src="assets/analytics.js?v=slot32" defer></script>
-  <script src="assets/consent.js?v=slot32" defer></script>
-  <script src="assets/lead-form.js?v=slot32" defer></script>
-  <script src="./script.js?v=slot32" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=slot33" />
+  <script src="assets/analytics.js?v=slot33" defer></script>
+  <script src="assets/consent.js?v=slot33" defer></script>
+  <script src="assets/lead-form.js?v=slot33" defer></script>
+  <script src="./script.js?v=slot33" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -74,27 +74,46 @@
               </div>
             </dl>
 
-            <a class="cta" href="#lead">
-              <span>Получить бесплатный разбор</span>
-              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
-            </a>
             <p class="hero__sign">Рамазан · по договору</p>
           </div>
 
-          <div class="card hero__check">
-            <p class="hero__check-title">Проверьте свой сайт</p>
-            <p class="hero__check-sub">
-              Бесплатно и без заявки: скорость на телефоне, кликабельный номер,
-              форма, аналитика. Полминуты.
-            </p>
-            <form class="hero__check-form" action="/pochemu-net-zayavok/" method="get">
-              <label class="sr-only" for="hero-url">Адрес сайта</label>
-              <input id="hero-url" name="url" type="text" inputmode="url" autocomplete="url"
-                     maxlength="300" placeholder="например, mysite.ru" />
-              <button type="submit">Проверить</button>
-            </form>
-            <p class="hero__check-alt">Ещё нет сайта? <a class="u" href="/nuzhen-li-sajt/">Проверю спрос в вашей нише</a></p>
-          </div>
+          <form class="lead__form hero__leadform" id="lead" action="api/lead.php" method="post" novalidate data-lead-form aria-label="Заявка на бесплатный разбор">
+            <p class="lead__title hero__leadform-title">Начнём с бесплатного разбора</p>
+            <p class="hero__leadform-sub">Посмотрю спрос и скажу честно: есть смысл вкладываться или нет. Ни к чему не обязывает.</p>
+
+            <div class="lead__field">
+              <label for="lead-biz">Чем занимаетесь</label>
+              <input id="lead-biz" name="name" type="text" required aria-required="true"
+                     autocomplete="organization" maxlength="120" placeholder="Например: кухни на заказ" />
+            </div>
+
+            <div class="lead__field">
+              <label for="lead-contact">Телефон или Telegram</label>
+              <input id="lead-contact" name="contact" type="text" required aria-required="true"
+                     autocomplete="tel" maxlength="160" placeholder="+7… или @username" />
+            </div>
+
+            <div class="lead__hp" aria-hidden="true">
+              <label for="lead-company">Не заполняйте это поле</label>
+              <input id="lead-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <input type="hidden" name="goal" value="Бесплатный разбор" />
+            <input type="hidden" name="source" value="glavnaya" />
+
+            <label class="lead__consent">
+              <input type="checkbox" name="consent" value="1" required aria-required="true" />
+              <span>Нажимая, соглашаюсь на <a class="u" href="privacy/">обработку персональных данных</a>. Никакого спама, один разбор, одно сообщение.</span>
+            </label>
+
+            <button class="lead__submit" type="submit">
+              <span>Получить разбор</span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
+            </button>
+
+            <p class="lead__status" data-lead-status role="status" aria-live="polite"></p>
+            <p class="hero__leadform-sign">Рамазан · отвечаю в течение рабочего дня</p>
+          </form>
         </div>
       </div>
     </section>
@@ -432,55 +451,21 @@
     </section>
 
     <!-- 008 ЗАЯВКА -->
-    <section id="lead" class="lead" aria-labelledby="lead-title">
+    <!-- 008 ФИНАЛЬНЫЙ CTA: форма живёт в hero (#lead), отсюда якорь наверх -->
+    <section class="final-cta" aria-labelledby="final-title">
       <div class="shell reveal">
         <p class="sec__head tag"><span><b>проводка 008</b> · заявка</span><span>бесплатно</span></p>
-
-        <div class="lead__grid">
-          <div>
-            <h2 class="sec__title lead__title" id="lead-title">Начнём с бесплатного разбора</h2>
-            <p class="sec__lead">
-              Расскажите, чем занимаетесь, я посмотрю спрос и скажу честно:
-              есть смысл вкладываться или нет. Это бесплатно и ни к чему
-              не обязывает.
-            </p>
-            <p class="lead__sign">Рамазан · отвечаю в течение рабочего дня</p>
-          </div>
-
-          <form class="lead__form" action="api/lead.php" method="post" novalidate data-lead-form>
-            <div class="lead__field">
-              <label for="lead-biz">Чем занимаетесь</label>
-              <input id="lead-biz" name="name" type="text" required aria-required="true"
-                     autocomplete="organization" maxlength="120" placeholder="Например: кухни на заказ" />
-            </div>
-
-            <div class="lead__field">
-              <label for="lead-contact">Телефон или Telegram</label>
-              <input id="lead-contact" name="contact" type="text" required aria-required="true"
-                     autocomplete="tel" maxlength="160" placeholder="+7… или @username" />
-            </div>
-
-            <div class="lead__hp" aria-hidden="true">
-              <label for="lead-company">Не заполняйте это поле</label>
-              <input id="lead-company" name="company" type="text" tabindex="-1" autocomplete="off" />
-            </div>
-
-            <input type="hidden" name="goal" value="Бесплатный разбор" />
-            <input type="hidden" name="source" value="glavnaya" />
-
-            <label class="lead__consent">
-              <input type="checkbox" name="consent" value="1" required aria-required="true" />
-              <span>Нажимая, соглашаюсь на <a class="u" href="privacy/">обработку персональных данных</a>. Никакого спама, один разбор, одно сообщение.</span>
-            </label>
-
-            <button class="lead__submit" type="submit">
-              <span>Получить разбор</span>
-              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
-            </button>
-
-            <p class="lead__status" data-lead-status role="status" aria-live="polite"></p>
-          </form>
-        </div>
+        <h2 class="sec__title" id="final-title">Начнём с бесплатного разбора</h2>
+        <p class="sec__lead">
+          Расскажите, чем занимаетесь, я посмотрю спрос и скажу честно:
+          есть смысл вкладываться или нет. Это бесплатно и ни к чему
+          не обязывает.
+        </p>
+        <a class="cta" href="#lead">
+          <span>Оставить заявку</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
+        </a>
+        <p class="lead__sign">Рамазан · отвечаю в течение рабочего дня</p>
       </div>
     </section>
   </main>
