@@ -213,26 +213,17 @@
       line-height: 1.2; letter-spacing: -.01em; text-wrap: balance;
     }
     .hero__title--main {
-      font-size: clamp(1.9rem, 5.2vw, 3.9rem);
-      line-height: 1.08; letter-spacing: -.02em;
-      max-width: 16ch;
+      font-size: clamp(2rem, 5.8vw, 4.4rem);
+      line-height: 1.06; letter-spacing: -.02em;
+      max-width: 18ch;
     }
     .hero__title em { font-style: normal; color: var(--stamp); }
     .hero__lead { margin-top: clamp(14px, 2vw, 20px); max-width: 46ch; font-size: clamp(1rem, 1.5vw, 1.15rem); color: rgba(20,18,16,.82); }
-    /* бланк-отчёт: парит как лист на столе, чуть повёрнут */
-    .hero__report {
-      align-self: center;
-      transform: rotate(.4deg);
-    }
-    .hero__report .total dd { color: var(--stamp); font-size: clamp(1.35rem, 2.4vw, 1.7rem); font-weight: 700; }
-    @media (min-width: 900px) {
-      .hero__grid { grid-template-columns: 1.15fr .85fr; align-items: center; }
-    }
-    @media (max-width: 899.98px) { .hero__report { transform: none; } }
+    .hero .ledger { max-width: 46ch; }
 
-    /* Стагер входа hero: метка → заголовок → лид → бланк. Только на загрузке. */
+    /* Стагер входа hero: метка → заголовок → лид → условия → CTA. Только на загрузке. */
     @media (prefers-reduced-motion: no-preference) {
-      .hero__eyebrow, .hero__title--main, .hero__lead, .hero .ledger, .hero .cta, .hero__sign, .hero__report {
+      .hero__eyebrow, .hero__title--main, .hero__lead, .hero .ledger, .hero .cta, .hero__sign {
         animation: rise-in .48s var(--ease-out) both;
       }
       .hero__title--main { animation-delay: .07s; }
@@ -240,11 +231,6 @@
       .hero .ledger      { animation-delay: .21s; }
       .hero .cta         { animation-delay: .27s; }
       .hero__sign        { animation-delay: .27s; }
-      .hero__report      { animation-name: rise-in-report; animation-delay: .36s; }
-      /* Оттиск: штемпель на бланке ставится после докрутки итога, с overshoot */
-      .hero__report .stamp {
-        animation: stamp-in .3s cubic-bezier(0.34, 1.56, 0.64, 1) 1.45s both;
-      }
     }
     @keyframes rise-in {
       from { opacity: 0; transform: translateY(14px); }
@@ -254,14 +240,6 @@
       from { opacity: 0; transform: rotate(-7deg) scale(1.5); }
       60%  { opacity: 1; }
       to   { opacity: 1; transform: rotate(-3deg) scale(1); }
-    }
-    /* бланк повёрнут — собственный transform затирается анимацией, вернём поворот */
-    @keyframes rise-in-report {
-      from { opacity: 0; transform: translateY(14px) rotate(.4deg); }
-      to   { opacity: 1; transform: rotate(.4deg); }
-    }
-    @media (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
-      .hero__report { animation-name: rise-in; }
     }
 
     /* пары «кто делает / кабинеты» как строки книги */
