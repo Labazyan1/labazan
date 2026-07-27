@@ -33,12 +33,13 @@
     })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
 
     // webvisor:true → вебвизор + карта скроллов; clickmap:true → карта кликов.
+    // Без defer: для многостраничной статики просмотр отправляется автоматически
+    // при init на каждой загрузке. defer:true (SPA-режим) глушил все хиты → нули.
     window.ym(id, 'init', {
       clickmap: true,
       trackLinks: true,
       accurateTrackBounce: true,
-      webvisor: true,
-      defer: true
+      webvisor: true
     });
   }
 
