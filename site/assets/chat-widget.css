@@ -1,10 +1,10 @@
 /* ── Чат-виджет ИИ-консультанта (ковровая тема) ──────────────────────────────
-   Кнопка bottom-LEFT (справа занят sticky-CTA «Демо автоответа»).
+   Кнопка bottom-RIGHT (конвенция чат-виджетов; «Демо автоответа» теперь блок в потоке).
    z-index 66 — НИЖЕ cookie-баннера (70): согласие на cookie приоритетнее чата.
    Разметку инжектит assets/chat-widget.js; бэкенд — bot.labazan.ru (YandexGPT, РФ). */
 
 .chat-toggle {
-  position: fixed; left: clamp(14px, 2vw, 26px); bottom: clamp(14px, 2vw, 26px);
+  position: fixed; right: clamp(14px, 2vw, 26px); bottom: clamp(14px, 2vw, 26px);
   z-index: 66;
   width: 54px; height: 54px; border-radius: 50%;
   background: var(--stamp, #a33324); color: #fff; border: 0;
@@ -23,7 +23,7 @@
 }
 
 .chat-panel {
-  position: fixed; left: clamp(14px, 2vw, 26px); bottom: calc(clamp(14px, 2vw, 26px) + 66px);
+  position: fixed; right: clamp(14px, 2vw, 26px); bottom: calc(clamp(14px, 2vw, 26px) + 66px);
   z-index: 66;
   width: 370px; max-width: calc(100vw - 28px);
   height: min(560px, calc(100dvh - 120px));
@@ -107,7 +107,7 @@
    сообщение консультанта (аватар + палитра сайта), НЕ как системное
    уведомление. Тап открывает чат, ✕ прячет до конца сессии. */
 .chat-offer {
-  position: fixed; left: clamp(14px, 2vw, 26px);
+  position: fixed; right: clamp(14px, 2vw, 26px);
   bottom: calc(clamp(14px, 2vw, 26px) + 66px);
   z-index: 66;
   display: flex; align-items: flex-start; gap: 10px;

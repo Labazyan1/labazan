@@ -28,7 +28,7 @@
   var scriptSrc = (document.currentScript && document.currentScript.src) || 'assets/chat-widget.js';
   var link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = scriptSrc.replace(/chat-widget\.js.*$/, 'chat-widget.css');
+  link.href = scriptSrc.replace(/chat-widget\.js/, 'chat-widget.css'); // ?v= скрипта наследуется css-файлом
   document.head.appendChild(link);
 
   // ── состояние сессии (переживает переходы между страницами в одной вкладке) ──
