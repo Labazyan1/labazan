@@ -245,7 +245,17 @@
     saveState();
     msgInput.value = '';
     inputForm.querySelector('.chat-send').disabled = true;
-    showTyping(true);
+
+    // «Живой» ритм: консультант сначала «открывает» сообщение (микро-пауза),
+    // потом «печатает» — длинный ответ печатается дольше. Сеть и генерация
+    // засчитываются в это время: ответ никогда не ждёт дольше формулы.
+    var PACE_READ_MS = 900 + Math.random() * 1100;
+    var paceStart = Date.now();
+    var typingTimer = setTimeout(function () { showTyping(true); }, PACE_READ_MS);
+    function paceDelayMs(replyLen) {
+      var typeMs = Math.max(1000, Math.min(8000, replyLen / 25 * 1000));
+      return Math.max(0, (paceStart + PACE_READ_MS + typeMs) - Date.now());
+    }
 
     // history для LLM: только user/assistant (реплики оператора — не контекст модели)
     var llmHistory = [];
@@ -261,20 +271,30 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(chatBody)
     }).then(function (r) { return r.json(); }).then(function (data) {
-      showTyping(false);
       if (data && data.ok && data.silent) {
-        // Оператор в диалоге: бот молчит, ответ человека приедет поллингом.
+        // Оператор в диалоге: бот молчит, «печатать» нечего — статус сразу.
+        clearTimeout(typingTimer);
+        showTyping(false);
         showStatus('Менеджер подключился к диалогу — ответит здесь.');
         pollOnce();
       } else if (data && data.ok && data.reply) {
-        addMsg(data.reply, 'bot');
-        history.push({ role: 'assistant', content: data.reply });
-        saveState();
-        if (data.escalate) offerLead();
+        clearTimeout(typingTimer);
+        showTyping(true);
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            showTyping(false);
+            addMsg(data.reply, 'bot');
+            history.push({ role: 'assistant', content: data.reply });
+            saveState();
+            if (data.escalate) offerLead();
+            resolve();
+          }, paceDelayMs(data.reply.length));
+        });
       } else {
         throw new Error('bad_reply');
       }
     }).catch(function () {
+      clearTimeout(typingTimer);
       showTyping(false);
       showStatus('Не удалось получить ответ. Напишите нам: <a href="' + MAILTO + '">' + EMAIL + '</a>', true);
     }).then(function () {
