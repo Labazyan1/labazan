@@ -2,3 +2,10 @@
 # Секреты движка автопроверки (ключ PSI) — только на сервере
 audit-config.php
 **/audit-config.php
+
+# Легаси v1-Astro (не деплоится, деплой берёт только site/) — не тащим в репо
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
