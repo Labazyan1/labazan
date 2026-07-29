@@ -160,12 +160,14 @@
   function openPanel(open) {
     if (open) {
       panel.removeAttribute('hidden');
+      document.body.classList.add('chat-panel-open');
       toggle.setAttribute('aria-expanded', 'true');
       toggle.classList.remove('has-unread');
       if (!greeted) { greeted = true; addMsg(GREETING, 'bot'); }
       if (msgInput) msgInput.focus();
     } else {
       panel.setAttribute('hidden', '');
+      document.body.classList.remove('chat-panel-open');
       toggle.setAttribute('aria-expanded', 'false');
       toggle.focus();
     }
@@ -428,4 +430,31 @@
       busy = false; submit.disabled = false;
     });
   });
+
+  // ── Прячем кнопку/оффер, когда форма заявки в поле зрения ─────────────
+  // Фиксированная кнопка bottom-right на мобильном перекрывала поля формы (P1-01),
+  // а всплывающий оффер — карточку контента и, на узком экране, карточку результата
+  // расчёта. Пока во вьюпорте видна форма заявки ИЛИ блок результата калькулятора
+  // (.calc-payline — цифра, ради которой человек пришёл), снимаем кнопку и оффер;
+  // ушли из вида — возвращаем. Безопасно для всех страниц: нет целей → наблюдать
+  // нечего. При открытой панели чата кнопку не прячем.
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var targets = document.querySelectorAll('[data-lead-form], .lead, .audit-form, .calc-payline');
+    if (!targets.length) return;
+    var visibleCount = 0;
+    var io = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        // dataset-флаг на элементе — чтобы повторные срабатывания не сбивали счётчик
+        var wasVisible = entries[i].target.dataset.chatNear === '1';
+        if (entries[i].isIntersecting && !wasVisible) {
+          entries[i].target.dataset.chatNear = '1'; visibleCount++;
+        } else if (!entries[i].isIntersecting && wasVisible) {
+          entries[i].target.dataset.chatNear = '0'; visibleCount--;
+        }
+      }
+      document.body.classList.toggle('chat-near-form', visibleCount > 0);
+    }, { threshold: 0.15 });
+    for (var i = 0; i < targets.length; i++) io.observe(targets[i]);
+  })();
 })();

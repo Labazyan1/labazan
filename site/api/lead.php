@@ -74,10 +74,13 @@ labazan_lead_run([
     'accept_telegram' => true, // поле формы «Телефон или Telegram»; доставка всё равно только в РФ
     'lead_email'      => $LEAD_EMAIL,
     'lead_email_from' => $LEAD_EMAIL_FROM,
-    // Приёмник: прямой CRM-ingest, если задан (Bearer-ключ), иначе прежний n8n-вебхук.
-    'n8n_url'         => $CRM_INGEST_URL !== '' ? $CRM_INGEST_URL : $N8N_WEBHOOK_URL,
-    'n8n_secret'      => $N8N_WEBHOOK_SECRET,
-    'ingest_key'      => $CRM_INGEST_KEY,
+    // CRM-доставка ПЕРЕНЕСЕНА на bot.labazan.ru/escalate (браузер → РФ-ВМ → CRM по внутренней
+    // сети): исходящий из Beget-PHP к crm.labazan.ru не проходит, а через ВМ — надёжно и без
+    // дубля. Здесь lead.php оставляем ТОЛЬКО как российский почтовый канал (n8n/ingest выключены).
+    // $CRM_INGEST_URL/$N8N_WEBHOOK_URL из конфига намеренно не пробрасываем.
+    'n8n_url'         => '',
+    'n8n_secret'      => '',
+    'ingest_key'      => '',
     // статичный пинг «пришёл лид» (без ПД): отдельный бот, если задан, иначе текущий v1-бот
     'tg_bot_token'    => $TG_BOT_TOKEN !== '' ? $TG_BOT_TOKEN : $BOT_TOKEN,
     'tg_chat_id'      => $TG_CHAT_ID !== '' ? $TG_CHAT_ID : $CHAT_ID,

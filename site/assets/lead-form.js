@@ -22,6 +22,18 @@
   const errorBox = section ? section.querySelector('[data-lead-error]') : null;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let submitting = false; // защита от двойной отправки: Enter умеет слать форму мимо кнопки
+  // РФ-ВМ приёма лида в обход исходящего Beget (тот же бэкенд, что у чата).
+  const BOT_URL = (window.LABAZAN_BOT_URL || 'https://bot.labazan.ru').replace(/\/+$/, '');
+
+  // Контекст лида в поле message бота (source-колонка у инстанса общая, цель/страница — сюда).
+  function buildBotMessage(fd) {
+    const parts = ['Заявка с сайта'];
+    const goal = fd.get('goal'); if (goal) parts.push(String(goal));
+    const source = fd.get('source'); if (source) parts.push('стр. ' + String(source));
+    let msg = parts.join(' · ');
+    const calc = fd.get('calc'); if (calc) msg += '\n' + String(calc);
+    return msg.slice(0, 2000);
+  }
 
   function setStatus(msg, kind) {
     if (!status) return;
@@ -90,16 +102,31 @@
     if (submit) submit.disabled = true;
 
     try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: new FormData(form),
-      });
+      const fd = new FormData(form);
+      // Доставка ДВУМЯ независимыми РФ-каналами (у Beget-PHP исходящий в CRM режется):
+      //   1) api/lead.php — российская почта + ответ формы (как раньше);
+      //   2) bot.labazan.ru/escalate — приём на РФ-ВМ прямо из браузера (в обход исходящего
+      //      Beget), оттуда в CRM по внутренней сети. Тот же путь, что у чат-виджета.
+      // Успех = подтвердил ХОТЯ БЫ один канал. Бот сам валидирует honeypot/согласие/контакт.
+      const botBody = {
+        name: fd.get('name') || '',
+        contact: fd.get('contact') || '',
+        consent: fd.get('consent') || '',
+        company: fd.get('company') || '',
+        message: buildBotMessage(fd),
+      };
+      const [phpRes, botRes] = await Promise.all([
+        fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: fd })
+          .then((r) => r.json()).catch(() => null),
+        fetch(BOT_URL + '/escalate', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(botBody),
+        }).then((r) => r.json()).catch(() => null),
+      ]);
 
-      let data = null;
-      try { data = await res.json(); } catch (_) { /* не JSON: статик-хостинг без PHP */ }
+      const errOf = (r) => (r && r.ok === false ? r.error : null);
+      const anyErr = (e) => errOf(phpRes) === e || errOf(botRes) === e;
 
-      if (res.ok && data && data.ok) {
+      if ((phpRes && phpRes.ok) || (botRes && botRes.ok)) {
         const source = sourceField ? sourceField.value : '';
         form.reset();
         // Блок подтверждения на месте формы; на главной — прежний текстовый статус.
@@ -110,18 +137,18 @@
         if (typeof window.labazanGoal === 'function') {
           window.labazanGoal('form_submit', source ? { source: source } : undefined);
         }
-      } else if (data && data.error === 'consent') {
+      } else if (anyErr('consent')) {
         setStatus('Отметьте согласие на обработку персональных данных.', 'error');
-      } else if (data && data.error === 'validation') {
+      } else if (anyErr('validation')) {
         setStatus('Проверьте контакт: телефон или Telegram-ник.', 'error');
-      } else if (data && data.error === 'rate_limited') {
+      } else if (anyErr('rate_limited')) {
         setStatus('Слишком много попыток. Подождите минуту и попробуйте снова.', 'error');
-      } else if (data && data.error) {
-        // Доставка не удалась — тупика быть не должно: даём прямую ссылку на связь.
+      } else if (phpRes || botRes) {
+        // Хотя бы один ответил ошибкой доставки — не тупик, даём прямую связь.
         showHardError('Не удалось отправить. Напишите напрямую в Telegram.');
       } else {
-        // Нет валидного JSON: на превью статик-сервер без PHP. Не врём про отправку.
-        setStatus('Форма заработает после переноса на рабочий хостинг. Пока напишите напрямую в Telegram или позвоните.', 'error');
+        // Оба канала недоступны (сеть / нет PHP и бот недоступен).
+        showHardError('Сеть недоступна. Напишите напрямую в Telegram.');
       }
     } catch (_) {
       showHardError('Сеть недоступна. Напишите напрямую в Telegram.');

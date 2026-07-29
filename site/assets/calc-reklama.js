@@ -36,6 +36,9 @@
 
   var profitMode = 'sum';
   var lastR = null;
+  // Пользователь осознанно тронул расчёт (ввёл число / сменил нишу / переключил режим).
+  // До этого превью в чат НЕ шлём: стартовые значения — демо, не персональный вывод.
+  var interacted = false;
 
   function currentNiche() {
     var id = $('niche').value;
@@ -146,7 +149,7 @@
   function offerChat() {
     var r = lastR;
     var detail;
-    if (!r || !r.valid) {
+    if (!interacted || !r || !r.valid) {
       detail = { tool: 'ads', valid: false, preview: '', full: '' };
     } else {
       var leadMid = Math.round((r.leadOpt + r.leadPess) / 2);
@@ -165,19 +168,49 @@
     try { document.dispatchEvent(new CustomEvent('labazan:calc', { detail: detail })); } catch (e) { /* ок */ }
   }
 
+  // Заметка «вне диапазона» под процентными полями (маржа/конверсия ≤ 100%).
+  function warnEl(id) {
+    if (id === 'margin') return $('warnMargin');
+    if (id === 'saleConv') return $('warnSale');
+    return null;
+  }
+  function setWarn(id, over) {
+    var w = warnEl(id);
+    if (!w) return;
+    if (over) {
+      w.textContent = id === 'margin'
+        ? 'Маржа не может быть больше 100% — взял 100%.'
+        : 'Конверсия не может быть больше 100% — взял 100%.';
+      w.hidden = false;
+    } else {
+      w.textContent = '';
+      w.hidden = true;
+    }
+  }
+
   function bindNumber(id) {
     var el = $(id);
     if (!el) return;
     el.addEventListener('input', function () {
+      interacted = true;
       var raw = String(el.value).replace(/[^\d]/g, '');
-      if (id === 'saleConv' || id === 'margin') el.value = raw ? String(parseInt(raw, 10)) : '';
-      else el.value = raw ? fmt(parseInt(raw, 10)) : '';
+      if (id === 'saleConv' || id === 'margin') {
+        // Проценты: показываем подрезку до 100 вместо тихого клампа внутри расчёта.
+        var n = raw ? parseInt(raw, 10) : 0;
+        var over = n > 100;
+        if (over) n = 100;
+        el.value = raw ? String(n) : '';
+        setWarn(id, over);
+      } else {
+        el.value = raw ? fmt(parseInt(raw, 10)) : '';
+      }
       recalc(true);
     });
     el.addEventListener('focus', function () { el.select(); });
   }
 
   function setMode(mode) {
+    interacted = true;
     profitMode = mode;
     var sum = mode === 'sum';
     $('paneSum').hidden = !sum;
@@ -202,7 +235,7 @@
   // ── Инициализация ─────────────────────────────────────────────────
   buildSelect();
   ['profit', 'check', 'margin', 'saleConv'].forEach(bindNumber);
-  $('niche').addEventListener('change', function () { recalc(true); });
+  $('niche').addEventListener('change', function () { interacted = true; recalc(true); });
   $('tgSum').addEventListener('click', function () { setMode('sum'); });
   $('tgMargin').addEventListener('click', function () { setMode('margin'); });
   recalc(false);

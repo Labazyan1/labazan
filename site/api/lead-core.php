@@ -29,7 +29,9 @@ function lead_clean($v, $max = 500) {
 // Контакт: email или телефон (10–15 цифр). Радар дополнительно принимает Telegram-ник (@username).
 function lead_contact_valid($c, $accept_telegram = false) {
     if (filter_var($c, FILTER_VALIDATE_EMAIL)) return true;
-    if ($accept_telegram && preg_match('/^@?[A-Za-z0-9_]{4,32}$/', $c)) return true;
+    // Telegram-ник: обязателен «@», начинается с буквы, 5–32 символа (правила Telegram).
+    // Без «@» отсекаем случайные слова (напр. «test»), иначе приходят заявки без способа связи.
+    if ($accept_telegram && preg_match('/^@[A-Za-z][A-Za-z0-9_]{4,31}$/', $c)) return true;
     $digits = preg_replace('/\D+/', '', $c);
     $len = strlen($digits);
     return $len >= 10 && $len <= 15;

@@ -25,15 +25,15 @@
     <meta name="twitter:title" content="Окупится ли реклама? Расчёт экономики до запуска" />
     <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
     <link rel="stylesheet" href="../assets/lead-form.css?v=slot29" />
-    <link rel="stylesheet" href="../assets/calc-reklama.css?v=slot29" />
+    <link rel="stylesheet" href="../assets/calc-reklama.css?v=fix2907" />
     <!-- subpage.css последним: системный слой «Гроссбух-стекло» -->
     <link rel="stylesheet" href="../pages/subpage.css?v=demo34" />
     <script src="../assets/analytics.js?v=slot34" defer></script>
     <script src="../assets/consent.js?v=slot29" defer></script>
-    <script src="../assets/lead-form.js?v=slot29" defer></script>
-    <script src="../assets/chat-widget.js?v=4" defer></script>
+    <script src="../assets/lead-form.js?v=fix2907" defer></script>
+    <script src="../assets/chat-widget.js?v=fix2907" defer></script>
     <script src="../assets/calc-niches.js?v=demo34" defer></script>
-    <script src="../assets/calc-reklama.js?v=demo34" defer></script>
+    <script src="../assets/calc-reklama.js?v=fix2907" defer></script>
       <script src="../script.js?v=demo34" defer></script>
   </head>
   <body>
@@ -147,20 +147,22 @@
               <div class="calc-row">
                 <label for="f-margin">Маржа (сколько остаётся прибыли), %</label>
                 <div class="calc-field">
-                  <input id="f-margin" data-el="margin" inputmode="numeric" placeholder="например, 30" aria-label="Маржа в процентах" />
+                  <input id="f-margin" data-el="margin" inputmode="numeric" maxlength="3" placeholder="например, 30" aria-label="Маржа в процентах" />
                   <span class="calc-cur">%</span>
                 </div>
               </div>
+              <p class="calc-warn" data-el="warnMargin" role="status" aria-live="polite" hidden></p>
               <div class="calc-mini"><span>Прибыль с продажи</span><b data-el="profitCalc">–</b></div>
             </div>
 
             <div class="calc-row">
               <label for="f-saleConv">Из скольких обращений выходит продажа, %</label>
               <div class="calc-field">
-                <input id="f-saleConv" data-el="saleConv" inputmode="numeric" value="20" aria-label="Конверсия из обращения в продажу в процентах" />
+                <input id="f-saleConv" data-el="saleConv" inputmode="numeric" maxlength="3" value="20" aria-label="Конверсия из обращения в продажу в процентах" />
                 <span class="calc-cur">%</span>
               </div>
             </div>
+            <p class="calc-warn" data-el="warnSale" role="status" aria-live="polite" hidden></p>
             <p class="calc-note">
               Поставили <b>20%</b> типовым допущением: покупает примерно каждый <b data-el="saleEvery">5</b>-й
               обратившийся. Знаете свою цифру, впишите. Точную даёт настроенный учёт обращений, это

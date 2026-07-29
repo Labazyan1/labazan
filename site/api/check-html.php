@@ -26,16 +26,43 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 if (!audit_rate_limit_ok(10, 60, 'html')) {
     audit_out(['ok' => false, 'error' => 'rate_limited', 'message' => 'Слишком много проверок подряд. Подождите минуту.'], 429);
 }
-if (!audit_daily_quota_ok($HTML_DAILY_MAX, 'html')) {
-    audit_out(['ok' => false, 'error' => 'quota_exhausted', 'message' => 'Сегодня лимит проверок исчерпан. Напишите — посмотрю сайт руками.'], 429);
-}
 
+// Читаем и валидируем адрес ДО расхода суточной квоты (P1-04): пустые, битые и
+// внутренние адреса не должны жечь общий дневной лимит и гасить лид-магнит для
+// реальных клиентов. Порядок и проверки — те же, что в check-speed.php.
 $url_in = audit_clean($_POST['url'] ?? '', 2000);
 if ($url_in === '') {
     audit_out(['ok' => false, 'error' => 'empty', 'message' => 'Укажите адрес сайта.'], 422);
 }
+$assumed = false;
+[$url_norm, $nerr] = audit_normalize_url($url_in, $assumed);
+if ($url_norm === null) {
+    $nmap = [
+        'invalid' => ['Не похоже на адрес сайта. Пример: example.ru', 422],
+        'scheme'  => ['Поддерживаются только адреса http и https.', 422],
+        'port'    => ['Можно проверять только стандартные адреса (порты 80 и 443).', 422],
+    ];
+    $nm = $nmap[$nerr] ?? ['Не удалось разобрать адрес.', 422];
+    audit_out(['ok' => false, 'error' => $nerr, 'message' => $nm[0]], $nm[1]);
+}
+// Адрес должен резолвиться в публичный IP: внутренние/приватные не проверяем и квоту на них не тратим.
+[$host_pre] = audit_host_port($url_norm);
+$ips_pre = audit_resolve_ips($host_pre);
+if (!$ips_pre) {
+    audit_out(['ok' => false, 'error' => 'dns', 'message' => 'Не удалось найти такой сайт. Проверьте адрес.'], 422);
+}
+foreach ($ips_pre as $ip_pre) {
+    if (!audit_is_public_ip($ip_pre)) {
+        audit_out(['ok' => false, 'error' => 'blocked', 'message' => 'Этот адрес проверить нельзя.'], 422);
+    }
+}
 
-// --- Загрузка страницы ---
+// Суточный потолок: расходуем ТОЛЬКО когда ясно, что адрес валиден и запрос дойдёт до фетча.
+if (!audit_daily_quota_ok($HTML_DAILY_MAX, 'html')) {
+    audit_out(['ok' => false, 'error' => 'quota_exhausted', 'message' => 'Сегодня лимит проверок исчерпан. Напишите — посмотрю сайт руками.'], 429);
+}
+
+// --- Загрузка страницы (повторная авторитетная проверка IP + anti-rebinding внутри) ---
 [$body, $err, $meta] = audit_safe_fetch($url_in);
 if ($err !== null) {
     $map = [

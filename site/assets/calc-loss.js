@@ -42,6 +42,9 @@
   function lossRate(h) { return Math.min(LOSS_CAP, h / (h + LOSS_K)); }
 
   var lastR = null;
+  // Пользователь осознанно тронул расчёт (ввёл значение / сменил скорость).
+  // До этого превью в чат НЕ шлём: дефолтные числа — демо, не персональный вывод.
+  var interacted = false;
 
   var anim = null;
   function animateTo(node, target) {
@@ -121,7 +124,7 @@
   }
   function offerChat() {
     var r = lastR;
-    var valid = !!r && r.leads > 0 && r.lost >= 1;
+    var valid = interacted && !!r && r.leads > 0 && r.lost >= 1;
     var detail;
     if (!valid) {
       detail = { tool: 'loss', valid: false, preview: '', full: '' };
@@ -150,6 +153,7 @@
     var el = $(id);
     if (!el) return;
     el.addEventListener('input', function () {
+      interacted = true;
       var raw = String(el.value).replace(/[^\d]/g, '');
       if (id === 'offshare') el.value = raw ? String(Math.min(100, parseInt(raw, 10))) : '';
       else el.value = raw ? fmt(parseInt(raw, 10)) : '';
@@ -169,6 +173,6 @@
 
   // ── Инициализация ─────────────────────────────────────────────────
   ['leads', 'offshare', 'check'].forEach(bindNumber);
-  $('speed').addEventListener('change', function () { recalc(true); });
+  $('speed').addEventListener('change', function () { interacted = true; recalc(true); });
   recalc(false);
 })();

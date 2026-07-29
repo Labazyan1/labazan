@@ -13,6 +13,17 @@
   -webkit-tap-highlight-color: transparent;
 }
 .chat-toggle svg { width: 26px; height: 26px; }
+/* Форма заявки во вьюпорте — убираем кнопку/оффер, чтобы не перекрывать поля
+   (P1-01). Кнопку не прячем, если панель чата открыта (chat-panel-open). */
+.chat-near-form:not(.chat-panel-open) .chat-toggle,
+.chat-near-form .chat-offer {
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .25s var(--ease-out, ease-out), visibility .25s var(--ease-out, ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-near-form:not(.chat-panel-open) .chat-toggle,
+  .chat-near-form .chat-offer { transition: none; }
+}
 .chat-toggle:focus-visible { outline: 2px solid var(--stamp, #a33324); outline-offset: 3px; }
 .chat-toggle:active { transform: scale(.97); }
 /* бейдж «есть непрочитанный ответ» при закрытой панели */

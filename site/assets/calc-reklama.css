@@ -201,6 +201,16 @@
 .calc-note b { color: var(--ink); font-weight: 700; }
 .calc-note a { color: var(--madder); font-weight: 700; }
 
+/* Заметка о вводе вне допустимого диапазона (маржа/конверсия > 100%). */
+.calc-warn {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--madder);
+  font-weight: 600;
+}
+.calc-warn[hidden] { display: none; }
+
 /* ── Главный результат ─────────────────────────────────────────────── */
 .calc-hero {
   text-align: center;
