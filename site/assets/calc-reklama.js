@@ -136,8 +136,33 @@
     }
     applyVerdict(tone, title, text);
 
-    lastR = { niche: n.label, leadOpt: lr.opt, leadPess: lr.pess, working: working, title: title };
+    lastR = { niche: n.label, leadOpt: lr.opt, leadPess: lr.pess, working: Math.round(working), title: title, valid: profit > 0 && saleConv > 0 };
     writeSnapshot();
+    offerChat();
+  }
+
+  // Оффер чат-виджету: превью «сообщения консультанта» после расчёта.
+  // Полный текст ссылается на числа клиента и уходит в контекст диалога с ботом.
+  function offerChat() {
+    var r = lastR;
+    var detail;
+    if (!r || !r.valid) {
+      detail = { tool: 'ads', valid: false, preview: '', full: '' };
+    } else {
+      var leadMid = Math.round((r.leadOpt + r.leadPess) / 2);
+      detail = {
+        tool: 'ads',
+        valid: true,
+        calc: { tool: 'ads', leadCostFrom: r.leadOpt, leadCostTo: r.leadPess, ceiling: r.working },
+        preview: 'В вашей нише обращение из рекламы обойдётся примерно в ' + fmt(leadMid) + ' рублей. Чтобы выйти в плюс, нужно...',
+        full: 'По нише «' + r.niche + '»: обращение из рекламы стоит примерно от ' + rub(r.leadOpt) + ' до ' + rub(r.leadPess)
+          + ' (цена клика и конверсия сайта по рынку). Платить за обращение вы можете до ' + rub(r.working)
+          + ': это половина вашей прибыли с продажи с учётом конверсии, вторая половина остаётся вам.'
+          + ' Итог расчёта: ' + r.title.toLowerCase() + '.'
+          + ' Могу разобрать, что из этого следует именно для вашего запуска. Расскажите, что за бизнес и какой город?',
+      };
+    }
+    try { document.dispatchEvent(new CustomEvent('labazan:calc', { detail: detail })); } catch (e) { /* ок */ }
   }
 
   function bindNumber(id) {

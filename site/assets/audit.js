@@ -223,7 +223,46 @@
 
     goal('audit_result');
     try { resultEl.setAttribute('tabindex', '-1'); resultEl.focus({ preventScroll: true }); } catch (e) {}
+    offerChat(checks);
     runSpeed(data.url, speedSlot);
+  }
+
+  // Оффер чат-виджету после отрисовки разбора: превью «сообщения консультанта».
+  // В полный текст идёт ТОЛЬКО наш label проверки (не detail: там бывают фрагменты
+  // чужого сайта — их в контекст диалога не тащим). Числа клиента бот увидит в истории.
+  function plural(n, one, few, many) {
+    const m = Math.abs(n) % 100, d = m % 10;
+    if (m > 10 && m < 20) return many;
+    if (d > 1 && d < 5) return few;
+    if (d === 1) return one;
+    return many;
+  }
+  function offerChat(checks) {
+    const n = countStatuses(checks);
+    const total = n.bad + n.warn;
+    if (total < 1) return; // всё зелёное: разбирать нечего, не пристаём
+    const first = checks[0]; // отсортировано: сначала критичное
+    const label = first && first.label ? String(first.label) : '';
+    const probl = plural(total, 'проблему', 'проблемы', 'проблем');
+    const opener = n.bad > 0
+      ? 'Прошёлся по вашему сайту: нашёл ' + total + ' ' + probl + ', из них '
+        + n.bad + ' ' + plural(n.bad, 'критичная', 'критичные', 'критичных') + '.'
+      : 'Прошёлся по вашему сайту: нашёл ' + total + ' '
+        + plural(total, 'место', 'места', 'мест') + ', которые стоит поправить.';
+    const preview = total === 1
+      ? 'Нашёл на вашем сайте проблему, которая съедает заявки...'
+      : 'Нашёл ' + total + ' ' + probl + ' на вашем сайте, одна из них съедает больше остальных...';
+    const detail = {
+      tool: 'audit',
+      valid: true,
+      calc: { tool: 'audit', problems: total, critical: n.bad },
+      preview: preview,
+      full: opener
+        + (label ? ' Сильнее всего по заявкам бьёт эта: «' + label + '».' : '')
+        + ' Могу объяснить простыми словами, что это значит, что чинить в первую очередь и что это даст в заявках.'
+        + ' Расскажите, что у вас за бизнес?',
+    };
+    try { document.dispatchEvent(new CustomEvent('labazan:calc', { detail })); } catch (e) {}
   }
 
   // Их сайт (недоступен/закрыт/не тот адрес): честное сообщение сервера + мостик на ручной

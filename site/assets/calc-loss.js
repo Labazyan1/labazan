@@ -105,8 +105,45 @@
     }
     applyVerdict(tone, title, text);
 
-    lastR = { lost: Math.round(lost), money: Math.round(money), speedH: H, off: Math.round(p * 100) };
+    lastR = { lost: Math.round(lost), money: Math.round(money), speedH: H, off: Math.round(p * 100), leads: N, check: check };
     writeSnapshot();
+    offerChat();
+  }
+
+  // Оффер чат-виджету: превью «сообщения консультанта» после расчёта.
+  // Полный текст ссылается на числа клиента и уходит в контекст диалога с ботом.
+  function plural(n, one, few, many) {
+    var m = Math.abs(n) % 100, d = m % 10;
+    if (m > 10 && m < 20) return many;
+    if (d > 1 && d < 5) return few;
+    if (d === 1) return one;
+    return many;
+  }
+  function offerChat() {
+    var r = lastR;
+    var valid = !!r && r.leads > 0 && r.lost >= 1;
+    var detail;
+    if (!valid) {
+      detail = { tool: 'loss', valid: false, preview: '', full: '' };
+    } else {
+      var zk = plural(r.lost, 'заявка', 'заявки', 'заявок');
+      var moneyPart = r.check > 0 && r.money > 0
+        ? ' В деньгах это примерно ' + rub(r.money) + ' недополученной выручки в месяц, считал консервативно: продажей становится каждое пятое обращение.'
+        : '';
+      detail = {
+        tool: 'loss',
+        valid: true,
+        calc: { tool: 'loss', leads: r.leads, lost: r.lost, money: r.money, answerHours: r.speedH, offSharePct: r.off, avgCheck: r.check },
+        preview: 'У вас теряется около ' + fmt(r.lost) + ' ' + zk + ' в месяц. Это примерно...',
+        full: 'Смотрите, что вышло по вашим цифрам: из ' + fmt(r.leads) + ' '
+          + plural(r.leads, 'обращения', 'обращений', 'обращений') + ' в месяц при ответе за '
+          + r.speedH + ' ч и ' + r.off + '% обращений вне рабочего времени теряется около ' + fmt(r.lost)
+          + ' ' + zk + '.' + moneyPart
+          + ' Сильнее всего утекают обращения, которые пришли ночью, в выходной или пока вы заняты.'
+          + ' Могу подсказать, как закрыть именно вашу утечку. Расскажите, что у вас за бизнес?',
+      };
+    }
+    try { document.dispatchEvent(new CustomEvent('labazan:calc', { detail: detail })); } catch (e) { /* ок */ }
   }
 
   function bindNumber(id) {

@@ -420,7 +420,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .sticky-cta {
   position: fixed; z-index: 60;
   right: clamp(14px, 2vw, 26px); bottom: clamp(14px, 2vw, 26px);
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
   background: var(--glass-strong);
   -webkit-backdrop-filter: var(--blur);
   backdrop-filter: var(--blur);
