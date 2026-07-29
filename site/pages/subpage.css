@@ -416,34 +416,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .lead__result p + p { margin-top: 8px; }
 .lead__error { border-color: rgba(200, 40, 28, .4); }
 
-/* ── Липкий CTA бота (как на главной) ── */
-.sticky-cta {
-  position: fixed; z-index: 60;
-  right: clamp(14px, 2vw, 26px); bottom: clamp(14px, 2vw, 26px);
-  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
-  background: var(--glass-strong);
-  -webkit-backdrop-filter: var(--blur);
-  backdrop-filter: var(--blur);
-  border: 1px solid var(--glass-line);
-  border-top-color: var(--glass-edge);
-  border-radius: 999px;
-  box-shadow: var(--elev-2);
-  padding: 12px 18px;
-  color: var(--ink); text-decoration: none;
-  font-weight: 700; font-size: .9rem;
-  opacity: 0; transform: translateY(12px); pointer-events: none;
-  transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
-}
-.sticky-cta.is-on { opacity: 1; transform: none; pointer-events: auto; }
-.sticky-cta b {
-  display: grid; place-items: center;
-  width: 26px; height: 26px; border-radius: 50%;
-  background: var(--stamp); color: var(--paper);
-  font-size: 13px; font-weight: 500;
-}
-@media (hover: hover) and (pointer: fine) { .sticky-cta:hover { transform: translateY(-2px); } }
-.sticky-cta:active { transform: scale(.97); transition-duration: .1s; }
-.sticky-cta:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
 
 /* ── Футер: стеклянная полоса ── */
 .page-footer {

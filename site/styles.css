@@ -639,14 +639,25 @@
       font-family: var(--font-mono); font-size: .78rem; color: rgba(20,18,16,.62);
     }
 
-    /* ============ ЛИПКИЙ CTA (стеклянная пилюля) ============ */
-    .sticky-cta {
-      position: fixed; z-index: 60;
-      right: clamp(14px, 2vw, 26px); bottom: clamp(14px, 2vw, 26px);
-      display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
+    /* ============ ДЕМО АВТООТВЕТА (в потоке, конец секции «Как выглядит учёт») ============ */
+    .demo-cta {
+      margin-top: clamp(28px, 4vw, 44px);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: clamp(16px, 3vw, 28px); flex-wrap: wrap;
       background: var(--glass-strong);
       -webkit-backdrop-filter: var(--blur);
       backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-line);
+      border-top-color: var(--glass-edge);
+      border-radius: var(--radius);
+      box-shadow: var(--elev-2);
+      padding: clamp(18px, 3vw, 26px);
+    }
+    .demo-cta__t { margin: 0 0 4px; font-weight: 700; }
+    .demo-cta__s { margin: 0; font-size: .92rem; opacity: .78; max-width: 56ch; }
+    .demo-cta__btn {
+      display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
+      background: var(--glass-strong);
       border: 1px solid var(--glass-line);
       border-top-color: var(--glass-edge);
       border-radius: 999px;
@@ -654,21 +665,18 @@
       padding: 12px 18px;
       color: var(--ink); text-decoration: none;
       font-weight: 700; font-size: .9rem;
-      opacity: 0; transform: translateY(12px); pointer-events: none;
-      transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
     }
-    .sticky-cta.is-on { opacity: 1; transform: none; pointer-events: auto; }
-    .sticky-cta b {
+    .demo-cta__btn b {
       display: grid; place-items: center;
       width: 26px; height: 26px; border-radius: 50%;
       background: var(--stamp); color: var(--paper);
       font-size: 13px; font-weight: 500;
     }
     @media (hover: hover) and (pointer: fine) {
-      .sticky-cta:hover { transform: translateY(-2px); }
+      .demo-cta__btn:hover { transform: translateY(-2px); transition: transform .2s var(--ease-out); }
     }
-    .sticky-cta:active { transform: scale(.97); transition-duration: .1s; }
-    .sticky-cta:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+    .demo-cta__btn:active { transform: scale(.97); }
+    .demo-cta__btn:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
 
 
 /* ── Cookie-баннер (consent.js инжектит разметку; классы его) ── */

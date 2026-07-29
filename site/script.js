@@ -73,27 +73,10 @@
       }, { passive: true });
     })();
 
-/* Липкий CTA «Написать боту»: появляется после первого экрана,
-   прячется в зоне формы #lead (там своя конверсия). */
+/* Демо автоответа (кнопка в потоке после «Как выглядит учёт»): цель Метрики click_bot. */
 (function () {
   var cta = document.querySelector('[data-sticky-bot]');
-  var lead = document.getElementById('lead');
-  if (!cta || !('IntersectionObserver' in window)) return;
-  var hero = document.querySelector('.hero');
-  var pastHero = !hero, nearLead = false; /* нет hero (подстраницы) — кнопка видна сразу */
-  function apply() { cta.classList.toggle('is-on', pastHero && !nearLead); }
-  if (hero) {
-    new IntersectionObserver(function (en) {
-      pastHero = !en[0].isIntersecting; apply();
-    }, { threshold: 0.05 }).observe(hero);
-  } else {
-    apply();
-  }
-  if (lead) {
-    new IntersectionObserver(function (en) {
-      nearLead = en[0].isIntersecting; apply();
-    }, { threshold: 0.15 }).observe(lead);
-  }
+  if (!cta) return;
   cta.addEventListener('click', function () {
     if (window.labazanGoal) window.labazanGoal('click_bot');
   });
