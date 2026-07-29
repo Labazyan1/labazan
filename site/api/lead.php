@@ -43,14 +43,18 @@ $LEAD_SOURCE_LABELS = [
     'okupitsya-reklama'   => 'Окупается ли реклама',
     'kalkulyator-reklamy' => 'Калькулятор рекламы',
     'teryayutsya-zayavki' => 'Приём заявок',
+    'razvedka'            => 'Разведка',
+    'zapusk'             => 'Запуск',
+    'vedenie'            => 'Ведение и обработка заявок',
 ];
 
 labazan_lead_run([
     'allowed_hosts'   => ['labazan.ru', 'www.labazan.ru', 'beta.labazan.ru'],
     'host_label'      => $LEAD_HOST_LABEL !== '' ? $LEAD_HOST_LABEL : 'labazan.ru',
     'rl_bucket'       => 'labazan_v2_lead_rl',
-    // «Разведка» — платная ступень; бесплатную форму метим нейтрально, чтобы в почте не путать.
-    'allowed_goals'   => ['Бесплатный разбор'],
+    // Бесплатная форма метится нейтрально; платные ступени услуг — своими целями (страницы
+    // /razvedka, /zapusk, /vedenie). Значения строго из этого списка (иначе default_goal).
+    'allowed_goals'   => ['Бесплатный разбор', 'Разведка ниши', 'Запуск', 'Ведение и обработка заявок'],
     'default_goal'    => 'Бесплатный разбор',
     'theme'           => 'light',
     // Источник страницы отдельной строкой в письме/CRM (см. whitelist выше).

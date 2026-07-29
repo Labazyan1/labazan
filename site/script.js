@@ -85,7 +85,7 @@
 /* Цели Метрики: делегирование на document, как на прежней главной.
    tel: → click_phone, t.me/tg: → click_telegram (кроме кнопки бота, у неё
    своя цель click_bot), .cta/[data-cta] → click_cta. Плюс scroll_packages
-   по доскроллу до #pricing, один раз. labazanGoal молчит без согласия. */
+   по доскроллу до секции цен (#process), один раз. labazanGoal молчит без согласия. */
 (function () {
   function goal(name) {
     if (typeof window.labazanGoal === 'function') window.labazanGoal(name);
@@ -101,7 +101,8 @@
     else if (a.classList.contains('cta') || a.classList.contains('cta__button') || a.hasAttribute('data-cta')) goal('click_cta');
   }, true);
 
-  var pricing = document.getElementById('pricing');
+  /* Блок тарифов слит с процессом (29.07): цены живут в секции #process. */
+  var pricing = document.getElementById('process');
   if (pricing && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {

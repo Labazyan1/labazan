@@ -367,30 +367,7 @@
     .tools-more b { color: var(--stamp); }
     .tools-more--bridge { margin-top: 10px; font-size: .9rem; color: rgba(20, 18, 16, .72); max-width: 62ch; }
 
-    /* ============ 002 ШАГИ ============ */
-    .steps {
-      list-style: none; margin-top: clamp(24px, 4vw, 40px);
-      background: var(--glass);
-      -webkit-backdrop-filter: var(--blur);
-      backdrop-filter: var(--blur);
-      border: 1px solid var(--glass-line);
-      border-top-color: var(--glass-edge);
-      border-radius: var(--radius);
-      box-shadow: var(--elev-2);
-      padding: 6px clamp(18px, 3vw, 32px);
-    }
-    .steps li {
-      display: flex; align-items: baseline; gap: clamp(10px, 2vw, 20px);
-      padding: clamp(14px, 2vw, 22px) 0;
-      border-bottom: 1px solid var(--rule);
-      flex-wrap: wrap;
-    }
-    .steps li:last-child { border-bottom: 0; }
-    .steps__num { font-family: var(--font-mono); font-size: .8rem; font-weight: 700; color: var(--stamp); }
-    .steps__name { font-family: var(--font-display); font-weight: 500; font-size: clamp(1rem, 1.8vw, 1.3rem); }
-    .steps .fill { flex: 1 1 40px; border-bottom: 1px dotted var(--rule-strong); transform: translateY(-5px); min-width: 24px; }
-    .steps__desc { font-size: .95rem; color: rgba(20,18,16,.78); flex-basis: 100%; }
-    @media (min-width: 720px) { .steps__desc { flex-basis: auto; max-width: 44ch; text-align: right; } }
+    /* ============ 002 АКЦЕНТНАЯ СТРОКА ============ */
     .accent-line {
       margin-top: clamp(20px, 3vw, 32px);
       font-weight: 700; font-size: clamp(1rem, 1.5vw, 1.15rem);
@@ -410,85 +387,15 @@
       border-top-color: var(--glass-edge);
       border-radius: var(--radius);
       box-shadow: var(--elev-2);
-      padding: clamp(20px, 3vw, 32px);
+      padding: clamp(16px, 2.4vw, 24px) clamp(20px, 3vw, 32px);
     }
-    .pledge__mark { font-family: var(--font-mono); font-size: .78rem; font-weight: 700; color: var(--stamp); }
-    .pledge h3 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.02rem, 1.6vw, 1.2rem); margin: 10px 0 8px; }
+    .pledge h3 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.02rem, 1.6vw, 1.2rem); margin: 0 0 8px; }
     .pledge p { font-size: .95rem; color: rgba(20,18,16,.8); max-width: 44ch; }
 
-    /* ============ 004 УЧЁТ ============ */
-    .report__grid { display: grid; gap: clamp(28px, 4vw, 56px); margin-top: clamp(24px, 4vw, 40px); }
-    @media (min-width: 900px) { .report__grid { grid-template-columns: .9fr 1.1fr; align-items: start; } }
-    .report__note { margin-top: 14px; font-family: var(--font-mono); font-size: .78rem; color: rgba(20,18,16,.66); max-width: 40ch; }
-    .card {
-      border: 1px solid var(--glass-line);
-      border-top-color: var(--glass-edge);
-      border-radius: var(--radius);
-      background: var(--glass);
-      -webkit-backdrop-filter: var(--blur);
-      backdrop-filter: var(--blur);
-      box-shadow: var(--elev-2);
-      padding: clamp(18px, 2.6vw, 28px);
-    }
-    .card__head {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding-bottom: 12px; margin-bottom: 6px;
-      border-bottom: 1px solid var(--rule);
-    }
-    .card__head span:first-child { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
-    .rows > div {
-      display: flex; align-items: baseline; gap: 10px;
-      padding: 13px 0;
-      border-bottom: 1px dashed var(--rule);
-    }
-    .rows dt { font-size: .92rem; color: rgba(20,18,16,.8); }
-    .rows .fill { flex: 1; border-bottom: 1px dotted var(--rule-strong); transform: translateY(-4px); }
-    .rows dd { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
-    .rows .total { border-bottom: 3px double var(--ink); border-top: 1px solid var(--rule-strong); }
-    .rows .total dt { font-weight: 700; color: var(--ink); }
-    .rows .total dd { font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--stamp); }
-    .card__caption { margin-top: 14px; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(20,18,16,.62); }
-    .report__extra { display: grid; gap: clamp(20px, 3vw, 32px); margin-top: clamp(20px, 3vw, 32px); }
-    @media (min-width: 900px) { .report__extra { grid-template-columns: 1fr 1fr; } }
-
-    .filter__bar { display: flex; gap: 3px; height: 44px; margin: 16px 0 10px; }
-    .filter__seg { display: flex; align-items: center; justify-content: center; min-width: 34px; }
-    .filter__seg b { font-family: var(--font-mono); font-weight: 700; font-size: .95rem; }
-    .filter__seg--good { background: var(--ink); color: var(--paper); }
-    .filter__seg--bad { background: transparent; border: 1.5px dashed var(--stamp); color: var(--stamp); }
-    .filter__legend { font-family: var(--font-mono); font-size: .78rem; color: rgba(20,18,16,.72); display: flex; gap: 14px; flex-wrap: wrap; }
-    .filter__legend .good { font-weight: 700; color: var(--ink); }
-    .filter__legend .bad { font-weight: 700; color: var(--stamp); }
-    .filter__reasons { list-style: none; margin-top: 14px; }
-    .filter__reasons li { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px dashed var(--rule); font-size: .9rem; color: rgba(20,18,16,.8); }
-    .filter__reasons b { font-family: var(--font-mono); font-weight: 700; color: var(--stamp); min-width: 1.4em; text-align: right; }
-    .filter__note { margin-top: 14px; font-size: .9rem; font-weight: 600; }
-
-    .path { list-style: none; margin-top: 10px; }
-    .path li { position: relative; padding: 10px 0 10px 26px; }
-    .path li::before {
-      content: ''; position: absolute; left: 5px; top: 20px;
-      width: 7px; height: 7px; background: var(--ink); border-radius: 50%;
-    }
-    .path li::after {
-      content: ''; position: absolute; left: 8px; top: 30px; bottom: -12px;
-      width: 1px; background: var(--rule-strong);
-    }
-    .path li:last-child::after { display: none; }
-    .path li:last-child::before { background: var(--stamp); box-shadow: 0 0 0 3px rgba(200,40,28,.18); }
-    .path__t { font-weight: 700; font-size: .95rem; }
-    .path__t .time { font-family: var(--font-mono); font-weight: 400; font-size: .78rem; color: var(--stamp); }
-    .path__s { font-size: .88rem; color: rgba(20,18,16,.72); }
-    .path__chip {
-      font-family: var(--font-mono); font-size: .72rem;
-      border: 1px solid var(--rule-strong); padding: 2px 8px; letter-spacing: .04em;
-    }
-
-    /* ============ 005 ТАРИФЫ ============ */
+    /* ============ 002 УСЛУГИ И ЦЕНЫ ============ */
     .pricing { list-style: none; display: grid; gap: clamp(12px, 1.6vw, 18px); margin-top: clamp(24px, 4vw, 40px); }
-    @media (min-width: 720px) { .pricing { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 1100px) { .pricing { grid-template-columns: repeat(3, 1fr); } }
     .pricing li {
+      position: relative; /* якорь stretched-link: вся карточка кликается через .pricing__cta::after */
       background: var(--glass);
       -webkit-backdrop-filter: var(--blur);
       backdrop-filter: var(--blur);
@@ -496,8 +403,12 @@
       border-top-color: var(--glass-edge);
       border-radius: var(--radius);
       box-shadow: var(--elev-2);
-      padding: clamp(20px, 3vw, 30px); display: flex; flex-direction: column; gap: 12px;
+      padding: clamp(20px, 3vw, 30px);
+      display: grid; gap: clamp(16px, 2.4vw, 28px);
       transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out);
+    }
+    @media (min-width: 720px) {
+      .pricing li { grid-template-columns: 1fr auto; align-items: start; }
     }
     @media (hover: hover) and (pointer: fine) {
       .pricing li:hover {
@@ -508,12 +419,43 @@
           0 34px 60px rgba(var(--sh), .14);
       }
     }
-    .pricing h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.05rem; }
+    .pricing__body { display: flex; flex-direction: column; gap: 10px; }
+    .pricing h3 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
+    .pricing__manifesto { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.1; }
+    .pricing__intro { font-size: .95rem; color: rgba(20,18,16,.78); max-width: 60ch; }
+    .pricing__aside {
+      display: flex; flex-direction: column; gap: 12px;
+      align-items: flex-start; min-width: max-content;
+    }
+    @media (min-width: 720px) { .pricing__aside { align-items: flex-end; text-align: right; } }
     .pricing__price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: clamp(2rem, 3.4vw, 2.6rem); line-height: 1.05; color: var(--stamp); }
     .pricing__price span { display: block; font-size: .72rem; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; color: rgba(20,18,16,.66); margin-top: 4px; }
     .pricing p { font-size: .92rem; color: rgba(20,18,16,.8); }
-    .pricing__desc { flex: 1; }
     .pricing__accent { font-weight: 700; color: var(--stamp); font-size: .88rem; }
+    .pricing__cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: .95rem; color: var(--ink);
+      text-decoration: none; /* бордовая линия ниже — своя, браузерное подчёркивание глушим */
+      border-bottom: 2px solid var(--stamp); padding-bottom: 3px;
+      transition: gap .2s ease-out;
+    }
+    .pricing__cta b { color: var(--stamp); font-weight: 700; }
+    .pricing__cta:hover { gap: 14px; }
+    /* Stretched link: клик по любой точке карточки ведёт на страницу услуги */
+    .pricing__cta::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+    .pricing__cta:focus-visible::after { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .pricing__cta:focus-visible { outline: none; }
+    .pricing__lead { border-top-color: var(--stamp); }
+    /* строка-перебивка в потоке карточек (не карточка): сброс стекла */
+    .pricing li.pricing__break {
+      background: none; border: 0; box-shadow: 0 0 0 transparent;
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+      padding: clamp(4px, 1vw, 10px) 0; display: block;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .pricing li.pricing__break:hover { transform: none; box-shadow: 0 0 0 transparent; }
+    }
+    .pricing__break .accent-line { margin-top: 0; }
     .pricing__foot { margin-top: 18px; font-family: var(--font-mono); font-size: .8rem; color: rgba(20,18,16,.72); }
 
     /* ============ 006 ОБО МНЕ ============ */
@@ -638,46 +580,6 @@
       border-top: 1px solid var(--rule);
       font-family: var(--font-mono); font-size: .78rem; color: rgba(20,18,16,.62);
     }
-
-    /* ============ ДЕМО АВТООТВЕТА (в потоке, конец секции «Как выглядит учёт») ============ */
-    .demo-cta {
-      margin-top: clamp(28px, 4vw, 44px);
-      display: flex; align-items: center; justify-content: space-between;
-      gap: clamp(16px, 3vw, 28px); flex-wrap: wrap;
-      background: var(--glass-strong);
-      -webkit-backdrop-filter: var(--blur);
-      backdrop-filter: var(--blur);
-      border: 1px solid var(--glass-line);
-      border-top-color: var(--glass-edge);
-      border-radius: var(--radius);
-      box-shadow: var(--elev-2);
-      padding: clamp(18px, 3vw, 26px);
-    }
-    .demo-cta__t { margin: 0 0 4px; font-weight: 700; }
-    .demo-cta__s { margin: 0; font-size: .92rem; opacity: .78; max-width: 56ch; }
-    .demo-cta__btn {
-      display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
-      background: var(--glass-strong);
-      border: 1px solid var(--glass-line);
-      border-top-color: var(--glass-edge);
-      border-radius: 999px;
-      box-shadow: var(--elev-2);
-      padding: 12px 18px;
-      color: var(--ink); text-decoration: none;
-      font-weight: 700; font-size: .9rem;
-    }
-    .demo-cta__btn b {
-      display: grid; place-items: center;
-      width: 26px; height: 26px; border-radius: 50%;
-      background: var(--stamp); color: var(--paper);
-      font-size: 13px; font-weight: 500;
-    }
-    @media (hover: hover) and (pointer: fine) {
-      .demo-cta__btn:hover { transform: translateY(-2px); transition: transform .2s var(--ease-out); }
-    }
-    .demo-cta__btn:active { transform: scale(.97); }
-    .demo-cta__btn:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
-
 
 /* ── Cookie-баннер (consent.js инжектит разметку; классы его) ── */
 .cookie-banner {

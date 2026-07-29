@@ -31,12 +31,12 @@
 
   <link rel="preload" as="font" type="font/woff2" crossorigin href="./assets/fonts/manrope-cyrillic-400-normal.woff2" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="./assets/fonts/unbounded-cyrillic-600-normal.woff2" />
-  <link rel="stylesheet" href="./styles.css?v=demo35" />
+  <link rel="stylesheet" href="./styles.css?v=demo39" />
   <script src="assets/analytics.js?v=slot34" defer></script>
   <script src="assets/consent.js?v=slot33" defer></script>
   <script src="assets/lead-form.js?v=slot33" defer></script>
   <script src="assets/chat-widget.js?v=3" defer></script>
-  <script src="./script.js?v=demo34" defer></script>
+  <script src="./script.js?v=demo35" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -127,87 +127,60 @@
       </div>
     </div>
 
-    <!-- 001 ИНСТРУМЕНТЫ -->
-    <section id="questions" aria-labelledby="tools-title">
-      <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 001</b> · инструменты</span><span>бесплатно</span></p>
-        <h2 class="sec__title" id="tools-title">Три вопроса, которые мы решим</h2>
-
-        <div class="tools">
-          <a class="tool" href="/pochemu-net-zayavok/">
-            <p class="tool__eyebrow"><b>01</b> Сайт есть, а заявок мало</p>
-            <h3>Узнайте, где сайт теряет заявки</h3>
-            <p>Проверю кнопку, телефон, форму, аналитику, юридические страницы и скорость загрузки на мобильном.</p>
-            <span class="tool__action"><span>Проверить сайт</span><b aria-hidden="true">→</b></span>
-            <small>Бесплатный экспресс-аудит</small>
-          </a>
-          <a class="tool" href="/okupitsya-reklama/">
-            <p class="tool__eyebrow"><b>02</b> Нужна реклама</p>
-            <h3>Посчитайте рекламу до запуска</h3>
-            <p>Введите нишу, прибыль с клиента и конверсию. Калькулятор покажет цену обращения и точку окупаемости.</p>
-            <span class="tool__action"><span>Рассчитать рекламу</span><b aria-hidden="true">→</b></span>
-            <small>Расчёт без отправки заявки</small>
-          </a>
-          <a class="tool" href="/teryayutsya-zayavki/">
-            <p class="tool__eyebrow"><b>03</b> Заявки теряются</p>
-            <h3>Посчитайте, сколько заявок утекает</h3>
-            <p>Ночью, в выходной, в пятницу вечером обращение ждёт ответа и уходит. Посчитайте, сколько их теряется и сколько это в деньгах.</p>
-            <span class="tool__action"><span>Проверить приём</span><b aria-hidden="true">→</b></span>
-            <small>Калькулятор потерянных заявок</small>
-          </a>
-        </div>
-
-        <p class="tools-more"><a class="u" href="/nuzhen-li-sajt/">Ещё нет сайта? Проверю спрос в вашей нише</a> <b aria-hidden="true">→</b></p>
-        <p class="tools-more tools-more--bridge">Эти проверки: мини-разведка своими руками. Полную, с планом и цифрами по вашей нише, делаю я. <a class="u" href="#process">Шаг 01, Разведка</a>.</p>
-      </div>
-    </section>
-
-    <!-- 002 КАК Я РАБОТАЮ -->
+    <!-- 002 УСЛУГИ И ЦЕНЫ (объединённый блок: как работаю + тарифы) -->
     <section id="process" aria-labelledby="process-title">
       <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 002</b> · как я работаю</span></p>
-        <h2 class="sec__title" id="process-title">Сначала проверяю. Потом делаю.</h2>
-        <p class="sec__lead">
-          Я не начинаю с «давайте сделаем сайт». Сначала разведка: есть ли спрос,
-          почём клик, сходится ли экономика. Если не сходится, я так и скажу,
-          и вы сэкономите сотни тысяч.
-        </p>
+        <p class="sec__head tag"><span>услуги и цены</span></p>
+        <h2 class="sec__title" id="process-title">Как я работаю</h2>
 
-        <ol class="steps" aria-label="Как устроена работа">
-          <li>
-            <span class="steps__num">01</span>
-            <span class="steps__name">Разведка</span>
-            <span class="fill" aria-hidden="true"></span>
-            <span class="steps__desc">спрос, конкуренты и реальная цена клика в вашем городе; часть проверок можно сделать бесплатно, инструментами выше</span>
+        <ul class="pricing" aria-label="Услуги и цены">
+          <li class="pricing__lead">
+            <div class="pricing__body">
+              <p class="pricing__manifesto">Сначала проверяю. Потом делаю.</p>
+              <p class="pricing__intro">Я не начинаю с «давайте сделаем сайт». Сначала разведка: есть ли спрос, почём клик, сходится ли экономика. Если не сходится, я так и скажу, и вы сэкономите сотни тысяч.</p>
+              <h3>Разведка</h3>
+              <p class="pricing__desc">Спрос, конкуренты и реальная цена клика в вашем городе. На выходе — план и честный ответ, стоит ли вообще вкладываться.</p>
+              <p class="pricing__accent">Зачту эту сумму, если продолжим</p>
+            </div>
+            <aside class="pricing__aside">
+              <p class="pricing__price">15–25<span>тыс ₽</span></p>
+              <a class="pricing__cta" href="/razvedka/"><span>Подробнее о разведке</span><b aria-hidden="true">→</b></a>
+            </aside>
+          </li>
+          <li class="pricing__break">
+            <p class="accent-line">Если на разведке видно, что не окупится, дальше не идём. Это тоже результат.</p>
           </li>
           <li>
-            <span class="steps__num">02</span>
-            <span class="steps__name">Страница</span>
-            <span class="fill" aria-hidden="true"></span>
-            <span class="steps__desc">под заявки, не «визитка»</span>
+            <div class="pricing__body">
+              <h3>Запуск</h3>
+              <p class="pricing__desc">Страница под заявки и настроенная реклама. Под ключ, по договору, оплата по этапам.</p>
+            </div>
+            <aside class="pricing__aside">
+              <p class="pricing__price">от 90<span>тыс ₽</span></p>
+              <a class="pricing__cta" href="/zapusk/"><span>Подробнее о запуске</span><b aria-hidden="true">→</b></a>
+            </aside>
           </li>
           <li>
-            <span class="steps__num">03</span>
-            <span class="steps__name">Запуск</span>
-            <span class="fill" aria-hidden="true"></span>
-            <span class="steps__desc">реклама, приём и учёт каждого обращения</span>
+            <div class="pricing__body">
+              <h3>Ведение и обработка заявок</h3>
+              <p class="pricing__desc">Реклама, правки и отчёт раз в неделю. На каждое обращение отвечаю за минуту — вам остаётся дожать.</p>
+              <p class="pricing__accent">KPI-условия обсудим лично · договор от 3 месяцев</p>
+            </div>
+            <aside class="pricing__aside">
+              <p class="pricing__price">от 45<span>тыс ₽/мес</span></p>
+              <a class="pricing__cta" href="/vedenie/"><span>Подробнее о ведении</span><b aria-hidden="true">→</b></a>
+            </aside>
           </li>
-          <li>
-            <span class="steps__num">04</span>
-            <span class="steps__name">Ведение</span>
-            <span class="fill" aria-hidden="true"></span>
-            <span class="steps__desc">отчёт раз в неделю, цифры ваши</span>
-          </li>
-        </ol>
+        </ul>
 
-        <p class="accent-line">Если на шаге 01 видно, что не окупится, дальше не идём. Это тоже результат.</p>
+        <p class="pricing__foot">Бюджет на саму рекламу отдельно и напрямую в Яндекс. Я его не касаюсь.</p>
       </div>
     </section>
 
     <!-- 003 ПРОЗРАЧНОСТЬ -->
     <section id="pledge" aria-labelledby="pledge-title">
       <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 003</b> · прозрачность</span></p>
+        <p class="sec__head tag"><span>прозрачность</span></p>
         <h2 class="sec__title" id="pledge-title">Всё ваше. Всегда.</h2>
         <p class="sec__lead">
           Три страха, из-за которых бизнес не звонит никому: заберут доступы,
@@ -217,22 +190,18 @@
 
         <ul class="pledge" aria-label="Гарантии прозрачности">
           <li>
-            <span class="pledge__mark" aria-hidden="true">01</span>
             <h3>Кабинеты на вас</h3>
             <p>Яндекс.Директ, Метрика, домен регистрируются на вас. Решите уйти, всё останется у вас.</p>
           </li>
           <li>
-            <span class="pledge__mark" aria-hidden="true">02</span>
             <h3>Бюджет напрямую</h3>
             <p>Деньги на рекламу вы платите Яндексу, а не мне. Вашего рекламного бюджета я не касаюсь.</p>
           </li>
           <li>
-            <span class="pledge__mark" aria-hidden="true">03</span>
             <h3>Цифры из первоисточника</h3>
             <p>Отчёт это скрин из вашей Метрики, а не «таблица от подрядчика». Проверяете сами, в любой момент.</p>
           </li>
           <li>
-            <span class="pledge__mark" aria-hidden="true">04</span>
             <h3>Данные ваши, программа моя</h3>
             <p>Уходя, забираете кабинеты, домен, Метрику и все обращения. Бот остаётся сервисом, как любая подписка.</p>
           </li>
@@ -240,156 +209,10 @@
       </div>
     </section>
 
-    <!-- 004 КАК ВЫГЛЯДИТ УЧЁТ -->
-    <section id="report" aria-labelledby="report-title">
-      <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 004</b> · доказательство</span></p>
-
-        <div class="report__grid">
-          <div>
-            <h2 class="sec__title" id="report-title">Как выглядит учёт</h2>
-            <p class="sec__lead">
-              Чужие кейсы с потолка я не показываю. Показываю формат, в котором
-              вы будете видеть свои цифры каждую неделю.
-            </p>
-            <p class="report__note">Это образец отчёта, а не обещание цифр. У вас будут свои, из вашей Метрики.</p>
-          </div>
-
-          <figure class="card">
-            <figcaption class="card__head">
-              <span>Отчёт за месяц</span>
-              <span class="stamp">образец</span>
-            </figcaption>
-            <dl class="rows">
-              <div>
-                <dt>Расход на рекламу</dt>
-                <span class="fill" aria-hidden="true"></span>
-                <dd><span data-count="50840">50&nbsp;840</span>&nbsp;₽</dd>
-              </div>
-              <div>
-                <dt>Обращений за месяц</dt>
-                <span class="fill" aria-hidden="true"></span>
-                <dd><span data-count="41">41</span></dd>
-              </div>
-              <div>
-                <dt>Из них целевых</dt>
-                <span class="fill" aria-hidden="true"></span>
-                <dd><span data-count="34">34</span></dd>
-              </div>
-              <div class="total">
-                <dt>Стоимость обращения</dt>
-                <span class="fill" aria-hidden="true"></span>
-                <dd><span data-count="1240">1&nbsp;240</span>&nbsp;₽</dd>
-              </div>
-            </dl>
-            <figcaption class="card__caption">Заявки, которые можно посчитать</figcaption>
-          </figure>
-        </div>
-
-        <div class="report__extra">
-          <figure class="card">
-            <figcaption class="card__head">
-              <span>Отбраковка обращений</span>
-              <span class="stamp">образец</span>
-            </figcaption>
-
-            <div class="filter__bar" role="img" aria-label="Из 41 обращения 34 целевых, 7 отсеяно">
-              <span class="filter__seg filter__seg--good" style="flex: 34"><b>34</b></span>
-              <span class="filter__seg filter__seg--bad" style="flex: 7"><b>7</b></span>
-            </div>
-            <p class="filter__legend">
-              <span class="good">34 целевых</span>
-              <span class="bad">7 отсеяно</span>
-              <span>из 41 обращения</span>
-            </p>
-
-            <ul class="filter__reasons">
-              <li><b>3</b> спам и реклама</li>
-              <li><b>2</b> ошиблись номером</li>
-              <li><b>1</b> другой город</li>
-              <li><b>1</b> не по теме</li>
-            </ul>
-
-            <p class="filter__note">Это то, что другие подрядчики засчитали бы как заявки.</p>
-          </figure>
-
-          <figure class="card">
-            <figcaption class="card__head">
-              <span>Путь одной заявки</span>
-              <span class="stamp">образец</span>
-            </figcaption>
-
-            <ol class="path">
-              <li>
-                <p class="path__t">Клик по объявлению</p>
-                <p class="path__s">Яндекс.Директ, «кухни на заказ»</p>
-              </li>
-              <li>
-                <p class="path__t">Заход на страницу</p>
-                <p class="path__s">Посмотрел цены и работы</p>
-              </li>
-              <li>
-                <p class="path__t">Обращение <span class="time">в 14:32</span></p>
-                <p class="path__s">Написал в чат: «посчитайте кухню»</p>
-              </li>
-              <li>
-                <p class="path__t">Отметка в учёте</p>
-                <p class="path__s"><span class="path__chip">целевой · кухни · Махачкала</span></p>
-              </li>
-              <li>
-                <p class="path__t">В работе</p>
-                <p class="path__s">Передан вам с готовым контактом</p>
-              </li>
-            </ol>
-          </figure>
-        </div>
-
-        <aside class="demo-cta">
-          <div>
-            <p class="demo-cta__t">Автоответ можно потрогать</p>
-            <p class="demo-cta__s">Тот же бот, что отвечает вашим клиентам за минуту, ночью и в выходные. Напишите ему в Telegram и посмотрите, как он работает.</p>
-          </div>
-          <a class="demo-cta__btn" href="https://t.me/labazan_consult_bot" target="_blank" rel="noopener" data-sticky-bot aria-label="Демо автоответа: написать демо-боту">
-            <b aria-hidden="true">✈</b><span>Демо автоответа</span>
-          </a>
-        </aside>
-      </div>
-    </section>
-
-    <!-- 005 ТАРИФЫ -->
-    <section id="pricing" aria-labelledby="pricing-title">
-      <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 005</b> · тарифы</span></p>
-        <h2 class="sec__title" id="pricing-title">Сколько это стоит</h2>
-
-        <ul class="pricing" aria-label="Тарифы">
-          <li>
-            <h3>Разведка</h3>
-            <p class="pricing__price">15–25<span>тыс ₽</span></p>
-            <p class="pricing__desc">Спрос, конкуренты, реальная цена клика, прогноз. План, с которым можно идти к любому подрядчику.</p>
-            <p class="pricing__accent">Зачту эту сумму, если продолжим</p>
-          </li>
-          <li>
-            <h3>Запуск</h3>
-            <p class="pricing__price">от 90<span>тыс ₽</span></p>
-            <p class="pricing__desc">Страница под заявки, настроенная реклама и учёт обращений. Под ключ, по договору, оплата по этапам.</p>
-          </li>
-          <li>
-            <h3>Ведение и обработка заявок</h3>
-            <p class="pricing__price">45<span>тыс ₽/мес</span></p>
-            <p class="pricing__desc">Реклама, правки, отчёт раз в неделю. На каждое обращение отвечаю за минуту, вам остаётся дожать.</p>
-            <p class="pricing__accent">KPI-условия обсудим лично · договор от 3 месяцев</p>
-          </li>
-        </ul>
-
-        <p class="pricing__foot">Бюджет на саму рекламу отдельно и напрямую в Яндекс. Я его не касаюсь.</p>
-      </div>
-    </section>
-
     <!-- 006 ОБО МНЕ -->
     <section id="about" aria-labelledby="about-title">
       <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 006</b> · обо мне</span></p>
+        <p class="sec__head tag"><span>обо мне</span></p>
 
         <div class="about__grid">
           <div>
@@ -426,10 +249,45 @@
       </div>
     </section>
 
+    <!-- 001 ИНСТРУМЕНТЫ -->
+    <section id="questions" aria-labelledby="tools-title">
+      <div class="shell reveal">
+        <p class="sec__head tag"><span>инструменты</span><span>бесплатно</span></p>
+        <h2 class="sec__title" id="tools-title">Три вопроса, которые мы решим</h2>
+
+        <div class="tools">
+          <a class="tool" href="/pochemu-net-zayavok/">
+            <p class="tool__eyebrow"><b>01</b> Сайт есть, а заявок мало</p>
+            <h3>Узнайте, где сайт теряет заявки</h3>
+            <p>Проверю кнопку, телефон, форму, аналитику, юридические страницы и скорость загрузки на мобильном.</p>
+            <span class="tool__action"><span>Проверить сайт</span><b aria-hidden="true">→</b></span>
+            <small>Бесплатный экспресс-аудит</small>
+          </a>
+          <a class="tool" href="/okupitsya-reklama/">
+            <p class="tool__eyebrow"><b>02</b> Нужна реклама</p>
+            <h3>Посчитайте рекламу до запуска</h3>
+            <p>Введите нишу, прибыль с клиента и конверсию. Калькулятор покажет цену обращения и точку окупаемости.</p>
+            <span class="tool__action"><span>Рассчитать рекламу</span><b aria-hidden="true">→</b></span>
+            <small>Расчёт без отправки заявки</small>
+          </a>
+          <a class="tool" href="/teryayutsya-zayavki/">
+            <p class="tool__eyebrow"><b>03</b> Заявки теряются</p>
+            <h3>Посчитайте, сколько заявок утекает</h3>
+            <p>Ночью, в выходной, в пятницу вечером обращение ждёт ответа и уходит. Посчитайте, сколько их теряется и сколько это в деньгах.</p>
+            <span class="tool__action"><span>Проверить приём</span><b aria-hidden="true">→</b></span>
+            <small>Калькулятор потерянных заявок</small>
+          </a>
+        </div>
+
+        <p class="tools-more"><a class="u" href="/nuzhen-li-sajt/">Ещё нет сайта? Проверю спрос в вашей нише</a> <b aria-hidden="true">→</b></p>
+        <p class="tools-more tools-more--bridge">Эти проверки: мини-разведка своими руками. Полную, с планом и цифрами по вашей нише, делаю я. <a class="u" href="#process">Это «Разведка»</a>.</p>
+      </div>
+    </section>
+
     <!-- 007 ВОПРОСЫ -->
     <section id="faq" aria-labelledby="faq-title">
       <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 007</b> · вопросы</span></p>
+        <p class="sec__head tag"><span>вопросы</span></p>
         <h2 class="sec__title" id="faq-title">Частые вопросы</h2>
 
         <div class="faq">
@@ -447,7 +305,7 @@
           </details>
           <details>
             <summary><span>Сколько ждать первых обращений?</span><b aria-hidden="true">+</b></summary>
-            <p>Реклама в поиске даёт первые звонки в первые дни после запуска. Стабильная картина примерно через месяц. Разведка до запуска показывает, чего реально ждать.</p>
+            <p>Реклама в поиске даёт первые звонки в первые дни после запуска, но это малая часть обращений. Основной объём обычно приводит РСЯ, а она разгоняется постепенно: кампании обучаются и набирают обороты до двух-трёх месяцев. Разведка до запуска показывает, чего реально ждать.</p>
           </details>
           <details>
             <summary><span>Почему вы один, а не агентство?</span><b aria-hidden="true">+</b></summary>
@@ -461,7 +319,7 @@
     <!-- 008 ФИНАЛЬНЫЙ CTA: форма живёт в hero (#lead), отсюда якорь наверх -->
     <section class="final-cta" aria-labelledby="final-title">
       <div class="shell reveal">
-        <p class="sec__head tag"><span><b>проводка 008</b> · заявка</span><span>бесплатно</span></p>
+        <p class="sec__head tag"><span>заявка</span><span>бесплатно</span></p>
         <h2 class="sec__title" id="final-title">Начнём с бесплатного разбора</h2>
         <p class="sec__lead">
           Расскажите, чем занимаетесь, я посмотрю спрос и скажу честно:
@@ -567,7 +425,7 @@
             "name": "Сколько ждать первых обращений?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Реклама в поиске даёт первые звонки в первые дни после запуска. Стабильная картина примерно через месяц. Разведка до запуска показывает, чего реально ждать."
+              "text": "Реклама в поиске даёт первые звонки в первые дни после запуска, но это малая часть обращений. Основной объём обычно приводит РСЯ, а она разгоняется постепенно: кампании обучаются и набирают обороты до двух-трёх месяцев. Разведка до запуска показывает, чего реально ждать."
             }
           },
           {

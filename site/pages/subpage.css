@@ -489,3 +489,149 @@ section[id], [id="check"], [id="lead"] { scroll-margin-top: 84px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ══════════ Секция «Как выглядит учёт» (перенесена с главной 29.07.2026, живёт на /vedenie/) ══════════ */
+    /* ============ 004 УЧЁТ ============ */
+    .report__grid { display: grid; gap: clamp(28px, 4vw, 56px); margin-top: clamp(24px, 4vw, 40px); }
+    @media (min-width: 900px) { .report__grid { grid-template-columns: .9fr 1.1fr; align-items: start; } }
+    .report__note { margin-top: 14px; font-family: var(--font-mono); font-size: .78rem; color: rgba(20,18,16,.66); max-width: 40ch; }
+    .card {
+      border: 1px solid var(--glass-line);
+      border-top-color: var(--glass-edge);
+      border-radius: var(--radius);
+      background: var(--glass);
+      -webkit-backdrop-filter: var(--blur);
+      backdrop-filter: var(--blur);
+      box-shadow: var(--elev-2);
+      padding: clamp(18px, 2.6vw, 28px);
+    }
+    .card__head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding-bottom: 12px; margin-bottom: 6px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .card__head span:first-child { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+    .rows > div {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 13px 0;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .rows dt { font-size: .92rem; color: rgba(20,18,16,.8); }
+    .rows .fill { flex: 1; border-bottom: 1px dotted var(--rule-strong); transform: translateY(-4px); }
+    .rows dd { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
+    .rows .total { border-bottom: 3px double var(--ink); border-top: 1px solid var(--rule-strong); }
+    .rows .total dt { font-weight: 700; color: var(--ink); }
+    .rows .total dd { font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--stamp); }
+    .card__caption { margin-top: 14px; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(20,18,16,.62); }
+    .report__extra { display: grid; gap: clamp(20px, 3vw, 32px); margin-top: clamp(20px, 3vw, 32px); }
+    @media (min-width: 900px) { .report__extra { grid-template-columns: 1fr 1fr; } }
+
+    .filter__bar { display: flex; gap: 3px; height: 44px; margin: 16px 0 10px; }
+    .filter__seg { display: flex; align-items: center; justify-content: center; min-width: 34px; }
+    .filter__seg b { font-family: var(--font-mono); font-weight: 700; font-size: .95rem; }
+    .filter__seg--good { background: var(--ink); color: var(--paper); }
+    .filter__seg--bad { background: transparent; border: 1.5px dashed var(--stamp); color: var(--stamp); }
+    .filter__legend { font-family: var(--font-mono); font-size: .78rem; color: rgba(20,18,16,.72); display: flex; gap: 14px; flex-wrap: wrap; }
+    .filter__legend .good { font-weight: 700; color: var(--ink); }
+    .filter__legend .bad { font-weight: 700; color: var(--stamp); }
+    .filter__reasons { list-style: none; margin-top: 14px; }
+    .filter__reasons li { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px dashed var(--rule); font-size: .9rem; color: rgba(20,18,16,.8); }
+    .filter__reasons b { font-family: var(--font-mono); font-weight: 700; color: var(--stamp); min-width: 1.4em; text-align: right; }
+    .filter__note { margin-top: 14px; font-size: .9rem; font-weight: 600; }
+
+    .path { list-style: none; margin-top: 10px; }
+    .path li { position: relative; padding: 10px 0 10px 26px; }
+    .path li::before {
+      content: ''; position: absolute; left: 5px; top: 20px;
+      width: 7px; height: 7px; background: var(--ink); border-radius: 50%;
+    }
+    .path li::after {
+      content: ''; position: absolute; left: 8px; top: 30px; bottom: -12px;
+      width: 1px; background: var(--rule-strong);
+    }
+    .path li:last-child::after { display: none; }
+    .path li:last-child::before { background: var(--stamp); box-shadow: 0 0 0 3px rgba(200,40,28,.18); }
+    .path__t { font-weight: 700; font-size: .95rem; }
+    .path__t .time { font-family: var(--font-mono); font-weight: 400; font-size: .78rem; color: var(--stamp); }
+    .path__s { font-size: .88rem; color: rgba(20,18,16,.72); }
+    .path__chip {
+      font-family: var(--font-mono); font-size: .72rem;
+      border: 1px solid var(--rule-strong); padding: 2px 8px; letter-spacing: .04em;
+    }
+
+
+    /* ============ ДЕМО АВТООТВЕТА (в потоке, конец секции «Как выглядит учёт») ============ */
+    .demo-cta {
+      margin-top: clamp(28px, 4vw, 44px);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: clamp(16px, 3vw, 28px); flex-wrap: wrap;
+      background: var(--glass-strong);
+      -webkit-backdrop-filter: var(--blur);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-line);
+      border-top-color: var(--glass-edge);
+      border-radius: var(--radius);
+      box-shadow: var(--elev-2);
+      padding: clamp(18px, 3vw, 26px);
+    }
+    .demo-cta__t { margin: 0 0 4px; font-weight: 700; }
+    .demo-cta__s { margin: 0; font-size: .92rem; opacity: .78; max-width: 56ch; }
+    .demo-cta__btn {
+      display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
+      background: var(--glass-strong);
+      border: 1px solid var(--glass-line);
+      border-top-color: var(--glass-edge);
+      border-radius: 999px;
+      box-shadow: var(--elev-2);
+      padding: 12px 18px;
+      color: var(--ink); text-decoration: none;
+      font-weight: 700; font-size: .9rem;
+    }
+    .demo-cta__btn b {
+      display: grid; place-items: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--stamp); color: var(--paper);
+      font-size: 13px; font-weight: 500;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .demo-cta__btn:hover { transform: translateY(-2px); transition: transform .2s var(--ease-out); }
+    }
+    .demo-cta__btn:active { transform: scale(.97); }
+    .demo-cta__btn:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; }
+
+/* ── Навигация по услугам (prev/next по цепочке разведка → запуск → ведение) ── */
+.svc-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.svc-nav a {
+  flex: 0 1 48%;
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-line);
+  border-top-color: var(--glass-edge);
+  border-radius: var(--radius-s);
+  box-shadow: 0 1px 2px rgba(var(--sh), .06), 0 6px 14px rgba(var(--sh), .08);
+  padding: 14px 18px;
+  text-decoration: none;
+  transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out), background-color .2s ease;
+}
+.svc-nav small {
+  font-family: var(--font-mono); font-size: .7rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: rgba(20, 18, 16, .6);
+}
+.svc-nav b { font-weight: 700; }
+.svc-nav b i { font-style: normal; color: var(--stamp); }
+.svc-nav .svc-nav__next { margin-left: auto; align-items: flex-end; text-align: right; }
+@media (hover: hover) and (pointer: fine) {
+  .svc-nav a:hover {
+    background: var(--glass-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(var(--sh), .08), 0 12px 26px rgba(var(--sh), .14);
+  }
+}
+.svc-nav a:active { transform: scale(.99); transition-duration: .1s; }
+@media (max-width: 559px) {
+  .svc-nav { flex-direction: column; }
+  .svc-nav a { flex-basis: auto; }
+  .svc-nav .svc-nav__next { margin-left: 0; }
+}
