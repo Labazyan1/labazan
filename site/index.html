@@ -31,7 +31,7 @@
 
   <link rel="preload" as="font" type="font/woff2" crossorigin href="./assets/fonts/manrope-cyrillic-400-normal.woff2" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="./assets/fonts/unbounded-cyrillic-600-normal.woff2" />
-  <link rel="stylesheet" href="./styles.css?v=demo39" />
+  <link rel="stylesheet" href="./styles.css?v=demo40" />
   <script src="assets/analytics.js?v=slot34" defer></script>
   <script src="assets/consent.js?v=slot33" defer></script>
   <script src="assets/lead-form.js?v=fix2907" defer></script>
@@ -101,6 +101,8 @@
 
             <input type="hidden" name="goal" value="Бесплатный разбор" />
             <input type="hidden" name="source" value="glavnaya" />
+            <!-- Антиспам-тайминг: заполняется токеном из token.php при загрузке формы (lead-form.js). -->
+            <input type="hidden" name="lead_ts" value="" />
 
             <label class="lead__consent">
               <input type="checkbox" name="consent" value="1" required aria-required="true" />
@@ -153,7 +155,8 @@
           <li>
             <div class="pricing__body">
               <h3>Запуск</h3>
-              <p class="pricing__desc">Страница под заявки и настроенная реклама. Под ключ, по договору, оплата по этапам.</p>
+              <p class="pricing__desc">Сначала разбираю ваш бизнес и конкурентов: чем вы сильнее, какие возражения у клиентов и как их снять. Потом собираю страницу под этот разбор и настраиваю рекламу. Под ключ, по договору, оплата по этапам.</p>
+              <p class="pricing__accent">Страница под ваш разбор, а не по шаблону</p>
             </div>
             <aside class="pricing__aside">
               <p class="pricing__price">от 90<span>тыс ₽</span></p>
@@ -162,13 +165,24 @@
           </li>
           <li>
             <div class="pricing__body">
-              <h3>Ведение и обработка заявок</h3>
-              <p class="pricing__desc">Реклама, правки и отчёт раз в неделю. На каждое обращение отвечаю за минуту — вам остаётся дожать.</p>
-              <p class="pricing__accent">KPI-условия обсудим лично · договор от 3 месяцев</p>
+              <h3>Ведение</h3>
+              <p class="pricing__desc">Веду рекламу, правлю страницы по цифрам, пишу блог и собираю посадочные под рекламные кампании. Отчёт раз в неделю.</p>
+              <p class="pricing__accent">Директ; с РСЯ дороже · договор от 3 месяцев</p>
             </div>
             <aside class="pricing__aside">
-              <p class="pricing__price">от 45<span>тыс ₽/мес</span></p>
+              <p class="pricing__price">от 15<span>тыс ₽/мес</span></p>
               <a class="pricing__cta" href="/vedenie/"><span>Подробнее о ведении</span><b aria-hidden="true">→</b></a>
+            </aside>
+          </li>
+          <li>
+            <div class="pricing__body">
+              <h3>Автоматизация</h3>
+              <p class="pricing__desc">Бот отвечает на каждое обращение за минуту, ночью и в выходные: выясняет задачу, отсеивает мусор и передаёт вам готовый контакт. Вам остаётся дожать.</p>
+              <p class="pricing__accent">Каналы и объём обсудим лично</p>
+            </div>
+            <aside class="pricing__aside">
+              <p class="pricing__price">от 15<span>тыс ₽/мес</span></p>
+              <a class="pricing__cta" href="/avtomatizaciya/"><span>Подробнее об автоматизации</span><b aria-hidden="true">→</b></a>
             </aside>
           </li>
         </ul>
@@ -249,41 +263,6 @@
       </div>
     </section>
 
-    <!-- 001 ИНСТРУМЕНТЫ -->
-    <section id="questions" aria-labelledby="tools-title">
-      <div class="shell reveal">
-        <p class="sec__head tag"><span>инструменты</span><span>бесплатно</span></p>
-        <h2 class="sec__title" id="tools-title">Три вопроса, которые мы решим</h2>
-
-        <div class="tools">
-          <a class="tool" href="/pochemu-net-zayavok/">
-            <p class="tool__eyebrow"><b>01</b> Сайт есть, а заявок мало</p>
-            <h3>Узнайте, где сайт теряет заявки</h3>
-            <p>Проверю кнопку, телефон, форму, аналитику, юридические страницы и скорость загрузки на мобильном.</p>
-            <span class="tool__action"><span>Проверить сайт</span><b aria-hidden="true">→</b></span>
-            <small>Бесплатный экспресс-аудит</small>
-          </a>
-          <a class="tool" href="/okupitsya-reklama/">
-            <p class="tool__eyebrow"><b>02</b> Нужна реклама</p>
-            <h3>Посчитайте рекламу до запуска</h3>
-            <p>Введите нишу, прибыль с клиента и конверсию. Калькулятор покажет цену обращения и точку окупаемости.</p>
-            <span class="tool__action"><span>Рассчитать рекламу</span><b aria-hidden="true">→</b></span>
-            <small>Расчёт без отправки заявки</small>
-          </a>
-          <a class="tool" href="/teryayutsya-zayavki/">
-            <p class="tool__eyebrow"><b>03</b> Заявки теряются</p>
-            <h3>Посчитайте, сколько заявок утекает</h3>
-            <p>Ночью, в выходной, в пятницу вечером обращение ждёт ответа и уходит. Посчитайте, сколько их теряется и сколько это в деньгах.</p>
-            <span class="tool__action"><span>Проверить приём</span><b aria-hidden="true">→</b></span>
-            <small>Калькулятор потерянных заявок</small>
-          </a>
-        </div>
-
-        <p class="tools-more"><a class="u" href="/nuzhen-li-sajt/">Ещё нет сайта? Проверю спрос в вашей нише</a> <b aria-hidden="true">→</b></p>
-        <p class="tools-more tools-more--bridge">Эти проверки: мини-разведка своими руками. Полную, с планом и цифрами по вашей нише, делаю я. <a class="u" href="#process">Это «Разведка»</a>.</p>
-      </div>
-    </section>
-
     <!-- 007 ВОПРОСЫ -->
     <section id="faq" aria-labelledby="faq-title">
       <div class="shell reveal">
@@ -331,6 +310,41 @@
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
         </a>
         <p class="lead__sign">Рамазан · отвечаю в течение рабочего дня</p>
+      </div>
+    </section>
+
+    <!-- 001 ИНСТРУМЕНТЫ (внизу, над подвалом): самопроверка своими руками -->
+    <section id="questions" aria-labelledby="tools-title">
+      <div class="shell reveal">
+        <p class="sec__head tag"><span>инструменты</span><span>бесплатно</span></p>
+        <h2 class="sec__title" id="tools-title">Бесплатные инструменты для самопроверки</h2>
+
+        <div class="tools">
+          <a class="tool" href="/pochemu-net-zayavok/">
+            <p class="tool__eyebrow"><b>01</b> Сайт есть, а заявок мало</p>
+            <h3>Узнайте, где сайт теряет заявки</h3>
+            <p>Проверю кнопку, телефон, форму, аналитику, юридические страницы и скорость загрузки на мобильном.</p>
+            <span class="tool__action"><span>Проверить сайт</span><b aria-hidden="true">→</b></span>
+            <small>Бесплатный экспресс-аудит</small>
+          </a>
+          <a class="tool" href="/okupitsya-reklama/">
+            <p class="tool__eyebrow"><b>02</b> Нужна реклама</p>
+            <h3>Посчитайте рекламу до запуска</h3>
+            <p>Введите нишу, прибыль с клиента и конверсию. Калькулятор покажет цену обращения и точку окупаемости.</p>
+            <span class="tool__action"><span>Рассчитать рекламу</span><b aria-hidden="true">→</b></span>
+            <small>Расчёт без отправки заявки</small>
+          </a>
+          <a class="tool" href="/teryayutsya-zayavki/">
+            <p class="tool__eyebrow"><b>03</b> Заявки теряются</p>
+            <h3>Посчитайте, сколько заявок утекает</h3>
+            <p>Ночью, в выходной, в пятницу вечером обращение ждёт ответа и уходит. Посчитайте, сколько их теряется и сколько это в деньгах.</p>
+            <span class="tool__action"><span>Проверить приём</span><b aria-hidden="true">→</b></span>
+            <small>Калькулятор потерянных заявок</small>
+          </a>
+        </div>
+
+        <p class="tools-more"><a class="u" href="/nuzhen-li-sajt/">Ещё нет сайта? Проверю спрос в вашей нише</a> <b aria-hidden="true">→</b></p>
+        <p class="tools-more tools-more--bridge">Эти проверки: мини-разведка своими руками. Полную, с планом и цифрами по вашей нише, делаю я. <a class="u" href="#process">Это «Разведка»</a>.</p>
       </div>
     </section>
   </main>

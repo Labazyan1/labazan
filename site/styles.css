@@ -94,6 +94,20 @@
       --font-text: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
       --font-mono: ui-monospace, 'Cascadia Code', Consolas, 'SFMono-Regular', Menlo, monospace;
     }
+
+    /* ============ СВИРКЛ (суперэллипс на стеклянных поверхностях) ============
+       Прогрессивное улучшение. Chromium ≥139 форматирует сам угол border-box,
+       поэтому рамка, тень (--elev-2) и backdrop-blur идут по свирклу вместе с фоном.
+       Safari/Firefox без поддержки оставляют обычный border-radius — деградация без
+       поломки. :where() держит специфичность 0, чтобы не спорить с правилами ниже.
+       Хочешь другую кривизну — заменить `squircle` на `superellipse(<число>)`. */
+    @supports (corner-shape: squircle) {
+      :where(
+        .pricing li, .tool, .card, .demo-cta, .demo-cta__btn,
+        .cta, .lead__form, .lead__submit,
+        .faq details, .pledge li, .cookie-banner, .question-card
+      ) { corner-shape: squircle; }
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {

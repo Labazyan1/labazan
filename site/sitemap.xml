@@ -20,7 +20,13 @@
   </url>
   <url>
     <loc>https://labazan.ru/vedenie/</loc>
-    <lastmod>2026-07-29</lastmod>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://labazan.ru/avtomatizaciya/</loc>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

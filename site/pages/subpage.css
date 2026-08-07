@@ -82,6 +82,17 @@
   --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
 }
 
+/* ===== СВИРКЛ (суперэллипс на стеклянных поверхностях подстраниц) =====
+   Прогрессивное улучшение, зеркально главной. Chromium ≥139 рисует свирклы
+   (форма угла border-box → рамка/тень/blur идут по свирклу), Safari/Firefox
+   оставляют обычное border-radius. :where() = специфичность 0. */
+@supports (corner-shape: squircle) {
+  :where(
+    .card, .demo-cta, .demo-cta__btn, .cta__button,
+    .lead__form, .lead__submit, .holes li, .svc-nav a, .cookie-banner
+  ) { corner-shape: squircle; }
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; background: var(--linen); -webkit-text-size-adjust: 100%; }
 body {
@@ -591,8 +602,13 @@ section[id], [id="check"], [id="lead"] { scroll-margin-top: 84px; }
       display: grid; place-items: center;
       width: 26px; height: 26px; border-radius: 50%;
       background: var(--stamp); color: var(--paper);
-      font-size: 13px; font-weight: 500;
     }
+    .demo-cta__btn b svg {
+      width: 15px; height: 15px;
+      fill: none; stroke: currentColor;
+      stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round;
+    }
+    .demo-cta__btn b svg circle { fill: currentColor; stroke: none; }
     @media (hover: hover) and (pointer: fine) {
       .demo-cta__btn:hover { transform: translateY(-2px); transition: transform .2s var(--ease-out); }
     }

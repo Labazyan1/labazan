@@ -26,7 +26,7 @@
     <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
     <link rel="stylesheet" href="../assets/lead-form.css?v=slot29" />
     <!-- subpage.css последним: системный слой «Гроссбух-стекло» -->
-    <link rel="stylesheet" href="../pages/subpage.css?v=demo36" />
+    <link rel="stylesheet" href="../pages/subpage.css?v=demo37" />
     <script src="../assets/analytics.js?v=slot34" defer></script>
     <script src="../assets/consent.js?v=slot29" defer></script>
     <script src="../assets/lead-form.js?v=fix2907" defer></script>
@@ -113,6 +113,17 @@
         <a class="cta__button" href="#lead">Заказать разведку</a>
       </section>
 
+      <section class="page__section" aria-labelledby="scope-title">
+        <h2 id="scope-title">Где разведка заканчивается</h2>
+        <p>
+          Разведка отвечает на один вопрос: стоит ли вкладываться и во сколько примерно
+          обойдётся обращение. Она про рынок и экономику. Конкурентов я здесь смотрю,
+          чтобы понять, реально ли зайти. Глубокий разбор вашего бизнеса и клиентских
+          возражений, из которого потом собирается сама страница, идёт уже на
+          <a href="../zapusk/">запуске</a>.
+        </p>
+      </section>
+
       <section class="page__section" aria-label="Навигация по услугам">
         <nav class="svc-nav">
           <a class="svc-nav__next" href="../zapusk/">
@@ -171,6 +182,8 @@
 
           <input type="hidden" name="goal" value="Разведка ниши" />
           <input type="hidden" name="source" value="razvedka" />
+          <!-- Антиспам-тайминг: токен из token.php (lead-form.js). -->
+          <input type="hidden" name="lead_ts" value="" />
 
           <label class="lead__consent">
             <input type="checkbox" name="consent" value="1" required aria-required="true" />

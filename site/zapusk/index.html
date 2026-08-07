@@ -26,7 +26,7 @@
     <meta name="twitter:image" content="https://labazan.ru/assets/og-image.png" />
     <link rel="stylesheet" href="../assets/lead-form.css?v=slot29" />
     <!-- subpage.css последним: системный слой «Гроссбух-стекло» -->
-    <link rel="stylesheet" href="../pages/subpage.css?v=demo36" />
+    <link rel="stylesheet" href="../pages/subpage.css?v=demo37" />
     <script src="../assets/analytics.js?v=slot34" defer></script>
     <script src="../assets/consent.js?v=slot29" defer></script>
     <script src="../assets/lead-form.js?v=fix2907" defer></script>
@@ -61,9 +61,41 @@
         <a class="cta__button" href="#lead">Обсудить запуск</a>
       </section>
 
-      <section class="page__section page__section--seamless" aria-labelledby="in-title">
+      <section class="page__section page__section--seamless" aria-labelledby="start-title">
+        <h2 id="start-title">Сначала разбор, потом страница</h2>
+        <p class="page__lead">
+          Я не сажусь верстать по шаблону. Сначала разбираю ваш бизнес и конкурентов
+          и только под этот разбор собираю страницу. Так она бьёт в реальные возражения
+          ваших клиентов, а не в придуманные.
+        </p>
+        <ul class="holes">
+          <li>
+            <b>Ваш бизнес</b>
+            <h3>Разбираю, как вы продаёте</h3>
+            <p>С ваших слов или из того, что уже есть: переписки с клиентами и записи звонков, если готовы поделиться. Оттуда достаю реальные возражения и рабочие ответы на них.</p>
+          </li>
+          <li>
+            <b>Конкуренты</b>
+            <h3>Смотрю, чем берут другие</h3>
+            <p>Их офферы, аргументы и слабые места. Нахожу, чем вы сильнее, и выношу это на первый экран, чтобы клиент выбрал вас.</p>
+          </li>
+          <li>
+            <b>Страница</b>
+            <h3>Собираю под этот разбор</h3>
+            <p>Оффер, доказательства и порядок блоков идут от того, что важно вашему клиенту. Под вашу нишу и город, а не по трафарету.</p>
+          </li>
+        </ul>
+        <p>
+          Разведка отвечала на вопрос «стоит ли вообще вкладываться» и считала экономику.
+          Здесь разбор глубже и про другое: как именно продавать и что писать на странице.
+          <a href="../razvedka/">Что входит в разведку</a>.
+        </p>
+      </section>
+
+      <section class="page__section" aria-labelledby="in-title">
         <h2 id="in-title">Что входит</h2>
         <ul class="checklist">
+          <li>Разбор бизнеса и конкурентов: оффер и структура страницы рождаются из него, а не из шаблона.</li>
           <li>Страница под заявки: не «визитка», а экран, который превращает клик в обращение.</li>
           <li>Настройка рекламы в Яндекс.Директе: кампании, запросы, минус-слова, ставки.</li>
           <li>Аналитика и цели: видно, откуда пришло обращение и сколько оно стоило.</li>
@@ -99,7 +131,7 @@
           <li>Настроенную и запущенную рекламу в Яндексе.</li>
           <li>Кабинеты и доступы — ваши, история остаётся у вас.</li>
           <li>Договор и оплату по этапам, без «всё вперёд».</li>
-          <li>Дальше по желанию — <a href="../vedenie/">ведение и обработка заявок</a>: ответ за минуту и учёт каждого обращения.</li>
+          <li>Дальше по желанию: <a href="../vedenie/">ведение</a> рекламы и контента, <a href="../avtomatizaciya/">автоматизация</a> обработки заявок с ответом за минуту.</li>
         </ul>
       </section>
 
@@ -122,7 +154,7 @@
           </a>
           <a class="svc-nav__next" href="../vedenie/">
             <small>Следующая услуга</small>
-            <b>Ведение и обработка заявок <i aria-hidden="true">→</i></b>
+            <b>Ведение <i aria-hidden="true">→</i></b>
           </a>
         </nav>
       </section>
@@ -176,6 +208,8 @@
 
           <input type="hidden" name="goal" value="Запуск" />
           <input type="hidden" name="source" value="zapusk" />
+          <!-- Антиспам-тайминг: токен из token.php (lead-form.js). -->
+          <input type="hidden" name="lead_ts" value="" />
 
           <label class="lead__consent">
             <input type="checkbox" name="consent" value="1" required aria-required="true" />
