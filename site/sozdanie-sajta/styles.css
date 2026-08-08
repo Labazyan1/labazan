@@ -99,19 +99,33 @@ img { max-width: 100%; height: auto; display: block; }
   backdrop-filter: saturate(1.4) blur(8px);
   border-bottom: 1px solid var(--line);
 }
+/* Mobile-first: имя и контакты в две строки, чтобы номер не ломался на узком экране. */
 .topbar__inner {
   width: min(1120px, calc(100vw - 40px));
   margin-inline: auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
   min-height: 56px;
+  padding: 8px 0;
 }
 .topbar__brand { font-weight: 700; letter-spacing: -0.01em; }
 .topbar__contacts { display: flex; align-items: center; gap: 16px; font-weight: 600; }
-.topbar__tel { color: var(--ink); }
+.topbar__tel { color: var(--ink); white-space: nowrap; }
 .topbar__tg { color: var(--accent); }
+
+/* От планшета — обратно в одну строку. */
+@media (min-width: 560px) {
+  .topbar__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+  }
+}
 
 /* ── Общий ритм секций ──────────────────────────────────── */
 .band { padding: clamp(48px, 8vw, 88px) 0; }
