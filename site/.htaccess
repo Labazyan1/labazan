@@ -24,8 +24,11 @@
     # Раздел продуктов и все карточки продуктов → на главную.
     RedirectMatch 301 ^/produkty(/.*)?$ /
 
-    # Блог и все статьи → на главную.
-    RedirectMatch 301 ^/blog(/.*)?$ /
+    # Блог v2 снова живой (/blog/ и /blog/spros-v-dagestane/, реальные файлы,
+    # их НЕ трогаем). Старые статьи блога v1 (Astro) склеиваем на новый список,
+    # чтобы не терять ссылочный вес и не плодить 404.
+    RedirectMatch 301 ^/blog/geo-aeo-prodvizhenie(/.*)?$ /blog/
+    RedirectMatch 301 ^/blog/kak-vybrat-podryadchika(/.*)?$ /blog/
 </IfModule>
 
 # Канонизация: единый адрес https://labazan.ru (без www), совпадает с <link canonical>.

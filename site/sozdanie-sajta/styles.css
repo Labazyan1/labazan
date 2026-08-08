@@ -113,6 +113,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .topbar__brand { font-weight: 700; letter-spacing: -0.01em; }
 .topbar__contacts { display: flex; align-items: center; gap: 16px; font-weight: 600; }
+.topbar__blog { color: var(--ink); }
 .topbar__tel { color: var(--ink); white-space: nowrap; }
 .topbar__tg { color: var(--accent); }
 
