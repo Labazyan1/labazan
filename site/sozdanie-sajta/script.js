@@ -50,6 +50,16 @@
       else setStatus(msg, 'error');
     }
 
+    // РФ-ВМ приёма лида в обход исходящего Beget (тот же бэкенд, что у чата главной).
+    var BOT_URL = (window.LABAZAN_BOT_URL || 'https://bot.labazan.ru').replace(/\/+$/, '');
+    // Контекст лида для оператора: помечаем, что это посадочная (без ПД в message — только метки).
+    function buildBotMessage(fd) {
+      var parts = ['Заявка с посадочной «создание сайта»'];
+      var goal = fd.get('goal'); if (goal) parts.push(String(goal));
+      var source = fd.get('source'); if (source) parts.push('стр. ' + String(source));
+      return parts.join(' · ').slice(0, 2000);
+    }
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
       if (submitting) return;
@@ -62,27 +72,46 @@
       if (submitBtn) submitBtn.disabled = true;
 
       var fd = new FormData(form);
-      fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: fd })
-        .then(function (r) { return r.json(); })
-        .catch(function () { return null; })
-        .then(function (res) {
-          if (res && res.ok) {
-            // Цель Метрики шлём ДО перерисовки UI (form.reset/скрытие формы/фокус), чтобы hit
-            // гарантированно ушёл. g:1 = засчитываемая заявка; honeypot отдаёт g:0 — не конверсия.
-            if (res.g !== 0) reachGoal('form_submit', { source: 'sozdanie-sajta' });
+      // ДВА независимых РФ-канала: (1) api/lead.php — российская почта (lead@labazan.ru);
+      // (2) bot.labazan.ru/escalate — приём на РФ-ВМ (в обход исходящего Beget) → CRM crm.labazan.ru
+      // + уведомление оператору. Успех, если подтвердил ХОТЯ БЫ один. Бот сам валидирует
+      // honeypot/согласие/контакт server-side. ПД идут только в РФ-приёмники (152-ФЗ), не в мессенджер.
+      var botBody = {
+        name: fd.get('name') || '',
+        contact: fd.get('contact') || '',
+        consent: fd.get('consent') || '',
+        company: fd.get('company') || '',
+        message: buildBotMessage(fd),
+      };
+      Promise.all([
+        fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: fd })
+          .then(function (r) { return r.json(); }).catch(function () { return null; }),
+        fetch(BOT_URL + '/escalate', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(botBody),
+        }).then(function (r) { return r.json(); }).catch(function () { return null; }),
+      ])
+        .then(function (rs) {
+          var phpRes = rs[0], botRes = rs[1];
+          var errOf = function (r) { return (r && r.ok === false) ? r.error : null; };
+          var anyErr = function (e) { return errOf(phpRes) === e || errOf(botRes) === e; };
+          if ((phpRes && phpRes.ok) || (botRes && botRes.ok)) {
+            // Цель Метрики ДО перерисовки UI. Honeypot: php отдаёт g:0 → бота не считаем конверсией.
+            var honeypot = phpRes && phpRes.g === 0;
+            if (!honeypot) reachGoal('form_submit', { source: 'sozdanie-sajta' });
             showResult();
-          } else if (res && res.error === 'consent') {
+          } else if (anyErr('consent')) {
             setStatus('Отметьте согласие на обработку персональных данных.', 'error');
-          } else if (res && res.error === 'validation') {
+          } else if (anyErr('validation')) {
             setStatus('Проверьте контакт: телефон или Telegram-ник.', 'error');
-          } else if (res && res.error === 'not_configured') {
-            showHardError('Форма ещё настраивается. Напишите в Telegram.');
-          } else if (res) {
-            showHardError('Не удалось отправить. Напишите в Telegram.');
+          } else if (anyErr('rate_limited')) {
+            setStatus('Слишком много попыток. Подождите минуту и попробуйте снова.', 'error');
+          } else if (phpRes || botRes) {
+            showHardError('Не удалось отправить.');
           } else {
-            showHardError('Сеть недоступна. Напишите в Telegram.');
+            showHardError('Сеть недоступна.');
           }
         })
+        .catch(function () { showHardError('Сеть недоступна.'); })
         .finally(function () {
           submitting = false;
           if (submitBtn) submitBtn.disabled = false;
