@@ -16,7 +16,16 @@ $LEAD_HOST_LABEL = '';
 // Уведомление о лиде (не канал доставки ПД): статичный пинг «пришёл лид».
 $TG_BOT_TOKEN = '';
 $TG_CHAT_ID = '';
-foreach ([__DIR__ . '/lead-config.php', __DIR__ . '/../lead-config.php'] as $cfg) {
+// Поиск конфига секретов по порядку. Сначала свой конфиг лендинга (приоритет), затем конфиг
+// ОСНОВНОГО САЙТА уровнями выше (public_html/api/ или public_html/) — чтобы посадочная
+// переиспользовала уже настроенный $LEAD_EMAIL основного сайта, если отдельного конфига нет.
+// Пути фиксированные (не из пользовательского ввода) — LFI нет. Реальные конфиги в .gitignore.
+foreach ([
+    __DIR__ . '/lead-config.php',           // sozdanie-sajta/api/lead-config.php  (свой, приоритет)
+    __DIR__ . '/../lead-config.php',         // sozdanie-sajta/lead-config.php
+    __DIR__ . '/../../api/lead-config.php',  // public_html/api/lead-config.php     (основной сайт)
+    __DIR__ . '/../../lead-config.php',      // public_html/lead-config.php
+] as $cfg) {
     if (is_file($cfg)) { require $cfg; break; }
 }
 
