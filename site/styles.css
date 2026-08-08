@@ -211,17 +211,19 @@
     }
     .brand {
       font-family: var(--font-display); font-weight: 600; font-size: 1.05rem;
-      letter-spacing: .04em; text-decoration: none;
+      letter-spacing: .04em; text-decoration: none; margin-right: auto; /* прижимает Блог+телефон вправо */
     }
     .brand span { color: var(--stamp); }
     .site-header a[href^="tel"] { font-family: var(--font-mono); font-size: .85rem; text-decoration: none; }
     .site-header a[href^="tel"]:hover { color: var(--stamp); }
-    .site-nav a { font-family: var(--font-mono); font-size: .85rem; text-decoration: none; }
+    /* Блог — приглушённый инструмент, не пункт первого экрана: мельче, серый, у самого телефона. */
+    .site-nav { margin-right: 2px; }
+    .site-nav a { font-family: var(--font-mono); font-size: .72rem; color: color-mix(in srgb, var(--ink) 45%, transparent); text-decoration: none; }
     .site-nav a:hover { color: var(--stamp); }
     @media (max-width: 380px) {
       .site-header .shell { gap: 8px; }
       .site-header a[href^="tel"] { font-size: .74rem; white-space: nowrap; }
-      .site-nav a { font-size: .8rem; }
+      .site-nav a { font-size: .66rem; }
       .brand { font-size: .85rem; letter-spacing: .02em; }
     }
 
