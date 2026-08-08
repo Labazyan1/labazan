@@ -67,9 +67,10 @@
         .catch(function () { return null; })
         .then(function (res) {
           if (res && res.ok) {
+            // Цель Метрики шлём ДО перерисовки UI (form.reset/скрытие формы/фокус), чтобы hit
+            // гарантированно ушёл. g:1 = засчитываемая заявка; honeypot отдаёт g:0 — не конверсия.
+            if (res.g !== 0) reachGoal('form_submit', { source: 'sozdanie-sajta' });
             showResult();
-            // Цель Метрики: засчитываемая конверсия (сервер вернул g:1 при живой заявке).
-            if (!res || res.g !== 0) reachGoal('form_submit', { source: 'sozdanie-sajta' });
           } else if (res && res.error === 'consent') {
             setStatus('Отметьте согласие на обработку персональных данных.', 'error');
           } else if (res && res.error === 'validation') {
